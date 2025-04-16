@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('includes/head', { nonce: nonce, title: 'Signup' })%>
+  <link rel="stylesheet" href="styles.folder/signup.css" />
+  <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+</head>
+<body>
+  <%- include('includes/header', { nonce: nonce })%>
+  <main id="signup">
+    <h1>Signup</h1>
+    <% if (inputData.hasError) { %>
+      <p id="input-error"><%= inputData.message %></p>
+    <% } %>
+    <form action="/signup" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <!-- Honeypot Field -->
+      <input type="text" name="honeypot" style="display: none;">
+      <div class="form-control">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= inputData.email %>" required>
+      </div>
+      <div class="form-control">
+        <label for="confirm-email">Confirm Email</label>
+        <input type="email" id="confirm-email" name="confirmEmail" value="<%= inputData.confirmEmail %>" required>
+      </div>
+      <div class="form-control">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" value="<%= inputData.password %>" required>
+      </div>
+      <button class="btn" id="signup">Create user</button>
+    </form>
+    <div id="auth-alternative">
+      <a class="btn-alt" id="login" href="/login">Login instead</a>
+    </div>
+  </main>
+  
+  <script nonce="<%= nonce %>">
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Signup page loaded');
+  
+    });
+  </script>
+</body>
+</html>

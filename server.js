@@ -1,0 +1,228 @@
+const express = require('express');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const path = require('path');
+const csrf = require('csurf');
+const cookieParser = require('cookie-parser');
+const calculatorRoutes = require('./routes/calculatorRoutes');
+const { connectToDatabase, getDb } = require('./data/database');
+const rateLimit = require('express-rate-limit');
+const registrationRoutes = require('./routes/registration');
+const symptomRoutes = require('./routes/symptomRoutes');
+const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
+//const paymentRoutes = require('./routes/paymentRoutes');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
+const crypto = require('crypto');
+
+const app = express();
+const port = 3000;
+
+dotenv.config();
+
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  collection: process.env.SESSION_COLLECTION,
+});
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: sessionStore,
+  cookie: { 
+    secure: false, 
+    maxAge: 1000 * 60 * 60 * 24 
+  } // Set secure to true in production
+}));
+
+// Generate nonce for each request
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString('base64');
+  next();
+});
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "trusted.com", (req, res) => `'nonce-${res.locals.nonce}'`],
+        styleSrc: ["'self'", "'unsafe-inline'"], 
+      },
+    },
+  })
+);
+
+// Logging middleware (for debugging)
+app.use((req, res, next) => {
+  console.log('Generated Nonce:', res.locals.nonce);
+  next();
+});
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests, please try again later.",
+  skip: (req) => req.ip === "127.0.0.1", // Skip localhost
+});
+app.use(limiter);
+
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
+
+// Honeypot trap middleware
+app.use((req, res, next) => {
+  if (req.body.honeypot) {
+    return res.status(400).send("Bot detected");
+  }
+  next();
+});
+
+// Payment routes
+//app.use('/api', paymentRoutes); 
+
+// Middleware to pass CSRF token to all views
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // Make CSRF token available in EJS templates
+  next();
+});
+
+app.use(async function (req, res, next) {
+  res.locals.isAuth = req.session.isAuthenticated || false;
+
+  if (req.session.isAuthenticated) {
+    try {
+      const db = getDb();
+      const [results] = await db.execute('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
+
+      if (results.length > 0) {
+        res.locals.user = results[0];
+        req.user = results[0];
+        console.log('User:', res.locals.user); // Debugging
+      } else {
+        req.session.isAuthenticated = false;
+        console.log('User not found:', req.session.user.id); // Debugging
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
+      req.session.isAuthenticated = false;
+    }
+  }
+
+  console.log('Middleware - isAuth:', res.locals.isAuth); // Debugging
+  next();
+}); 
+
+// Set view engine to EJS
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+
+// Use registration routes
+app.use('/api', calculatorRoutes);
+app.use(registrationRoutes);
+app.use('/', symptomRoutes);
+app.use('/api', secondaryConditionRoutes);
+
+
+
+
+app.get('/', (req, res) => {
+  console.log('Root route - isAuth:', res.locals.isAuth); // Debugging
+  console.log('CSRF Token:', res.locals.csrfToken); // Debugging
+  res.render('index', { csrfToken: req.csrfToken(), nonce: res.locals.nonce });
+});
+
+app.get('/secondary', (req, res) => {
+  console.log('Rendering secondary with CSRF token:', req.csrfToken()); // Debugging
+  res.render('secondary', { 
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce
+  });
+});
+
+
+// Route to handle the submission of disabilities data 
+app.post('/submit-disabilities', (req, res) => {
+  const disabilities = req.body.disabilities;
+
+  if (disabilities && disabilities.length > 0) {
+    console.log('Disabilities received:', disabilities);
+    res.json({ message: 'Disabilities data successfully received.' });
+  } else {
+    res.status(400).json({ message: 'No disabilities data provided.' });
+  }
+});
+
+app.get("/possibleDisabilities", async (req, res) => {
+  try{
+    const db = getDb();
+    const [systems] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
+    console.log('Systems:', systems); // Debugging
+
+    res.render("possibleDisabilities", { 
+      title: "Symptom Analysis",
+      csrfToken: req.csrfToken(), // Pass CSRF token
+      nonce: res.locals.nonce,
+      systems: systems.map(row => row.systems)
+    });
+  } catch (err) {
+    console.error('Error fetching systems:', err);
+    res.status(500).send('Error fetching systems');
+  }
+});
+
+// Initialize the database connection and start the server
+async function startServer() {
+  try {
+    await connectToDatabase(); // Connect to the database
+    console.log('Database connection established');
+
+    // Test database connection
+    const db = getDb();
+    try {
+      const [testResult] = await db.execute('SELECT 1 as test');
+      console.log('Database test query result:', testResult);
+    } catch (dbError) {
+      console.error('Error executing test query:', dbError);
+      throw new Error('Database connection test failed');
+    }
+
+    // Set up error handling for the Express app
+    app.use((err, req, res, next) => {
+      console.error('Express error:', err);
+      res.status(500).send('An error occurred on the server');
+    });
+
+    // Start the server
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+
+    // Handle server startup errors
+    app.on('error', (error) => {
+      console.error('Server startup error:', error);
+      process.exit(1);
+    });
+
+  } catch (err) {
+    console.error('Error during server startup:', err);
+    process.exit(1); // Exit the process if startup fails
+  }
+}
+
+// Start the server
+startServer().catch((err) => {
+  console.error('Unhandled error during server startup:', err);
+  process.exit(1);
+});

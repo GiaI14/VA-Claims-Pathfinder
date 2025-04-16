@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('includes/head', { title: 'Login', nonce: nonce }) %>
+  <link rel="stylesheet" href="/styles.folder/login.css">
+  <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+</head>
+<body>
+  <%- include('includes/header', { nonce: nonce }) %>
+  <main id="signup">
+    <h1>Login</h1>
+    <% if (locals.errorMessage) { %>
+      <div class="alert alert-danger"><%= errorMessage %></div>
+    <% } %>
+    <form action="/login" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <!-- Honeypot Field -->
+      <input type="text" name="honeypot" style="display: none;">
+      <div class="form-control">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
+      </div>
+      <div class="form-control">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button class="btn">Log in</button>
+    </form>
+    <div id="auth-alternative">
+      <a class="btn btn-alt" href="/signup">Create a new user</a>
+    </div>
+  </main>
+  <script nonce="<%= nonce %>">
+    document.addEventListener('DOMContentLoaded', function() {
+      // Any inline scripts can go here if needed
+      console.log('Login page loaded');
+    });
+  </script>
+</body>
+</html>

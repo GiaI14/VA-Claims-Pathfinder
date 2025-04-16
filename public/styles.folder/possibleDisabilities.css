@@ -1,0 +1,275 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7fa;
+    margin-top: 80px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 80px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #2a4b8e;
+}
+
+h1 {
+    text-align: center;
+    width: 100%;
+    margin: 0 auto 20px;
+    color: #2a4b8e; /* Optional: keeps your existing color */
+    font-size: 2.5em; /* Optional: adjust size as needed */
+}
+
+
+button {
+    background-color: #2a4b8e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #1a3c7d;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.disability-entry, .symptom-entry {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.disability-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.disability-entry input,
+.disability-entry select {
+    width: auto;
+    margin-right: 10px;
+}
+
+.disability-entry button {
+    margin-left: auto;
+}
+
+/* Adjust the width of the disability name input */
+.disability-entry .disability-name {
+    flex-grow: 1;
+}
+
+/* Adjust the width of the disability percentage input */
+.disability-entry .disability-percentage {
+    width: 70px;
+}
+#results {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e0f7fa;
+    border-radius: 4px;
+}
+
+/* Specific styling for the Remove button */
+button[onclick^="removeDisability"], button[onclick^="removeSymptomEntry"] {
+    background-color: #f44336;
+    margin-bottom: 5px;
+    margin-right: 20px;
+}
+
+button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]:hover {
+    background-color: #d32f2f;
+}
+
+.symptom-entry {
+    position: relative;
+    padding-bottom: 40px;
+    margin-bottom: 15px;
+  }
+  
+  .input-group {
+    margin-bottom: 10px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 3px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    max-width: 99.5%;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  
+  .symptom-entry button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+.button-row button,
+.analyze-section button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+
+.analyze-section button {
+    background-color: #4CAF50; /* Blue color for Analyze */
+    color: white;
+    margin-top: 80px;
+    font-weight: bold;
+    width: 8.5rem;
+    font-size: 16px; 
+}
+
+.analyze-section button:hover {
+    background-color: #45a049;
+}
+
+.body-part {
+  width: 100%;
+  padding: 8px 10px; /* Reduced top and bottom padding */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 24px;
+  height: 40px; /* Set a specific height */
+  line-height: 24px; /* Adjust line height for vertical centering */
+}
+
+.body-part:focus {
+  outline: none;
+  border-color: #0071bb;
+  box-shadow: 0 0 0 2px rgba(0, 113, 187, 0.2);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.condition-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.medical-code {
+  color: #555;
+}
+
+.match-percentage {
+  float: right;
+  color: #2c7be5;
+  font-weight: 500;
+}
+
+.condition-details {
+  margin-left: 20px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.detail-item {
+  margin-bottom: 3px;
+  line-height: 1.4;
+}
+
+.detail-label {
+  display: inline-block;
+  min-width: 160px;
+  color: #333;
+}
+
+.detail-text {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+    body {
+      padding: 10px;
+    }
+  
+    .container {
+      margin: 60px auto 20px;
+      padding: 15px;
+    }
+  
+    h1 {
+      font-size: 1.8em;
+    }
+  
+    .symptom-entry {
+      padding-bottom: 60px;
+    }
+  
+    .input-group label {
+      font-size: 14px;
+    }
+  
+    .body-part {
+      font-size: 14px;
+      padding: 8px;
+    }
+    .input-group input,
+    .input-group select {
+      font-size: 14px;
+    }
+  
+    button {
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+  
+    .analyze-section button {
+      width: 100%;
+      margin-top: 40px;
+    }
+  }
+  

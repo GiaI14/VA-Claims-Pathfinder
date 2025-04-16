@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce })%> 
+<link rel="stylesheet" href="styles.folder/calculator.css">
+<body>
+    <%- include('includes/header', { nonce: nonce })%>
+    <div id="disabilities-container">
+        <h2>Disability Ratings</h2>
+        <button id="add-disability-btn">+ Add Disability %</button>
+        <div id="disabilities"></div>
+    </div>
+
+    <div id="dependents-container">
+        <h2>Dependents</h2>
+        <label><input type="checkbox" id="spouse"> Spouse?</label>
+        <label>Number of Children Under 18:</label>
+        <input type="number" id="childrenUnder18" min="0" value="0">
+
+        <label>Number of Children Over 18 (in school):</label>
+        <input type="number" id="childrenOver18" min="0" value="0">
+        <label>Number of Parents:</label>
+        <select id="numParents">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div>
+
+    <!-- Honeypot Field -->
+    <input type="text" name="honeypot" style="display: none;"> 
+
+    <button id="calculate-btn">Calculate</button>
+
+    <div id="results-container">
+        <h2>Exact Combined Rating: <span id="exactRating">0%</span></h2>
+        <h2>VA Rounded Rating: <span id="roundedRating">0%</span></h2>
+        <h2>Estimated Compensation: <span id="result">$0</span></h2>
+    </div>
+
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/index.js" nonce="<%= nonce %>"></script>
+    <script nonce="<%= nonce %>">
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // Add event listeners for buttons
+            document.getElementById('add-disability-btn').addEventListener('click', addDisability);
+            document.getElementById('calculate-btn').addEventListener('click', calculateDisability);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<header>
+  <% if (typeof loggedOut !== 'undefined' && loggedOut) { %>
+    <div class="alert alert-success">You have successfully logged out.</div>
+  <% } %>
+  <nav class="navbar">
+    <a href="/" class="logo">VA Claims Pathfinder</a>
+    <div class="hamburger" id="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+    <ul class="nav-menu" id="nav-menu">
+      <li><a href="/">Rating Calculator</a></li>
+      <% if (isAuth) { %> 
+        <li><a href="/secondary">Secondary Conditions</a></li>
+        <li><a href="/possibleDisabilities">Possible Disabilities</a></li>
+      <% } %>
+      <% if (!isAuth) { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Signup</a></li>
+      <% } else { %>
+        <li>
+          <form action="/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+            <button id="nav-logout-btn">Logout</button>
+          </form>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+  <%- include('mobile-drawer', { nonce: nonce }) %>
+</header>
+
+<script nonce="<%= nonce %>">
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+    }
+
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+  });
+</script>

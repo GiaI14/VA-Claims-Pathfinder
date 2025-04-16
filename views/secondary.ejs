@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce }) %>
+  <link rel="stylesheet" href="styles.folder/secondary.css" />
+
+  <body>
+    <%- include('includes/header', { nonce: nonce }) %>
+
+      <div class="container">
+        <h1>Secondary Conditions</h1>
+        <!-- Disability Form -->
+        <form id="disabilityForm">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <h2>Currently Rated Disabilities</h2>
+          <button type="button" id="addDisabilityButton">
+            Add Disability
+          </button>
+          <div id="disabilities">
+            <!-- Disabilities will be added here dynamically -->
+          </div>
+          <button type="button" id="submitDisabilitiesButton">Submit Disabilities</button>
+        </form>
+
+        <!-- Secondary Conditions Display -->
+        <div id="secondaryConditions">
+          <!-- Secondary conditions will be displayed here -->
+        </div>
+      </div>
+
+      <!-- Scripts -->
+      <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+      <script src="/js/disabilitySecondaryForm.js" nonce="<%= nonce %>" defer></script>
+
+      <script nonce="<%= nonce %>">
+        document.addEventListener('DOMContentLoaded', function () {
+          console.log('DOM fully loaded and parsed'); // Debugging log
+          document.getElementById('addDisabilityButton').addEventListener('click', addDisability);
+          document.getElementById('submitDisabilitiesButton').addEventListener('click', submitDisabilities);
+          document.getElementById('disabilities').addEventListener('click', handleDisabilityRemoval);
+        });
+      </script>
+  </body>
+
+</html>

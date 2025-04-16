@@ -1,0 +1,152 @@
+:root {
+  /* VA Official Color Scheme */
+  --primary-color: #844f39;       /* VA navy blue */
+  --secondary-color: #023047;     /* Dark rich blue */
+  --accent-color:  #c4b687;   /* VA gold */
+  --background-color: #FFFFFF;    /* Pure white */
+  --text-color: #212121;          /* Near-black for readability */
+  --input-border-color: #5A6D7B;  /* VA gray */
+  --underline: #70a288;
+  --error-color: #E31C3D;         /* VA red */
+  --success-color: #2E8540;       /* VA green */
+  --light-gray: #F4F7FA;          /* For subtle backgrounds */
+} 
+
+body {
+  padding-top: 150px;
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  font-family: 'Source Sans Pro', Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Forms */
+#signup, #login {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 45, 114, 0.15); /* Blue-tinted shadow */
+  border: 2px solid #E0E0E0; /* Light gray border */
+}
+
+#signup h1, #login h1 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+#signup h1:after, #login h1:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 3px;
+  background-color: var(--underline); /* Gold underline */
+}
+
+.form-control {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 45, 114, 0.2);
+}
+
+/* Alerts */
+.alert {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  color: var(--error-color);
+  background-color: #FDF3F4;
+  border-left: 4px solid var(--error-color);
+  padding-left: 1rem;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+.btn-alt {
+  background-color: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-alt:hover {
+  background-color: var(--light-gray);
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+/* Auth Alternative */
+#auth-alternative {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+#auth-alternative a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--primary-color);
+}
+
+#auth-alternative a:hover {
+  color: var(--secondary-color);
+  border-bottom-style: solid;
+}
+
+/* Utility Classes */
+.text-accent {
+  color: var(--accent-color);
+}
