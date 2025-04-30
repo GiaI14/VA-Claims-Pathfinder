@@ -1,8 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { getDb } = require('../data/database');
-
+const { OAuth2Client } = require('google-auth-library');
 const router = express.Router();
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+
 
 router.get('/', function (req, res) {
   const loggedOut = req.query.loggedOut === 'true';
@@ -101,7 +103,12 @@ router.post('/signup', async function (req, res) {
 });
 ////////////////////////////////////////////////////////////////////////////////
 router.get('/login', function(req, res) {
-  res.render('login', { csrfToken: req.csrfToken(), errorMessage: null, email: '' });
+  res.render('login', { 
+    csrfToken: req.csrfToken(), 
+    errorMessage: null, 
+    email: '',
+    googleClientId: process.env.GOOGLE_CLIENT_ID
+   });
 });
 
 // POST route for handling login
@@ -119,7 +126,8 @@ router.post('/login', async function (req, res) {
       console.log('User not found');
       return res.render('login', {
         errorMessage: "User does not exist. Please register!",
-        email: enteredEmail
+        email: enteredEmail,
+        googleClientId: process.env.GOOGLE_CLIENT_ID
       });
     }
 
@@ -130,7 +138,8 @@ router.post('/login', async function (req, res) {
       console.log('Password incorrect');
       return res.render('login', {
         errorMessage: "Could not log you in - please check your credentials!",
-        email: enteredEmail
+        email: enteredEmail,
+        googleClientId: process.env.GOOGLE_CLIENT_ID
       });
     }
 
@@ -147,7 +156,8 @@ router.post('/login', async function (req, res) {
     console.error('Login error:', error);
     res.status(500).render('login', {
       errorMessage: "An error occurred. Please try again later.",
-      email: enteredEmail
+      email: enteredEmail,
+      googleClientId: process.env.GOOGLE_CLIENT_ID
     });
   }
 });
@@ -169,6 +179,192 @@ router.post('/logout', function (req, res) {
   }
 });
 
+// router.post('/auth/google/callback', async (req, res) => {
+//   try {
+//     const { credential } = req.body;
+//     if (!credential) {
+//       return res.status(400).json({ success: false, message: 'Missing credential' });
+//     }
+
+//     // Verify token
+//     const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+//     const ticket = await client.verifyIdToken({
+//       idToken: credential,
+//       audience: GOOGLE_CLIENT_ID,
+//     });
+//     const payload = ticket.getPayload();
+
+//     // Find or create user
+//     const db = getDb();
+//     const [users] = await db.execute('SELECT * FROM users WHERE email = ?', [payload.email]);
+//     let user = users[0];
+//     if (!user) {
+//       const [result] = await db.execute('INSERT INTO users (email, password) VALUES (?, ?)', [payload.email, '']);
+//       user = { id: result.insertId, email: payload.email };
+//     }
+
+//     // Log in user
+//     req.session.user = { id: user.id, email: user.email };
+//     req.session.isAuthenticated = true;
+//     req.session.save(() => {
+//       console.log('User session created:', req.session.user);
+//       res.redirect('/dashboard')
+//       //res.json({ success: true });
+//     });
+//   } catch (err) {
+//     console.error('Google Sign-In error:', err);
+//     res.status(400).json({ success: false, message: 'Invalid Google credential' });
+//   }
+// });
+////////////////////////////////////////////////////////////////////////////////
+// router.post('/auth/google/callback', async (req, res) => {
+//   console.log('Request body received:', req.body); // Debug
+  
+//   if (!req.body.credential) {
+//     console.error('Missing credential in:', req.body);
+//     return res.status(400).json({ error: 'Invalid request' });
+//   }
+
+//   try {
+//     // Verify token
+//     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+//     const ticket = await client.verifyIdToken({
+//       idToken: req.body.credential,
+//       audience: process.env.GOOGLE_CLIENT_ID
+//     });
+    
+//     const payload = ticket.getPayload();
+//     console.log('Google payload:', {
+//       email: payload.email,
+//       name: payload.name,
+//       picture: payload.picture
+//     });
+
+//     // Database upsert
+//     const db = getDb();
+//     const [user] = await db.execute(`
+//       INSERT INTO users (email, name, google_id, avatar) 
+//       VALUES (?, ?, ?, ?)
+//       ON DUPLICATE KEY UPDATE 
+//         name = VALUES(name),
+//         avatar = VALUES(avatar)
+//     `, [
+//       payload.email,
+//       payload.name,
+//       payload.sub,
+//       payload.picture
+//     ]);
+
+//     // Session handling
+//     req.session.regenerate(err => {
+//       if (err) {
+//         console.error('Session regeneration error:', err);
+//         return res.status(500).json({ error: 'Session error' });
+//       }
+
+//       req.session.user = {
+//         id: user.insertId || user.id,
+//         email: payload.email,
+//         name: payload.name,
+//         avatar: payload.picture
+//       };
+//       req.session.isAuthenticated = true;
+
+//       req.session.save(err => {
+//         if (err) {
+//           console.error('Session save error:', err);
+//           return res.status(500).json({ error: 'Session save failed' });
+//         }
+
+//         console.log('Auth successful for:', payload.email);
+//         res.setHeader('Cache-Control', 'no-store');
+        
+//         res.json({
+//           success: true,
+//           user: {
+//             id: user.insertId || user.id,
+//             email: payload.email
+//           },
+//           redirectUrl: '/' // Change as needed
+//         });
+//       });
+//     });
+
+//   } catch (error) {
+//     console.error('Auth error:', error);
+//     res.status(401).json({
+//       error: 'Authentication failed',
+//       details: error.message
+//     });
+//   }
+// });
+router.post('/auth/google/callback', async (req, res) => {
+  console.log('Request body received:', req.body);
+
+  if (!req.body.credential) {
+      console.error('Missing credential in:', req.body);
+      return res.status(400).json({ error: 'Invalid request' });
+  }
+
+  try {
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      const ticket = await client.verifyIdToken({
+          idToken: req.body.credential,
+          audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      console.log('Google payload:', {
+          email: payload.email,
+          // name: payload.name,
+          picture: payload.picture,
+          google_id: payload.sub,
+      });
+
+      const db = getDb();
+
+      let [googleUser] = await db.execute('SELECT * FROM google_users WHERE email = ?', [payload.email]);
+      googleUser = googleUser[0];
+
+      if (!googleUser) {
+          const [result] = await db.execute(
+              'INSERT INTO google_users (email, google_id, avatar) VALUES (?, ?, ?)',
+              [payload.email, payload.sub, payload.picture]
+          );
+          const [newGoogleUser] = await db.execute('SELECT * FROM google_users WHERE id = ?', [result.insertId]);
+          googleUser = newGoogleUser[0];
+      }
+
+      req.session.regenerate((err) => {
+          if (err) {
+              console.error('Session regeneration error:', err);
+              return res.redirect('/login');
+          }
+
+          req.session.user = {
+              id: googleUser.id,
+              email: googleUser.email,
+              avatar: googleUser.avatar,
+              google_id: googleUser.google_id,
+          };
+          req.session.isAuthenticated = true;
+
+          req.session.save((err) => {
+              if (err) {
+                  console.error('Session save error:', err);
+                  return res.redirect('/login');
+              }
+
+              console.log('Auth successful for:', payload.email);
+              res.setHeader('Cache-Control', 'no-store');
+              return res.json({success: true, redirectUrl: '/'});
+          });
+      });
+  } catch (error) {
+      console.error('Auth error:', error);
+      return res.status(401).redirect('/login');
+  }
+});
 
 
 module.exports = router;

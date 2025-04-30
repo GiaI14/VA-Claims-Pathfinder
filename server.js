@@ -10,15 +10,22 @@ const rateLimit = require('express-rate-limit');
 const registrationRoutes = require('./routes/registration');
 const symptomRoutes = require('./routes/symptomRoutes');
 const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
+const authRoutes = require('./routes/auth');
+
 //const paymentRoutes = require('./routes/paymentRoutes');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const crypto = require('crypto');
+const { connect } = require('http2');
 
 const app = express();
 const port = 3000;
 
 dotenv.config();
+
+
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+console.log(googleClientId)
 
 const sessionStore = new MySQLStore({
   host: process.env.DB_HOST,
@@ -29,39 +36,68 @@ const sessionStore = new MySQLStore({
   collection: process.env.SESSION_COLLECTION,
 });
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
   cookie: { 
-    secure: false, 
-    maxAge: 1000 * 60 * 60 * 24 
+    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+    sameSite: 'lax',
+    secure: false, // Set to true in production to use HTTPS
   } // Set secure to true in production
 }));
-
 // Generate nonce for each request
 app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString('base64');
-  next();
+res.locals.nonce = crypto.randomBytes(16).toString('base64');
+next();
 });
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "trusted.com", (req, res) => `'nonce-${res.locals.nonce}'`],
-        styleSrc: ["'self'", "'unsafe-inline'"], 
-      },
+// Middleware to parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(session({
+//   secret: process.env.SESSION_SECRET,
+//   resave: false,
+//   saveUninitialized: false,
+//   store: sessionStore,
+//   cookie: { 
+//     secure: false, 
+//     maxAge: 1000 * 60 * 60 * 24 
+//   } // Set secure to true in production
+// }));
+
+app.use((req, res, next) => {
+  const nonce = res.locals.nonce; // <-- now it's defined
+
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        `'nonce-${nonce}'`,
+        "https://accounts.google.com",
+        "https://apis.google.com"
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'", // optional, if you want to allow inline styles
+        "https://accounts.google.com"
+      ],
+      frameSrc: [
+        "'self'",
+        "https://accounts.google.com"
+      ],
+      connectSrc: [
+        "'self'",
+        "https://accounts.google.com",
+        "https://play.google.com"
+      ],
     },
-  })
-);
+  })(req, res, next); // Call helmet's CSP middleware
+});
 
 // Logging middleware (for debugging)
 app.use((req, res, next) => {
@@ -133,7 +169,7 @@ app.use('/api', calculatorRoutes);
 app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/api', secondaryConditionRoutes);
-
+app.use('/auth', authRoutes);
 
 
 

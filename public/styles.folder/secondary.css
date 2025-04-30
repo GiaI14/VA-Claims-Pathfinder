@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7fa;
+    margin-top: 80px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 80px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #2a4b8e;
+}
+
+h1 {
+    text-align: center;
+    width: 100%;
+    margin: 0 auto 20px;
+    font-size: 2.5em;
+}
+
+button {
+    background-color: #2a4b8e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1a3c7d;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#disabilities {
+    margin-top: 15px;
+}
+
+.disability-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.disability-entry input,
+.disability-entry select {
+    width: auto;
+    margin-right: 10px;
+}
+
+.disability-entry button {
+    margin-left: auto;
+    background-color: #f44336;
+}
+
+.disability-entry button:hover {
+    background-color: #d32f2f;
+}
+
+.disability-name {
+    flex-grow: 1;
+}
+
+.disability-percentage {
+    width: 70px;
+}
+
+#secondaryConditions {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e0f7fa;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        margin: 60px auto 20px;
+        padding: 15px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    button {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}
+

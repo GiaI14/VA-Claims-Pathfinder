@@ -1,40 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <%- include('includes/head', { title: 'Login', nonce: nonce }) %>
-  <link rel="stylesheet" href="/styles.folder/login.css">
-  <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+  <%- include('includes/head', { title: 'Login' , nonce: nonce }) %>
+    <link rel="stylesheet" href="/styles.folder/login.css">
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <!-- Google Identity Services script -->
+    <script src="https://accounts.google.com/gsi/client" nonce="<%= nonce %>"async defer></script>
 </head>
+
 <body>
   <%- include('includes/header', { nonce: nonce }) %>
-  <main id="signup">
-    <h1>Login</h1>
-    <% if (locals.errorMessage) { %>
-      <div class="alert alert-danger"><%= errorMessage %></div>
-    <% } %>
-    <form action="/login" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <!-- Honeypot Field -->
-      <input type="text" name="honeypot" style="display: none;">
-      <div class="form-control">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
-      </div>
-      <div class="form-control">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      <button class="btn">Log in</button>
-    </form>
-    <div id="auth-alternative">
-      <a class="btn btn-alt" href="/signup">Create a new user</a>
-    </div>
-  </main>
-  <script nonce="<%= nonce %>">
-    document.addEventListener('DOMContentLoaded', function() {
-      // Any inline scripts can go here if needed
-      console.log('Login page loaded');
-    });
-  </script>
+    <main id="signup">
+      <h1>Login</h1>
+      <% if (locals.errorMessage) { %>
+        <div class="alert alert-danger">
+          <%= errorMessage %>
+        </div>
+        <% } %>
+          <form action="/login" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <!-- Honeypot Field -->
+            <input type="text" name="honeypot" style="display: none;">
+            <div class="form-control">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
+            </div>
+            <div class="form-control">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required>
+              <div class="forgot-password">
+                <a href="/auth/forgot-password">Forgot your password?</a>
+              </div>
+            </div>
+            <button class="btn">Log in</button>
+            <div style="margin-top: 24px;">
+              <!-- Official Google Sign-In Button -->
+              <div id="g_id_onload" 
+                data-client_id="<%= googleClientId %>" 
+                data-context="signin"
+                data-ux_mode = "popup"
+                data-callback="handleCredentialResponse" 
+                data-auto_prompt="false"> 
+            </div>
+            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+              data-text="sign_in_with" data-size="large" data-logo_alignment="left">
+            </div>
+            </div>
+          </form>
+          <div id="auth-alternative">
+            <a class="btn btn-alt" href="/signup">Create a new user</a>
+          </div>
+    </main>
+
+    <script nonce="<%= nonce %>">
+      window.handleCredentialResponse = async function (response) {
+        console.group('handleCredentialResponse called', response);
+
+        try {
+          console.log('Received credential:', response.credential);
+
+          const authResponse = await fetch('/auth/google/callback', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': '<%= csrfToken %>'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              credential: response.credential,
+              _csrf: '<%= csrfToken %>'
+            })
+          });
+
+          const data = await authResponse.json();
+          console.log('Response data:', data);
+
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else {
+            window.location.href = '/';
+          }
+
+        } catch (error) {
+          console.error('Auth error:', error);
+          alert('Login failed. Check console for details.');
+        } finally {
+          console.groupEnd();
+        }
+      };
+    </script>
+
 </body>
+
 </html>
