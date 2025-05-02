@@ -5,4 +5,7 @@
     <meta name="csrf-token" content="<%= csrfToken %>">
     <title>VA Claims Pathfinder</title>
     <link rel="stylesheet" href="styles.folder/shared.css" />
+    <% if (typeof customStyles !== "undefined") { %>
+      <%- customStyles %>
+    <% } %>
   </head>
