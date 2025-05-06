@@ -153,6 +153,15 @@ app.use(async function (req, res, next) {
   next();
 }); 
 
+app.use(function (err, req, res, next) {
+    if (err.code === 'EBADCSRFTOKEN') {
+        console.error("CSRF error: Invalid CSRF token");
+        return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+    next(err);
+});
+
+
 // Set view engine to EJS
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
