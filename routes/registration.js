@@ -12,6 +12,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/signup', function (req, res) {
+  console.log('GET /signup route hit');
   let sessionInputData = req.session.inputData;
   if (!sessionInputData) {
     sessionInputData = {
@@ -103,6 +104,7 @@ router.post('/signup', async function (req, res) {
 });
 ////////////////////////////////////////////////////////////////////////////////
 router.get('/login', function(req, res) {
+  console.log('GET /login route hit');
   res.render('login', { 
     csrfToken: req.csrfToken(), 
     errorMessage: null, 
