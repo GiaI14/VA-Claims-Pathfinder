@@ -241,15 +241,6 @@ router.post("/api/analyze-symptoms", (req, res, next) => {
     }
 });
 
-// CSRF error handler (should be after all routes)
-app.use(function (err, req, res, next) {
-    if (err.code === 'EBADCSRFTOKEN') {
-        console.error("CSRF error: Invalid CSRF token");
-        return res.status(403).json({ error: 'Invalid CSRF token' });
-    }
-    next(err);
-});
-
 
 
 module.exports = router;
