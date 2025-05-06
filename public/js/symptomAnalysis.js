@@ -74,6 +74,7 @@ async function analyzeSymptoms(event) {
         "CSRF-Token": csrfToken,
       },
       body: JSON.stringify(symptomsData),
+      credentials: "include",
     });
 
     if (!response.ok) throw new Error("Failed to analyze symptoms");
