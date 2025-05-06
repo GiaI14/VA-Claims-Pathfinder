@@ -4,6 +4,9 @@ const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const https = require('https');
+
 const calculatorRoutes = require('./routes/calculatorRoutes');
 const { connectToDatabase, getDb } = require('./data/database');
 const rateLimit = require('express-rate-limit');
@@ -109,7 +112,7 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: "Too many requests, please try again later.",
-  skip: (req) => req.ip === "127.0.0.1", // Skip localhost
+  skip: (req) => req.ip === "127.0.0.1", 
 });
 app.use(limiter);
 
@@ -240,10 +243,14 @@ async function startServer() {
       res.status(500).send('An error occurred on the server');
     });
 
-    // Start the server
-    app.listen(port, '0.0.0.0', () => {
-      console.log(`Server running on port ${port}`);
-    });
+const privateKey = fs.readFileSync('server.key', 'utf8');
+const certificate = fs.readFileSync('server.cert', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
+
+// Start HTTPS server
+https.createServer(credentials, app).listen(port, '0.0.0.0', () => {
+  console.log(`HTTPS Server running at https://67.205.168.90:${port}/`);
+});
 
     // Handle server startup errors
     app.on('error', (error) => {
