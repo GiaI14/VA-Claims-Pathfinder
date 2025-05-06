@@ -156,6 +156,7 @@ router.post("/api/analyze-symptoms", async (req, res) => {
 
         for (const entry of symptomsData) {
             const { system, symptoms } = entry;
+            console.log("Processing entry:", entry);
 
             if (!system || !Array.isArray(symptoms) || symptoms.length === 0) {
                 console.warn(`Skipping invalid entry: ${JSON.stringify(entry)}`);
@@ -175,7 +176,19 @@ router.post("/api/analyze-symptoms", async (req, res) => {
             let possibleConditions = [];
 
             for (const row of rows) {
-                const matchPercentage = calculateMatchPercentage(symptoms, row.symptoms);
+                // Defensive: check if row.symptoms exists and is a string
+                if (!row.symptoms || typeof row.symptoms !== 'string') {
+                    console.warn("Skipping row with invalid symptoms:", row);
+                    continue;
+                }
+
+                let matchPercentage;
+                try {
+                    matchPercentage = calculateMatchPercentage(symptoms, row.symptoms);
+                } catch (err) {
+                    console.error("Error in calculateMatchPercentage:", err, { symptoms, rowSymptoms: row.symptoms });
+                    continue;
+                }
 
                 if (matchPercentage > 25) {
                     const conditionData = {
@@ -186,7 +199,7 @@ router.post("/api/analyze-symptoms", async (req, res) => {
                             row.symptoms.toLowerCase().includes(symptom.toLowerCase())
                         ),
                         total_condition_symptoms: row.symptoms.split(',').length,
-                        is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !=='no',
+                        is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== 'no',
                         presumptive_raw: row.presumptive_conditions,
                         secondary_conditions: row.secondary_conditions,
                         qualifying_circumstance: row.qualifying_circumstance || null, 
@@ -217,7 +230,8 @@ router.post("/api/analyze-symptoms", async (req, res) => {
         console.log("Analysis results:", JSON.stringify(results, null, 2));
         res.json(results);
     } catch (error) {
-        console.error("Error querying database:", error.message);
+        // Log the full error object, not just the message
+        console.error("Error querying database:", error);
         res.status(500).json({ error: "An error occurred while analyzing symptoms.", details: error.message });
     }
 });
