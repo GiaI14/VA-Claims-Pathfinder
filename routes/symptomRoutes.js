@@ -142,7 +142,14 @@ function tokenizeAndNormalize(symptoms) {
 //     }
 // });
 ///////////////////////////////////////////////////////////////////////////////////
-router.post("/api/analyze-symptoms", async (req, res) => {
+router.post("/api/analyze-symptoms", (req, res, next) => {
+    // CSRF/session debugging
+    console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("CSRF token sent by client:", req.headers['csrf-token']);
+    next();
+}, async (req, res) => {
+    // Your existing logic below
     console.log("Received symptom data:", req.body);
     const symptomsData = req.body;
 
@@ -176,7 +183,6 @@ router.post("/api/analyze-symptoms", async (req, res) => {
             let possibleConditions = [];
 
             for (const row of rows) {
-                // Defensive: check if row.symptoms exists and is a string
                 if (!row.symptoms || typeof row.symptoms !== 'string') {
                     console.warn("Skipping row with invalid symptoms:", row);
                     continue;
@@ -230,10 +236,18 @@ router.post("/api/analyze-symptoms", async (req, res) => {
         console.log("Analysis results:", JSON.stringify(results, null, 2));
         res.json(results);
     } catch (error) {
-        // Log the full error object, not just the message
         console.error("Error querying database:", error);
         res.status(500).json({ error: "An error occurred while analyzing symptoms.", details: error.message });
     }
+});
+
+// CSRF error handler (should be after all routes)
+app.use(function (err, req, res, next) {
+    if (err.code === 'EBADCSRFTOKEN') {
+        console.error("CSRF error: Invalid CSRF token");
+        return res.status(403).json({ error: 'Invalid CSRF token' });
+    }
+    next(err);
 });
 
 
