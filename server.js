@@ -2,8 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
-const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const https = require('https');
 
@@ -39,6 +40,7 @@ const sessionStore = new MySQLStore({
   collection: process.env.SESSION_COLLECTION,
 });
 
+app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -61,16 +63,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false,
-//   store: sessionStore,
-//   cookie: { 
-//     secure: false, 
-//     maxAge: 1000 * 60 * 60 * 24 
-//   } // Set secure to true in production
-// }));
 
 app.use((req, res, next) => {
   const nonce = res.locals.nonce; // <-- now it's defined
@@ -116,7 +108,6 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use(cookieParser());
 app.use(csrf({ cookie: true }));
 
 // Honeypot trap middleware
