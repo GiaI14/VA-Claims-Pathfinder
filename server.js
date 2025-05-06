@@ -108,7 +108,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use(csrf({ cookie: true }));
+app.use(csrf());
 
 // Honeypot trap middleware
 app.use((req, res, next) => {
