@@ -71,7 +71,7 @@ async function analyzeSymptoms(event) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "CSRF-Token": csrfToken,
+        "CSRF-Token": csrfToken
       },
       body: JSON.stringify(symptomsData),
       credentials: "include",
