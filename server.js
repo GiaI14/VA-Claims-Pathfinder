@@ -41,6 +41,7 @@ const sessionStore = new MySQLStore({
 });
 
 app.use(cookieParser());
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -61,6 +62,7 @@ next();
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(csrf());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -107,8 +109,6 @@ const limiter = rateLimit({
   skip: (req) => req.ip === "127.0.0.1", 
 });
 app.use(limiter);
-
-app.use(csrf());
 
 // Honeypot trap middleware
 app.use((req, res, next) => {
