@@ -67,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req, res, next) => {
-  const nonce = res.locals.nonce; // <-- now it's defined
+  const nonce = res.locals.nonce; 
 
   helmet.contentSecurityPolicy({
     directives: {
@@ -96,9 +96,10 @@ app.use((req, res, next) => {
   })(req, res, next); // Call helmet's CSP middleware
 });
 
-// Logging middleware (for debugging)
 app.use((req, res, next) => {
   console.log('Generated Nonce:', res.locals.nonce);
+  console.log("Incomming X-CSRF-Token:", req.headers['x-csrf-token']);
+  console.log("Session cookie:", req.headers.cookies);
   next();
 });
 
