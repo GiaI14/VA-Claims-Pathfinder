@@ -23,7 +23,7 @@ const crypto = require('crypto');
 const { connect } = require('http2');
 
 const app = express();
-const port = 443;
+const port = 3000;
 
 dotenv.config();
 
