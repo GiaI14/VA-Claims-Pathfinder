@@ -65,7 +65,7 @@ function tokenizeAndNormalize(symptoms) {
 router.post("/api/analyze-symptoms", (req, res, next) => {
     console.log("Session ID:", req.sessionID);
     console.log("Session:", req.session);
-    console.log("CSRF token sent by client:", req.headers['csrf-token']);
+    console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
     next();
 }, async (req, res) => {
     console.log("Received symptom data:", req.body);
