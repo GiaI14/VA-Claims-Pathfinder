@@ -23,7 +23,7 @@ const crypto = require('crypto');
 const { connect } = require('http2');
 
 const app = express();
-const port = 3000;
+const port = 443;
 
 dotenv.config();
 
@@ -48,10 +48,10 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore,
   cookie: { 
-    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+    httpOnly: true, 
     sameSite: 'lax',
-    secure: false, // Set to true in production to use HTTPS
-  } // Set secure to true in production
+    secure: true, 
+  }
 }));
 // Generate nonce for each request
 app.use((req, res, next) => {
