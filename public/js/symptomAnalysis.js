@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
 
-  // Add new entry
+  // new entry adding
   addEntryButton.addEventListener('click', addSymptomEntry);
 
-  // Remove entry (using event delegation)
+  //Removing entry 
   symptomEntriesContainer.addEventListener('click', function(event) {
     if (event.target.classList.contains('remove-entry-button')) {
       removeSymptomEntry(event.target);
@@ -22,7 +22,7 @@ function addSymptomEntry() {
   const templateEntry = symptomEntriesContainer.querySelector('.symptom-entry');
   const newEntry = templateEntry.cloneNode(true);
   
-  // Clear any input values in the cloned entry
+  // Clearing values in the cloned entry
   newEntry.querySelector('.symptoms').value = '';
   newEntry.querySelector('.body-part').selectedIndex = 0;
 
@@ -71,11 +71,13 @@ async function analyzeSymptoms(event) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "CSRF-Token": csrfToken
+        "X-CSRF-Token": csrfToken
       },
       body: JSON.stringify(symptomsData),
       credentials: "include",
     });
+
+    console.log("CSRF token being sent:", csrfToken);
 
     if (!response.ok) throw new Error("Failed to analyze symptoms");
 
@@ -88,45 +90,6 @@ async function analyzeSymptoms(event) {
   }
 }
 
-// Keep your existing displayResults function as it is
-// function displayResults(data) {
-//   const resultsContainer = document.getElementById("results");
-//   resultsContainer.innerHTML = ""; // Clear previous results
-
-//   if (!data || data.length === 0) {
-//     resultsContainer.innerHTML = "<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>";
-//     return;
-//   }
-
-//   data.forEach((entry) => {
-//     const section = document.createElement("div");
-//     section.classList.add("result-section");
-
-//     let htmlContent = `<h3>Affected System: ${entry.system}</h3>`;
-
-//     if (entry.message) {
-//       htmlContent += `<p>${entry.message}</p>`;
-//     } else if (entry.possibleConditions && entry.possibleConditions.length > 0) {
-//       htmlContent += "<h4>Possible Conditions:</h4><ul>";
-//       entry.possibleConditions.forEach((condition) => {
-//         htmlContent += `
-//           <li class="condition">
-//             <strong>${condition.condition_name}</strong> (${condition.medical_code})
-//             <br>Match Percentage: ${condition.match_percentage}%
-//             ${condition.is_presumptive ? '<br><span class="presumptive">Presumptive Condition</span>' : ''}
-            
-//           </li>
-//         `;
-//       });
-//       htmlContent += "</ul>";
-//     } else {
-//       htmlContent += "<p>No specific conditions matched. Please provide more detailed symptoms.</p>";
-//     }
-
-//     section.innerHTML = htmlContent;
-//     resultsContainer.appendChild(section);
-//   });
-// }
 
 function displayResults(data) {
   const resultsContainer = document.getElementById("results");
