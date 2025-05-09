@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
