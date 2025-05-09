@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 
 const calculatorRoutes = require('./routes/calculatorRoutes');
 const { connectToDatabase, getDb } = require('./data/database');
@@ -20,7 +20,6 @@ const authRoutes = require('./routes/auth');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const crypto = require('crypto');
-const { connect } = require('http2');
 
 const app = express();
 const port = 3000;
@@ -249,8 +248,8 @@ const certificate = fs.readFileSync('server.cert', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
 // Start HTTPS server
-https.createServer(credentials, app).listen(port, '0.0.0.0', () => {
-  console.log(`HTTPS Server running at https://67.205.168.90:${port}/`);
+http.createServer(app).listen(port, '0.0.0.0', () => {
+  console.log(`HTTP Server running at https://67.205.168.90:${port}/`);
 });
 
     // Handle server startup errors
