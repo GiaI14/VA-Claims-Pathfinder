@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 
 router.post('/calculate-disability', (req, res) => {
-  let { ratings, spouse, childrenUnder18, childrenOver18, numParents } = req.body
+  try {
+    let { ratings, spouse, childrenUnder18, childrenOver18, numParents } = req.body
 
   console.log('Received request with:', {
     ratings,
@@ -18,14 +19,14 @@ router.post('/calculate-disability', (req, res) => {
     ratings.length === 0 ||
     ratings.some(r => typeof r !== 'number' || r < 0 || r > 100)
   ) {
-    return res.json({
+    return res.status(400).json({
       error:
         'Invalid or missing ratings input. Ratings should be an array of numbers between 0 and 100.'
-    })
+    });
   }
 
   // Default values for spouse and children
-  spouse = !!spouse // Convert to boolean
+  spouse = !!spouse
   childrenUnder18 = childrenUnder18 || 0
   childrenOver18 = childrenOver18 || 0
   numParents = numParents || 0
@@ -226,6 +227,12 @@ router.post('/calculate-disability', (req, res) => {
     roundedRating,
     totalCompensation: totalCompensation.toFixed(2)
   })
-})
+}catch (err) {
+    console.error('Error in /calculate-disability:', err);
+    res.status(500).json({
+      error: 'An error occurred while calculating the disability compensation. Please try again.'
+    });
+  }
+});
 
 module.exports = router
