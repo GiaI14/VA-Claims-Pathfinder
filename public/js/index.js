@@ -55,6 +55,7 @@ async function calculateDisability() {
         const response = await fetch("/api/calculate-disability", {
             method: "POST",
             headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken},
+            credintials: "same-origin",
             body: JSON.stringify({ ratings, spouse, childrenUnder18, childrenOver18, numParents })
         });
 
