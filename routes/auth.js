@@ -34,6 +34,38 @@ router.get('/forgot-password', (req, res) => {
         successMessage: null
     });
 });
+////////////////////////////////////////////////////////////////////////////////////
+router.get('/reset-password', async (req, res) => {
+    const token = req.query.token;
+    if (!token) {
+        return res.render('reset-password', {
+            csrfToken: req.csrfToken(),
+            errorMessage: 'Missing or invalid token'
+        });
+    }
+
+    // Check if token is valid and not expired
+    const [users] = await pool.query(
+        'SELECT * FROM users WHERE resetToken = ? AND resetTokenExpiration > NOW()',
+        [token]
+    );
+    const user = users[0];
+
+    if (!user) {
+        return res.render('reset-password', {
+            csrfToken: req.csrfToken(),
+            errorMessage: 'Invalid or expired token'
+        });
+    }
+
+    // Render the reset-password form, pass the token to the view
+    res.render('reset-password', {
+        csrfToken: req.csrfToken(),
+        errorMessage: null,
+        token 
+    });
+});
+
 /////////////////////////////////////////////////////////////////////////////////////
 router.post('/forgot-password', async (req, res) => {
     try {
