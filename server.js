@@ -103,7 +103,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next)=> {
-  console.error('Express error:", err);
+  console.error('Express error:', err);
     error: err.message || "Internal Server Error"
   });
 });
