@@ -102,6 +102,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((err, req, res, next)=> {
+  console.error('Express error:", err);
+    error: err.message || "Internal Server Error"
+  });
+});
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
