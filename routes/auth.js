@@ -18,18 +18,12 @@ const pool = mysql.createPool({
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
     logger: true,
     debug: true,
-    tls: {
-        rejectUnauthorized: false
-    }
 });
 
 
@@ -73,11 +67,9 @@ router.post('/forgot-password', async (req, res) => {
             });
         }
 
-        //Generate token and expiration
         const token = crypto.randomBytes(32).toString('hex');
         const expiresAt = new Date(Date.now() + 3600000);
 
-        // Store token in database
         await pool.query(
             'UPDATE users SET resetToken = ?, resetTokenExpiration = ? WHERE email = ?',
             [token, expiresAt, user.email]
