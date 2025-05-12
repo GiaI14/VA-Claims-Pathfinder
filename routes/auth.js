@@ -25,6 +25,13 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+transporter.verify(function(error, success) {
+    if (error) {
+        console.error('SMTP connection error:', error);
+    } else {
+        console.log('SMTP server is ready to take messages');
+    }
+});
 
 router.get('/forgot-password', (req, res) => {
     res.render('forgot-password', {
@@ -33,7 +40,7 @@ router.get('/forgot-password', (req, res) => {
         successMessage: null
     });
 });
-////////////////////////////////////////////////////////////////////////////////////
+
 router.get('/reset-password', async (req, res) => {
     const token = req.query.token;
     if (!token) {
@@ -43,7 +50,6 @@ router.get('/reset-password', async (req, res) => {
         });
     }
 
-    // Check if token is valid and not expired
     const [users] = await pool.query(
         'SELECT * FROM users WHERE resetToken = ? AND resetTokenExpiration > NOW()',
         [token]
@@ -57,7 +63,6 @@ router.get('/reset-password', async (req, res) => {
         });
     }
 
-    // Render the reset-password form, pass the token to the view
     res.render('reset-password', {
         csrfToken: req.csrfToken(),
         errorMessage: null,
@@ -65,10 +70,8 @@ router.get('/reset-password', async (req, res) => {
     });
 });
 
-/////////////////////////////////////////////////////////////////////////////////////
 router.post('/forgot-password', async (req, res) => {
     try {
-        // Google users
         const [googleUsers] = await pool.query(
             'SELECT 1 FROM google_users WHERE email = ?',
             [req.body.email]
@@ -82,14 +85,12 @@ router.post('/forgot-password', async (req, res) => {
             });
         }
 
-        // Regular users
         const [users] = await pool.query(
             'SELECT * FROM users WHERE email = ?',
             [req.body.email]
         );
         const user = users[0];
 
-        // Show generic success message regardless of user existence
         if (!user) {
             return res.render('forgot-password', {
                 csrfToken: req.csrfToken(),
@@ -106,12 +107,10 @@ router.post('/forgot-password', async (req, res) => {
             [token, expiresAt, user.email]
         );
 
-        // Need to change to my domain upon completion.
         const resetLink = `${req.protocol}://${req.get('host')}/auth/reset-password?token=${token}`;
-        console.log('Reset link:', resetLink);
 
         const mailOptions = {
-            from: `"VA Claims Pathfinder" <${process.env.EMAIL_USER}>`,
+            from: process.env.SMTP_FROM,
             to: user.email,
             subject: "Reset Your Password",
             text: `You requested a password reset. Click the link below to reset your password:\n\n${resetLink}\n\nIf you did not request this, ignore this email.`,
@@ -122,47 +121,34 @@ router.post('/forgot-password', async (req, res) => {
                 <p>This link is valid for 1 hour. If you didn’t request this, you can safely ignore it.</p>
                 <br />
                 <p>Best regards,<br>VA Claims Pathfinder</p>
-    `,
+            `,
         };
 
-        // Send email with token
-        transporter.sendMail(mailOptions, async (error) => {
-            if (error) {
-                console.error('Email failed:', error);
-                await pool.query(
-                    'UPDATE users SET resetToken = NULL, resetTokenExpiration = NULL WHERE email = ?',
-                    [user.email]
-                );
+        await transporter.sendMail(mailOptions);
 
-                return res.render('forgot-password', {
-                    csrfToken: req.csrfToken(),
-                    errorMessage: 'Failed to send email',
-                    successMessage: null
-                });
-            }
-
-            res.render('forgot-password', {
-                csrfToken: req.csrfToken(),
-                successMessage: 'Reset link sent if account exists',
-                errorMessage: null
-            });
-        });
-
-    } catch (error) {
-        console.error('System error:', error);
         res.render('forgot-password', {
             csrfToken: req.csrfToken(),
-            errorMessage: 'System error - please try again',
+            successMessage: 'Reset link sent if account exists',
+            errorMessage: null
+        });
+    } catch (error) {  // <-- This catch block was misplaced
+        console.error('Email failed:', error);
+        await pool.query(
+            'UPDATE users SET resetToken = NULL, resetTokenExpiration = NULL WHERE email = ?',
+            [req.body.email]  // Use req.body.email instead of user.email for safety
+        );
+        res.render('forgot-password', {
+            csrfToken: req.csrfToken(),
+            errorMessage: 'Failed to send email. Please try again.',
             successMessage: null
         });
     }
 });
-/////////////////////////////////////////////////////////////////////////////////////
+
 router.post('/reset-password', async (req, res) => {
     try {
         const { token, password } = req.body;
 
-        // Valid token
         const [users] = await pool.query(
             'SELECT * FROM users WHERE resetToken = ? AND resetTokenExpiration > NOW()',
             [token]
@@ -171,7 +157,6 @@ router.post('/reset-password', async (req, res) => {
 
         if (!user) throw new Error('Invalid token');
 
-        //Update password and clear token
         const hashedPassword = await bcrypt.hash(password, 12);
         await pool.query(
             'UPDATE users SET password = ?, resetToken = NULL, resetTokenExpiration = NULL WHERE id = ?',
@@ -188,3 +173,4 @@ router.post('/reset-password', async (req, res) => {
 });
 
 module.exports = router;
+
