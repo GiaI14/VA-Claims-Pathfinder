@@ -17,14 +17,12 @@ const pool = mysql.createPool({
 });
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
-        user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
-    logger: true,
-    debug: true,
 });
 
 
