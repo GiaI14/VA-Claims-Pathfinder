@@ -277,6 +277,10 @@ input[type="password"]:focus {
 }
 
 @media (max-width: 500px) {
+  main {
+    max-width: 95vw;
+    padding: 0.5rem;
+  }
   #sigup, #login {
     max-width: 95vw;
     padding: 1rem;
