@@ -12,6 +12,16 @@
   <%- include('includes/header', { nonce: nonce }) %>
     <main id="signup">
       <h1>Login</h1>
+ <% if (loggedOut) { %>
+    <div class="alert alert-success text-center my-4" role="alert">
+      You have successfully logged out.
+    </div>
+  <% } %>
+  <% if (locals.errorMessage) { %>
+    <div class="alert alert-danger">
+      <%= errorMessage %>
+    </div>
+  <% } %>
       <% if (locals.errorMessage) { %>
         <div class="alert alert-danger">
           <%= errorMessage %>
