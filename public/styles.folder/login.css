@@ -34,8 +34,10 @@ main {
   padding: 2rem;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 45, 114, 0.15); /* Blue-tinted shadow */
+  box-shadow: 0 4px 12px rgba(0, 45, 114, 0.15); /* Blue-tinted*/
   border: 2px solid #E0E0E0; /* Light gray border */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #signup h1, #login h1 {
@@ -274,3 +276,9 @@ input[type="password"]:focus {
   text-decoration: underline;
 }
 
+@media (max-width: 500px) {
+  #sigup, #login {
+    max-width: 95vw;
+    padding: 1rem;
+  }
+}
