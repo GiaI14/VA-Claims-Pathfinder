@@ -41,6 +41,10 @@ router.get('/forgot-password', (req, res) => {
     });
 });
 
+function isStrongPassword(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+}
+
 router.get('/reset-password', async (req, res) => {
     const token = req.query.token;
     if (!token) {
@@ -158,8 +162,25 @@ router.post('/forgot-password', async (req, res) => {
 
 router.post('/reset-password', async (req, res) => {
     try {
-        const { token, password } = req.body;
+        const { token, password, confirmPassword } = req.body;
 
+        if(password != confirmPassword) {
+            return res.render('reset-password', {
+                csrfToken: req.csrfToken(),
+                errorMessage: 'Passwords do not match.',
+                successMessage: null,
+                token
+            });
+        }
+        if (!isStrongPassword(password)) {
+            return res.render('reset-password', {
+                csrfToken: req.csrfToken(),
+                errorMessage: 'Password must be at least 8 characters and include upper and lower case letters, a number, and a special character.',
+                successMessage: null,
+                token
+            });
+        }
+        
         const [users] = await pool.query(
             'SELECT * FROM users WHERE resetToken = ? AND resetTokenExpiration > NOW()',
             [token]
