@@ -94,6 +94,13 @@
         }
       };
     </script>
+<script>
+    if (window.location.search.includes('loggedOut=true')) {
+      const url = new URL(window.location);
+      url.searchParams.delete('loggedOut');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  </script>
 
 </body>
 
