@@ -178,7 +178,8 @@ router.post('/reset-password', async (req, res) => {
     } catch (error) {
         res.render('reset-password', {
             csrfToken: req.csrfToken(),
-            errorMessage: 'Invalid or expired token'
+            errorMessage: 'Invalid or expired token',
+            successMessage: null
         });
     }
 });
