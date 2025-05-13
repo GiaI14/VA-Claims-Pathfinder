@@ -28,7 +28,6 @@ main {
   margin: 0 auto;
 }
 
-/* Forms */
 #signup, #login {
   max-width: 400px;
   margin: 2rem auto;
@@ -86,7 +85,6 @@ input[type="password"]:focus {
   box-shadow: 0 0 0 2px rgba(0, 45, 114, 0.2);
 }
 
-/* Alerts */
 .alert {
   padding: 0.75rem 1rem;
   margin-bottom: 1.25rem;
@@ -154,7 +152,6 @@ input[type="password"]:focus {
   border-bottom-style: solid;
 }
 
-/* Utility Classes */
 .text-accent {
   color: var(--accent-color);
 }
@@ -277,10 +274,3 @@ input[type="password"]:focus {
   text-decoration: underline;
 }
 
-#signup, #login {
-  max-width: 400px; /* reduce this to shrink horizontal width */
-  margin: 2rem auto;
-  padding: 1.5rem;
-  transform: scale(0.9);
-  transform-origin: top center;
-}
