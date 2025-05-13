@@ -20,6 +20,14 @@ body {
   line-height: 1.5;
 }
 
+main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 /* Forms */
 #signup, #login {
   max-width: 400px;
