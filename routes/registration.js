@@ -106,6 +106,7 @@ router.post('/signup', async function (req, res) {
 router.get('/login', function(req, res) {
   console.log('GET /login route hit');
   res.render('login', { 
+    loggedOut: req.query.loggedOut === 'true',
     csrfToken: req.csrfToken(), 
     errorMessage: null, 
     email: '',
