@@ -130,9 +130,6 @@ body {
   flex-direction: column;
 }
 
-main {
-  flex: 1;
-} 
  footer{
    background: #f8f9fa;
    text-align: center;
