@@ -46,10 +46,11 @@ router.get('/reset-password', async (req, res) => {
     if (!token) {
         return res.render('reset-password', {
             csrfToken: req.csrfToken(),
-            errorMessage: 'Missing or invalid token'
+            errorMessage: 'Missing or invalid token',
+            successMessage: null =
         });
     }
-
+   try {
     const [users] = await pool.query(
         'SELECT * FROM users WHERE resetToken = ? AND resetTokenExpiration > NOW()',
         [token]
@@ -59,16 +60,26 @@ router.get('/reset-password', async (req, res) => {
     if (!user) {
         return res.render('reset-password', {
             csrfToken: req.csrfToken(),
-            errorMessage: 'Invalid or expired token'
+            errorMessage: 'Invalid or expired token',
+            successMessage: null
         });
     }
 
     res.render('reset-password', {
         csrfToken: req.csrfToken(),
         errorMessage: null,
+        successMessage: null,
         token 
     });
-});
+}catch (error) {
+       console.error(error);
+       res.render('reset-password', {
+           csrfToken: req.csrfToken(),
+           errorMessage: 'Server error',
+           successMessage: null
+       });
+   }
+}); 
 
 router.post('/forgot-password', async (req, res) => {
     try {
