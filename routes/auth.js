@@ -143,7 +143,7 @@ router.post('/forgot-password', async (req, res) => {
 
         res.render('forgot-password', {
             csrfToken: req.csrfToken(),
-            successMessage: 'Reset link sent if account exists',
+            successMessage: 'If an account exists, a reset link has been sent to your email.',
             errorMessage: null
         });
     } catch (error) {  // <-- This catch block was misplaced
