@@ -94,8 +94,9 @@
         }
       };
     </script>
-<script>
+<script nonce="<%= nonce %>">
     if (window.location.search.includes('loggedOut=true')) {
+      console.log("Removing loggedOut form URL ');
       const url = new URL(window.location);
       url.searchParams.delete('loggedOut');
       window.history.replaceState({}, document.title, url.pathname + url.search);
