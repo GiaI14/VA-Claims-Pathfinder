@@ -47,7 +47,7 @@ router.get('/reset-password', async (req, res) => {
         return res.render('reset-password', {
             csrfToken: req.csrfToken(),
             errorMessage: 'Missing or invalid token',
-            successMessage: null =
+            successMessage: null 
         });
     }
    try {
