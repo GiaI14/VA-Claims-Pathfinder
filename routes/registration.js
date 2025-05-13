@@ -173,11 +173,11 @@ router.post('/logout', function (req, res) {
       }
       console.log('User logged out successfully'); 
       res.clearCookie('connect.sid'); 
-      return res.redirect('/?loggedOut=true');
+      return res.redirect('/login?loggedOut=true');
     });
   } else {
     console.log('No active session found'); 
-    return res.redirect('/?loggedOut=true');
+    return res.redirect('/login?loggedOut=true');
   }
 });
 
