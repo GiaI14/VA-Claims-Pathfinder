@@ -108,7 +108,7 @@ input[type="password"]:focus {
   border-bottom-style: solid;
 }
 
-#signup{
+#signup.btn {
   width: 100%;
   padding: 0.675rem; 
   background-color: var(--primary-color);
@@ -123,12 +123,12 @@ input[type="password"]:focus {
   letter-spacing: 0.45px; 
 }
 
-#signup:hover {
+#signup.btn:hover {
   background-color: var(--secondary-color);
   transform: translateY(-1px);
 }
 
-.btn-alt {
+#login.btn-alt {
   width: 100%;
   padding: 0.45rem; 
   background-color: white;
@@ -147,7 +147,7 @@ input[type="password"]:focus {
   text-decoration: none; 
 }
 
-.btn-alt:hover {
+#login.btn-alt:hover {
   background-color: var(--light-gray);
   color: var(--secondary-color);
   border-color: var(--secondary-color);
