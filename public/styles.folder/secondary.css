@@ -8,6 +8,7 @@ html, body {
 }
 
 .container {
+    flex: 1;
     max-width: 800px;
     margin: 80px auto;
     background-color: #ffffff;
