@@ -8,6 +8,7 @@ body {
 }
 
 .container {
+    flex: 1 0 auto;
     max-width: 800px;
     margin: 80px auto;
     background-color: #ffffff;
@@ -76,12 +77,11 @@ input[type="text"], input[type="number"] {
     margin-left: auto;
 }
 
-/* Adjust the width of the disability name input */
+
 .disability-entry .disability-name {
     flex-grow: 1;
 }
 
-/* Adjust the width of the disability percentage input */
 .disability-entry .disability-percentage {
     width: 70px;
 }
@@ -92,7 +92,6 @@ input[type="text"], input[type="number"] {
     border-radius: 4px;
 }
 
-/* Specific styling for the Remove button */
 button[onclick^="removeDisability"], button[onclick^="removeSymptomEntry"] {
     background-color: #f44336;
     margin-bottom: 5px;
