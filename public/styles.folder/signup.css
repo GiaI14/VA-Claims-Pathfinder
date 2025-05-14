@@ -19,6 +19,14 @@ body {
   line-height: 1.5;
 }
 
+main {
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
 #signup-page {
   max-width: 360px;  /* Reduced width by 10% */
   margin: 1.8rem auto;  /* Reduced margin by 10% */
