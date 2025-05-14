@@ -6,7 +6,16 @@ html, body {
     padding: 0;
     background-color: #f4f7fa;
 }
-    
+
+#disabilityForm {
+  max-width: 700px;
+  margin: 0 auto;   
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 h1, h2 {
     color: #2a4b8e;
 }
