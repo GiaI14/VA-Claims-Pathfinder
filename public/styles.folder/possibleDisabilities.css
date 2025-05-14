@@ -3,16 +3,12 @@ html, body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: #f4f7fa;
-    margin-top: 80px;
-}
-main { 
-    flex: 1 0 auto;
 }
 
 .container {
-    flex: 1 0 auto;
+    flex: 1;
     max-width: 800px;
     margin: 80px auto;
     background-color: #ffffff;
