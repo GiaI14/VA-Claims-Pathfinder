@@ -130,6 +130,8 @@ body {
 }
 
 footer{
+   width: 100%;
+   flex-shrink: 0;
    background: #f8f9fa;
    text-align: center;
    padding: 1rem 0;
