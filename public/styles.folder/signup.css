@@ -108,7 +108,7 @@ input[type="password"]:focus {
   border-bottom-style: solid;
 }
 
-#signup-page .btn {
+#signup{
   width: 100%;
   padding: 0.675rem; 
   background-color: var(--primary-color);
@@ -123,7 +123,7 @@ input[type="password"]:focus {
   letter-spacing: 0.45px; 
 }
 
-#signup-page .btn:hover {
+#signup:hover {
   background-color: var(--secondary-color);
   transform: translateY(-1px);
 }
