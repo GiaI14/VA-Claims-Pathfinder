@@ -6,30 +6,6 @@ html, body {
     padding: 0;
     background-color: #f4f7fa;
 }
-
-.container {
-    flex: 1;
-    margin-top: 80px;
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-#disabilityForm {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
-    margin-bottom: 40px;
-    width: 100%; /* Ensures the form fills the container width */
-    max-width: 800px; /* Restricts form to a max width */
-    margin-left: auto;
-    margin-right: auto; /* Centers the form */
-}
-
     
 h1, h2 {
     color: #2a4b8e;
