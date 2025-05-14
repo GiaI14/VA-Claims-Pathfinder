@@ -9,9 +9,7 @@
   --li-hover-color: #d2f4f8; 
 }
 
-html, body {
-  height: 100%;
-  box-sizing: border-box;
+body {
   font-family: 'Arial', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
