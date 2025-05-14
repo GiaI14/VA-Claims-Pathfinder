@@ -17,6 +17,14 @@ main.container {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+#symptom-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
 h1, h2 {
     color: #2a4b8e;
 }
