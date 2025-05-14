@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="styles.folder/secondary.css" />
 
   <body>
+ <div class="page-wrapper">
     <%- include('includes/header', { nonce: nonce }) %>
 
       <div class="container">
@@ -38,7 +39,9 @@
           document.getElementById('disabilities').addEventListener('click', handleDisabilityRemoval);
         });
       </script>
+     <div class="spacer"></div>
     <%- include('includes/footer') %>
+ <div>
   </body>
 
 </html>
