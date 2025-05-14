@@ -7,6 +7,9 @@ html, body {
     background-color: #f4f7fa;
     margin-top: 80px;
 }
+main { 
+    flex: 1 0 auto;
+}
 
 .container {
     flex: 1 0 auto;
