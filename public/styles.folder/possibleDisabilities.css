@@ -252,6 +252,7 @@ button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]
       margin: 60px auto 20px;
       padding: 15px;
       border-sizing: border-box;
+      width:100%;
     }
   
     h1 {
