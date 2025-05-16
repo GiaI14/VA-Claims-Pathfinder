@@ -91,8 +91,8 @@ input[type="text"], input[type="number"] {
 
 #secondaryConditions {
     width: 700px;
-    margin: 20px auto 10 auto;
-    padding: 15px;
+    margin: 20px auto 0 auto;
+    padding: 20px;
     background-color: #e0f7fa;
     border-radius: 4px;
 }
