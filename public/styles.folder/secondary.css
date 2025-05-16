@@ -92,7 +92,7 @@ input[type="text"], input[type="number"] {
 #secondaryConditions {
     width: 700px;
     margin: 20px auto 10 auto;
-    padding: 20px;
+    padding: 15px;
     background-color: #e0f7fa;
     border-radius: 4px;
 }
