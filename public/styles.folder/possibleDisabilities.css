@@ -99,13 +99,13 @@ input[type="text"], input[type="number"] {
     width: 70px;
 }
 #results {
-    margin-top: 20px auto;
+    margin-top: 20px;
     padding: 15px;
     background-color: #e0f7fa;
     border-radius: 4px;
     max-width: 800px;
+    width: 100%;
     box-sizing: border-box;
-}
 }
 
 button[onclick^="removeDisability"], button[onclick^="removeSymptomEntry"] {
