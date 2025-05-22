@@ -99,7 +99,7 @@ input[type="text"], input[type="number"] {
     width: 70px;
 }
 #results {
-    margin-top: 20px auto;
+    margin: 20px auto;
     padding: 15px;
     background-color: #e0f7fa;
     border-radius: 4px;
