@@ -10,6 +10,14 @@
         <div id="disabilities"></div>
     </div>
 
+ <button id="calculate-btn">Calculate</button>
+
+    <div id="results-container">
+        <h2>Exact Combined Rating: <span id="exactRating">0%</span></h2>
+        <h2>VA Rounded Rating: <span id="roundedRating">0%</span></h2>
+        <h2>Estimated Compensation: <span id="result">$0</span></h2>
+    </div>
+
     <div id="dependents-container">
         <h2>Dependents</h2>
         <label for="spouse" id="spouse-label">
@@ -31,14 +39,6 @@
 
     <!-- Honeypot Field -->
     <input type="text" name="honeypot" style="display: none;"> 
-
-    <button id="calculate-btn">Calculate</button>
-
-    <div id="results-container">
-        <h2>Exact Combined Rating: <span id="exactRating">0%</span></h2>
-        <h2>VA Rounded Rating: <span id="roundedRating">0%</span></h2>
-        <h2>Estimated Compensation: <span id="result">$0</span></h2>
-    </div>
 
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/index.js" nonce="<%= nonce %>"></script>
