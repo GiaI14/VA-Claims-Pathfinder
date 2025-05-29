@@ -147,20 +147,38 @@ footer{
   .nav-menu {
     position: fixed;
     left: -100%;
-    top: 5rem;
+    top: 0;
     flex-direction: column;
     background-color: var(--secondary-color);
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
     text-align: center;
     transition: left var(--transition-speed) ease-in-out;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    padding-top: 100px;
   }
+
+  .nav-menu li {
+    margin: 1rem 0;
+    width: 100%;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .nav-menu li form {
-    margin-left: 0; /* Remove margin for mobile alignment */
-    width: auto; /* Ensure it doesn't stretch unnecessarily */
-    display: block; /* Stack vertically in mobile view */
-    text-align: center; /* Center-align content in mobile view */
+    margin-left: 0; 
+    width: 100%; 
+    display: block; 
+    text-align: center;
   }
+
   .nav-menu.active {
     left: 0;
   }
