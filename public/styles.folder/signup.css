@@ -8,12 +8,13 @@
   --input-border-color: #5A6D7B;  /* VA gray */
   --error-color: #E31C3D;         /* VA red */
   --success-color: #2E8540;       /* VA green */
-  --light-gray: #F4F7FA;          /* For subtle backgrounds */
+  --light-gray: #F4F7FA; 
+  --maroon-color: #440705; 
 }
 
 body {
   padding-top: 135px;  
-  background-color: var(--accent-color);
+  background-color: var(--light-gray);
   color: var(--text-color);
   font-family: 'Source Sans Pro', Arial, sans-serif;
   line-height: 1.5;
