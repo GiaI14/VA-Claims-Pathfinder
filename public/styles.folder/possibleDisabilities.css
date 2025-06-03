@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-    background-color: #290303;
+    background-color: #2f4141;
 }
 
 input[type="text"], input[type="number"] {
@@ -166,7 +166,7 @@ button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]
 }
 
 .analyze-section button: hover {
-    background-color: #486262;
+    background-color: #2f4141;
 }
 
 .body-part {
