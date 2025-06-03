@@ -1,15 +1,16 @@
 :root {
   /* VA Official Color Scheme */
-  --primary-color: #844f39;       /* VA navy blue */
-  --secondary-color: #023047;     /* Dark rich blue */
+  --primary-color: #440705;       /* VA navy blue */
+  --secondary-color: #202c2c;     /* Dark rich blue */
   --accent-color:  #c4b687;   /* VA gold */
   --background-color: #FFFFFF;    /* Pure white */
   --text-color: #212121;          /* Near-black for readability */
   --input-border-color: #5A6D7B;  /* VA gray */
-  --underline: #70a288;
+  --underline: #2f4141;
   --error-color: #E31C3D;         /* VA red */
   --success-color: #2E8540;       /* VA green */
-  --light-gray: #F4F7FA;          /* For subtle backgrounds */
+  --light-gray: #F4F7FA;
+  --gray-background: #041110/* For subtle backgrounds */
 } 
 
 body {
@@ -55,7 +56,7 @@ main {
   left: 25%;
   width: 50%;
   height: 3px;
-  background-color: var(--underline); /* Gold underline */
+  background-color: var(--underline);
 }
 
 .form-control {
@@ -105,7 +106,7 @@ input[type="password"]:focus {
 .btn {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--primary-color);
+  background-color: var(--gray-background);
   color: white;
   border: none;
   border-radius: 4px;
