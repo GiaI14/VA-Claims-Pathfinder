@@ -17,7 +17,7 @@ html, body {
 }
 
 h1, h2 {
-    color: #2a4b8e;
+    color: #202c2c;
 }
 
 h1 {
@@ -28,7 +28,7 @@ h1 {
 }
 
 button {
-    background-color: #2a4b8e;
+    background-color: #440705;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -40,7 +40,7 @@ button {
 }
 
 button:hover {
-    background-color: #1a3c7d;
+    background-color: #290303;
 }
 
 input[type="text"], input[type="number"] {
@@ -93,7 +93,7 @@ input[type="text"], input[type="number"] {
     width: 700px;
     margin: 20px auto 10px auto;
     padding: 20px;
-    background-color: #e0f7fa;
+    background-color: #486262;
     border-radius: 4px;
 }
 
