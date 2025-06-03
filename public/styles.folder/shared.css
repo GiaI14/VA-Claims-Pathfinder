@@ -7,6 +7,8 @@
   --transition-speed: 0.3s;
   --green-hover:#2ecc71;
   --li-hover-color: #d2f4f8; 
+  --gold-logo: #e9b424;
+  --gray-background: #3a3a3a;
 }
 
 body {
@@ -23,7 +25,11 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 2rem 10%;
-  background-color: var(--secondary-color);
+  background-image: url("/Studio-Project.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
   position: fixed;
   top: 0;
   left: 0;
@@ -110,6 +116,20 @@ body {
 .logo {
   font-size: 1.7rem;
   color: var(--nav-text-color);
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h1, h2, h3 {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.logo {
+  font-size: 2rem;
+  font-family: 'Bebas Neue';
+  color: var(--gold-logo);
   text-decoration: none;
   font-weight: bold;
   text-transform: uppercase;
