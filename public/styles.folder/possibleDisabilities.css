@@ -31,20 +31,20 @@ main.container {
 }
 
 h1, h2 {
-    color: #2a4b8e;
+    color: #202c2c;
 }
 
 h1 {
     text-align: center;
     width: 100%;
     margin: 0 auto 20px;
-    color: #2a4b8e; /* Optional: keeps your existing color */
+    color: #202c2c; /* Optional: keeps your existing color */
     font-size: 2.5em; /* Optional: adjust size as needed */
 }
 
 
 button {
-    background-color: #2a4b8e;
+    background-color: #440705;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-    background-color: #1a3c7d;
+    background-color: #290303;
 }
 
 input[type="text"], input[type="number"] {
@@ -157,7 +157,7 @@ button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]
 
 
 .analyze-section button {
-    background-color: #4CAF50; /* Blue color for Analyze */
+    background-color: #2f4141
     color: white;
     margin-top: 80px;
     font-weight: bold;
@@ -166,7 +166,7 @@ button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]
 }
 
 .analyze-section button:hover {
-    background-color: #45a049;
+    background-color: #384e4e;
 }
 
 .body-part {
