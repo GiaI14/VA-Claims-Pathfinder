@@ -1,10 +1,7 @@
 :root {
     --primary-color: #855743;
-    /* VA Navy Blue */
-    --secondary-color: #023047;
-    /* Dark Rich Blue */
+    --secondary-color: #202c2c;
     --accent-color: #c4b687;
-    /* VA Gold */
     --background-color: #FFFFFF;
     /* Pure White */
     --text-color: #212121;
@@ -230,7 +227,7 @@ select {
 }
 
 #toggle-dependents:hover {
-    background-color: #014271;
+    background-color: #2f4141;
 }
 
 .dependents-row {
