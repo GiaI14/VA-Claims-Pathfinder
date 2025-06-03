@@ -122,13 +122,8 @@ body {
   letter-spacing: 1px;
 }
 
-h1, h2, h3 {
-  font-family: 'Bebas Neue', sans-serif;
-}
-
 .logo {
   font-size: 2rem;
-  font-family: 'Bebas Neue';
   color: var(--gold-logo);
   text-decoration: none;
   font-weight: bold;
