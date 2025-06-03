@@ -108,14 +108,19 @@ input[type="text"], input[type="number"] {
     box-sizing: border-box;
 }
 
-button[onclick^="removeDisability"], button[onclick^="removeSymptomEntry"] {
-    background-color: #f44336;
-    margin-bottom: 5px;
-    margin-right: 20px;
+button.remove-entry-button {
+  background-color: #44005;
+  color: white;
+  margin-bottom: 5px;
+  margin-right: 20px;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-button[onclick^="removeDisability"]:hover, button[onclick^="removeSymptomEntry"]:hover {
-    background-color: #d32f2f;
+button.remove-entry-button:hover {
+  background-color: #290303;
 }
 
 .symptom-entry {
