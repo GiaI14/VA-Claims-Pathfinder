@@ -65,6 +65,7 @@ app.use(csrf());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'images')));
 
 // Helmet CSP middleware with dynamic nonce
 app.use((req, res, next) => {
