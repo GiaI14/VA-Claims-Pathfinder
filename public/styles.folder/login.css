@@ -159,11 +159,20 @@ input[type="password"]:focus {
   color: var(--accent-color);
 }
 
-.g_id_signin {
-  display: inline-block;
+.g_id_signin-wrapper {
   width: 100%;
-  max-width: 400px; /* to match form width */
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 1rem;
 }
+
+.g_id_signin {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex;
+  justify-content: center;
+}
+
 .gsi-material-button {
   -moz-user-select: none;
   -webkit-user-select: none;
