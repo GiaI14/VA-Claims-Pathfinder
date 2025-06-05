@@ -41,6 +41,7 @@
             <button class="btn">Log in</button>
             <div style="margin-top: 24px;">
               <!-- Official Google Sign-In Button -->
+             <div class="g_id_signin-wrapper">
               <div id="g_id_onload" 
                 data-client_id="<%= googleClientId %>" 
                 data-context="signin"
@@ -52,6 +53,7 @@
               data-text="sign_in_with" data-size="large" data-logo_alignment="left">
             </div>
             </div>
+            >/div>
           </form>
           <div id="auth-alternative">
             <a class="btn btn-alt" href="/signup">Create a new user</a>
