@@ -100,7 +100,7 @@ input[type="text"], input[type="number"] {
 }
 #results {
     margin: 20px auto;
-    padding: 15px;
+    padding: 20px;
     background-color: #e0f7fa;
     border-radius: 4px;
     max-width: 800px;
