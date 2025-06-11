@@ -7,7 +7,7 @@ html, body {
     background-color: #f4f7fa;
 }
 
-.container {
+main.container {
     flex: 1;
     max-width: 800px;
     margin: 40px auto;
