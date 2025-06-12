@@ -30,7 +30,7 @@ main {
 }
 
 #signup, #login {
-  max-width: 600px;
+  max-width: 450px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: white;
