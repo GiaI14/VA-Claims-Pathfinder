@@ -169,9 +169,9 @@ input[type="password"]:focus {
 }
 
 .g_id_signin {
-  width: 100% !important;
+  width: 99% !important;
   max-width: 100% !important;
-  display: block;
+  display: flex;
   justify-content: center;
 }
 
