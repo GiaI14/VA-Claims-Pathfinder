@@ -129,6 +129,7 @@ input[type="password"]:focus {
   background-color: white;
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
+  width: 100%;
 }
 
 .btn-alt:hover {
