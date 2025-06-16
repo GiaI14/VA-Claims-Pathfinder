@@ -21,10 +21,15 @@ router.post('/contact', async (req, res) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail({
+      from: req.body.email,
+      to: 'vaclaimspathfinder@gmail.com',
+      subject: 'New Contact Form Submission',
+      text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`
+    });
     res.send('Message sent!');
-  } catch (err) {
-    console.error('Error sending email:', err.stack || err);
+  } catch (error) {
+    console.error('Email sending error:', error);
     res.status(500).send('Failed to send message.');
   }
 });
