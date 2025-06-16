@@ -21,21 +21,31 @@ transporter.verify(function (error, success) {
 });
 
 router.post('/', async (req, res) => {
-  const { name, email, message } = req.body;
-
-  const mailOptions = {
-    from: process.env.SMTP_FROM,
-    to: process.env.CONTACT_RECIPIENT_EMAIL,
-    subject: `Contact Form Submission from ${name}`,
-    text: `Email: ${email}\n\nMessage:\n${message}`,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).send('Message sent');
+    console.log('Incoming contact request:', req.body);
+
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+      console.warn('Missing required fields');
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: process.env.CONTACT_RECEIVER_EMAIL,
+      subject: `New contact form submission from ${name}`,
+      text: message,
+      html: `<p><strong>Email:</strong> ${email}</p><p>${message}</p>`,
+    };
+
+    //const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.messageId);
+
+    res.status(200).json({ message: 'Message sent successfully' });
   } catch (err) {
-    console.error('Failed to send contact email:', err);
-    res.status(500).send('Failed to send message');
+    console.error('Error in /contact route:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
