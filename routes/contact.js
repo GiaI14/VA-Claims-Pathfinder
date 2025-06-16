@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
   try {
     console.log('Incoming contact request:', req.body);
 
-    const { name, email, message } = req.body;
+    const { name, email, message, phone } = req.body;
 
     if (!name || !email || !message) {
       console.warn('Missing required fields');
