@@ -39,13 +39,14 @@ router.post('/', async (req, res) => {
       html: `<p><strong>Email:</strong> ${email}</p><p>${message}</p>`,
     };
 
-    //const info = await transporter.sendMail(mailOptions);
+    // ✅ Actually send the email and declare info
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.messageId);
 
     res.status(200).json({ message: 'Message sent successfully' });
   } catch (err) {
     console.error('Error in /contact route:', err);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 });
 
