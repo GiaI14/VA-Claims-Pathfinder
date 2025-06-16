@@ -138,6 +138,28 @@
                     document.getElementById('calculate-btn').addEventListener('click', calculateDisability);
                 });
             </script>
+<section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
+  <h2>Contact Us</h2>
+  <form id="contact-form" method="POST" action="/contact">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+    <div>
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" />
+    </div>
+    <div>
+      <label for="message">Message:</label><br />
+      <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
+    <button type="submit">Send</button>
+  </form>
+</section>
 <%- include('includes/footer') %>
 </body>
 </html>
