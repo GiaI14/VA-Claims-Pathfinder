@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { transporter } = require('./auth'); // adjust path if needed
-
+const { transporter } = require('./auth'); 
 router.get('/contact', (req, res) => {
   res.render('contact', {
     csrfToken: req.csrfToken(),
