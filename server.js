@@ -172,7 +172,7 @@ app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/api', secondaryConditionRoutes);
 app.use('/auth', authRoutes);
-app.use('/', contactRouter); //test
+app.use('/contact', contactRouter); //test
 
 // Main routes
 app.get('/', (req, res) => {
