@@ -35,9 +35,15 @@ router.post('/', async (req, res) => {
       from: process.env.SMTP_FROM,
       to: process.env.CONTACT_RECEIVER_EMAIL,
       subject: `New contact form submission from ${name}`,
-      text: message,
-      html: `<p><strong>Email:</strong> ${email}</p><p>${message}</p>`,
-    };
+      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'Not provided'}\n\nMessage:\n${message}`,
+    html: `
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message}</p>
+  `,
+};
 
     // ✅ Actually send the email and declare info
     const info = await transporter.sendMail(mailOptions);
