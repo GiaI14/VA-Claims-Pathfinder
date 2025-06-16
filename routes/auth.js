@@ -205,9 +205,7 @@ router.post('/reset-password', async (req, res) => {
     }
 });
 
-module.exports = {
-    router,
-    transporter,
-};
+module.exports = router
+
 
 
