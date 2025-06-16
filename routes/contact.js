@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { transporter } = require('../auth'); // adjust path if needed
+const { transporter } = require('./auth'); // adjust path if needed
 
 router.post('/contact', async (req, res) => {
   const { name, email, phone, message } = req.body;
