@@ -18,6 +18,7 @@ const registrationRoutes = require('./routes/registration');
 const symptomRoutes = require('./routes/symptomRoutes');
 const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
+const contactRouter = require('./routes/contact');
 
 dotenv.config();
 
@@ -171,7 +172,7 @@ app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/api', secondaryConditionRoutes);
 app.use('/auth', authRoutes);
-
+app.use('/', contactRouter);
 // Main routes
 app.get('/', (req, res) => {
   console.log('Root route - isAuth:', res.locals.isAuth);
