@@ -138,7 +138,7 @@
                     document.getElementById('calculate-btn').addEventListener('click', calculateDisability);
                 });
             </script>
-<% if (message === 'sent') { %>
+<% if (req.query.message === 'sent') { %>
   <div id="popupMessage" class="alert alert-success" style="
     background-color: #d4edda;
     color: #155724;
