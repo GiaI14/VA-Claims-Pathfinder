@@ -1,37 +1,42 @@
-// const express = require('express');
-// const router = express.Router();
-// const { transporter } = require('./auth');
+const express = require('express');
+const router = express.Router();
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-// router.get('/contact', (req, res) => {
-//   res.render('contact', {
-//     csrfToken: req.csrfToken(),
-//     nonce: res.locals.nonce
-//   });
-// });
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
-// router.post('/contact', async (req, res) => {
-//   const { name, email, phone, message } = req.body;
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error('SMTP connection error:', error);
+  } else {
+    console.log('SMTP server ready for contact messages');
+  }
+});
 
-//   const mailOptions = {
-//     from: 'vaclaimspathfinder@gmail.com', // Replace with your verified sender email
-//     replyTo: email,                        
-//     to: 'vaclaimspathfinder@gmail.com',
-//     subject: 'New Contact Form Submission',
-//     text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\n\nMessage:\n${message}`
-//   };
+router.post('/contact', async (req, res) => {
+  const { name, email, message } = req.body;
 
-//   try {
-//     await transporter.sendMail({
-//       from: req.body.email,
-//       to: 'vaclaimspathfinder@gmail.com',
-//       subject: 'New Contact Form Submission',
-//       text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`
-//     });
-//     res.send('Message sent!');
-//   } catch (error) {
-//     console.error('Email sending error:', error);
-//     res.status(500).send('Failed to send message.');
-//   }
-// });
+  const mailOptions = {
+    from: process.env.SMTP_FROM,
+    to: process.env.CONTACT_RECIPIENT_EMAIL,
+    subject: `Contact Form Submission from ${name}`,
+    text: `Email: ${email}\n\nMessage:\n${message}`,
+  };
 
-// module.exports = router;
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Message sent');
+  } catch (err) {
+    console.error('Failed to send contact email:', err);
+    res.status(500).send('Failed to send message');
+  }
+});
+
+module.exports = router;
