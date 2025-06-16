@@ -141,6 +141,7 @@
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
   <form id="contact-form" method="POST" action="/contact">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div>
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" required />
