@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.messageId);
 
-    res.status(200).json({ message: 'Message sent successfully' });
+    res.redirect('/?message=sent');
   } catch (err) {
     console.error('Error in /contact route:', err);
     res.status(500).json({ message: 'Internal Server Error', error: err.message });
