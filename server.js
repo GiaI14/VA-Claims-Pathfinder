@@ -173,6 +173,7 @@ app.use('/', symptomRoutes);
 app.use('/api', secondaryConditionRoutes);
 app.use('/auth', authRoutes);
 app.use('/', contactRouter);
+
 // Main routes
 app.get('/', (req, res) => {
   console.log('Root route - isAuth:', res.locals.isAuth);
