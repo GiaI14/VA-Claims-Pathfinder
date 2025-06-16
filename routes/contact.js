@@ -20,7 +20,7 @@ transporter.verify(function (error, success) {
   }
 });
 
-router.post('/contact', async (req, res) => {
+router.post('/', async (req, res) => {
   const { name, email, message } = req.body;
 
   const mailOptions = {
