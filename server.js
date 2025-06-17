@@ -176,13 +176,18 @@ app.use('/contact', contactRoutes);
 
 // Main routes
 app.get('/', (req, res) => {
-  console.log('Root route - isAuth:', res.locals.isAuth);
-  console.log('CSRF Token:', res.locals.csrfToken);
-  res.render('index', { 
-    csrfToken: req.csrfToken(), 
-    nonce: res.locals.nonce,
-    message: req.query.message || null,
-  });
+  try {
+    console.log('Root route - isAuth:', res.locals.isAuth);
+    console.log('CSRF Token:', res.locals.csrfToken);
+    res.render('index', {
+      csrfToken: req.csrfToken(),
+      nonce: res.locals.nonce,
+      message: req.query.message || null,
+    });
+  } catch (err) {
+    console.error('Error in GET / route:', err.stack);
+    res.status(500).send('An error occurred on the server.');
+  }
 });
 
 app.get('/secondary', (req, res) => {
