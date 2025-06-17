@@ -11,6 +11,7 @@ router.get('/', function (req, res) {
   res.render('index', { 
     loggedOut: loggedOut,
     message: null
+  });
 });
 
 router.get('/signup', function (req, res) {
