@@ -139,50 +139,42 @@
                 });
             </script>
 
-  <style>
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #4CAF50;
-      color: white;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      opacity: 0;             /* Start hidden */
-      transition: opacity 0.6s ease-out;
-      z-index: 9999;
-      display: none;          /* Hidden initially */
-    }
-  </style>
 
 <% if (typeof message !== 'undefined' && message === 'success') { %>
-  <div id="toast" class="toast">Your message has been sent successfully!</div>
+  <div id="alert-message" class="alert-message">
+    Your message has been sent successfully!
+  </div>
 
   <script nonce="<%= nonce %>">
-    document.addEventListener('DOMContentLoaded', function () {
-      const toast = document.getElementById('toast');
-      if (toast) {
-        toast.style.display = 'block';  // Show the element
-        // Force a reflow so the browser registers the display change before changing opacity
-        toast.offsetHeight; 
-        toast.style.opacity = '1';       // Fade in
-
-        setTimeout(() => {
-          toast.style.opacity = '0';     // Fade out
-
-          // After fade-out completes, hide element and clean URL
-          setTimeout(() => {
-            toast.style.display = 'none';
-            const url = new URL(window.location);
-            url.searchParams.delete('message');
-            window.history.replaceState({}, document.title, url.pathname);
-          }, 600); // match the CSS transition duration
-        }, 3000); // show toast for 3 seconds
+    // Remove message from URL immediately
+    document.addEventListener('DOMContentLoaded', () => {
+      const url = new URL(window.location);
+      if (url.searchParams.has('message')) {
+        url.searchParams.delete('message');
+        window.history.replaceState({}, document.title, url.pathname + url.search);
       }
+      
+      // Hide alert after 60 seconds
+      setTimeout(() => {
+        const alertMsg = document.getElementById('alert-message');
+        if (alertMsg) alertMsg.style.display = 'none';
+      }, 60000);
     });
   </script>
+
+  <style>
+    .alert-message {
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #4CAF50;
+      background-color: #dff0d8;
+      color: #3c763d;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
 <% } %>
+
 
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
