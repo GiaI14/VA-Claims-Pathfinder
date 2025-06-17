@@ -139,9 +139,6 @@
                 });
             </script>
 
-<% if (typeof message !== 'undefined' && message === 'success') { %>
-  <div id="toast" class="toast">Your message has been sent successfully!</div>
-
   <style>
     .toast {
       position: fixed;
@@ -158,6 +155,9 @@
       display: none;          /* Hidden initially */
     }
   </style>
+
+<% if (typeof message !== 'undefined' && message === 'success') { %>
+  <div id="toast" class="toast">Your message has been sent successfully!</div>
 
   <script nonce="<%= nonce %>">
     document.addEventListener('DOMContentLoaded', function () {
