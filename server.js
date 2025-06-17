@@ -181,7 +181,7 @@ app.get('/', (req, res) => {
   res.render('index', { 
     csrfToken: req.csrfToken(), 
     nonce: res.locals.nonce });
-    message: req.query.message
+    message: req.query.message || null,
   });
 });
 
