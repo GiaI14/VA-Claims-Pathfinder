@@ -64,10 +64,16 @@ app.use(express.urlencoded({ extended: false }));
 // CSRF protection
 app.use((req, res, next) => {
   if (req.path === '/auth/google/callback') {
-    return next();
+    return next(); // skip CSRF for this route
   }
-  csrf(req, res, next); 
+  csrf()(req, res, (err) => {
+    if (err) {
+      return next(err);
+    }
+    next();
+  });
 });
+
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -130,7 +136,9 @@ app.use((req, res, next) => {
 
 // Middleware to pass CSRF token to all views
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
+  if(typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken();
+  }
   next();
 });
 
