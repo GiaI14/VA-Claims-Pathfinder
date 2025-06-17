@@ -126,7 +126,6 @@ app.use((req, res, next) => {
 // Middleware to pass CSRF token to all views
 app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
-  res.locals.flash = req.query.flash || null;
   next();
 });
 
