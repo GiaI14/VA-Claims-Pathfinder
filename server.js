@@ -62,7 +62,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // CSRF protection
-app.use(csrf());
+app.use((req, res, next) => {
+  if (req.path === '/auth/google/callback') {
+    return next(); 
+  }
+  csrf(req, res, next);
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
