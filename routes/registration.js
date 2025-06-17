@@ -8,7 +8,9 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 router.get('/', function (req, res) {
   const loggedOut = req.query.loggedOut === 'true';
-  res.render('index', { loggedOut: loggedOut });
+  res.render('index', { 
+    loggedOut: loggedOut,
+    message: null
 });
 
 router.get('/signup', function (req, res) {
