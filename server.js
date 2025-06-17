@@ -179,7 +179,7 @@ app.get('/', (req, res) => {
   try {
     console.log('Root route - isAuth:', res.locals.isAuth);
     console.log('CSRF Token:', res.locals.csrfToken);
-    console.log('Flash query:', req.query.flash);
+    console.log('Message query:', req.query.message);
     res.render('index', {
       csrfToken: req.csrfToken(),
       nonce: res.locals.nonce,
