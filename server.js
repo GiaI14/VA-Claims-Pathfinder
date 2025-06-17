@@ -131,10 +131,8 @@ app.use((req, res, next) => {
 
 // Middleware to pass CSRF token to all views
 app.use((req, res, next) => {
-  if(typeof req.csrfToken === 'function') {
     res.locals.csrfToken = req.csrfToken();
-  }
-  next();
+    next();
 });
 
 // Auth status and user loader
