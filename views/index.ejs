@@ -142,25 +142,6 @@
 <% if (typeof message !== 'undefined' && message === 'success') { %>
   <div id="toast" class="toast">Your message has been sent successfully!</div>
 
-  <script nonce="<%= nonce %>">
-    document.addEventListener('DOMContentLoaded', function () {
-      const toast = document.getElementById('toast');
-      if (toast) {
-        toast.style.display = 'block';
-        setTimeout(() => {
-          toast.style.opacity = '0';
-
-          // Optional: Clean up the URL after fade-out
-          setTimeout(() => {
-            const url = new URL(window.location);
-            url.searchParams.delete('message');
-            window.history.replaceState({}, document.title, url.pathname);
-          }, 600); // Wait for fade to finish
-        }, 3000);
-      }
-    });
-  </script>
-
   <style>
     .toast {
       position: fixed;
@@ -170,15 +151,38 @@
       color: white;
       padding: 16px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      opacity: 1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      opacity: 0;             /* Start hidden */
       transition: opacity 0.6s ease-out;
       z-index: 9999;
-      display: none;
+      display: none;          /* Hidden initially */
     }
   </style>
-<% } %>
 
+  <script nonce="<%= nonce %>">
+    document.addEventListener('DOMContentLoaded', function () {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.style.display = 'block';  // Show the element
+        // Force a reflow so the browser registers the display change before changing opacity
+        toast.offsetHeight; 
+        toast.style.opacity = '1';       // Fade in
+
+        setTimeout(() => {
+          toast.style.opacity = '0';     // Fade out
+
+          // After fade-out completes, hide element and clean URL
+          setTimeout(() => {
+            toast.style.display = 'none';
+            const url = new URL(window.location);
+            url.searchParams.delete('message');
+            window.history.replaceState({}, document.title, url.pathname);
+          }, 600); // match the CSS transition duration
+        }, 3000); // show toast for 3 seconds
+      }
+    });
+  </script>
+<% } %>
 
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
