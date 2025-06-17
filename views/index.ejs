@@ -139,8 +139,32 @@
                 });
             </script>
 
-
-
+<% if (message === 'success') { %>
+  <div id="toast" class="toast">Your message has been sent successfully!</div>
+  <script nonce="<%= nonce %>">
+    const toast = document.getElementById('toast');
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.opacity = '0';
+    }, 3000);
+  </script>
+  <style>
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      opacity: 1;
+      transition: opacity 0.6s ease-out;
+      z-index: 9999;
+      display: none;
+    }
+  </style>
+<% } %>
 
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
