@@ -185,7 +185,7 @@ app.get('/', (req, res) => {
       message: req.query.message || null,
     });
   } catch (err) {
-    console.error('Error in GET / route:', err.stack);
+    console.error('Error in GET / route:', err);
     res.status(500).send('An error occurred on the server.');
   }
 });
