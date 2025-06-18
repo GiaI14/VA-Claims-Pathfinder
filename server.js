@@ -178,8 +178,6 @@ app.use('/contact', contactRoutes);
 // Main routes
 app.get('/', (req, res) => {
   try {
-    console.log('Root route - isAuth:', res.locals.isAuth);
-    console.log('CSRF Token:', res.locals.csrfToken);
     console.log('Message query:', req.query.message);
     res.render('index', {
       csrfToken: req.csrfToken(),
