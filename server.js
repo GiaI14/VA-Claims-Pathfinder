@@ -169,6 +169,7 @@ app.get('/', (req, res) => {
 const csrfProtection = csrf();
 app.use(csrfProtection);
 
+
 // Register routes
 app.use('/api', calculatorRoutes);
 app.use(registrationRoutes);
@@ -268,14 +269,6 @@ startServer().catch((err) => {
 
 
 
-
-
-
-
-
-
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-console.log(googleClientId);
 
 
 
