@@ -67,7 +67,7 @@ app.use((req, res, next) => {
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", `'nonce-${nonce}'`, "https://accounts.google.com", "https://apis.google.com"],
+      scriptSrc: ["'self'", `"nonce-${nonce}"`, "https://accounts.google.com", "https://apis.google.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
       frameSrc: ["'self'", "https://accounts.google.com"],
       connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"],
