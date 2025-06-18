@@ -4,7 +4,6 @@ const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const csrfProtection = csrf(); //test
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const https = require('https'); // Use https for HTTPS server
@@ -12,6 +11,8 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+
+dotenv.config();
 
 const calculatorRoutes = require('./routes/calculatorRoutes');
 const { connectToDatabase, getDb } = require('./data/database');
@@ -21,13 +22,8 @@ const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
 const contactRoutes = require('./routes/contact');
 
-dotenv.config();
-
 const app = express();
 const port = 3000;
-
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-console.log(googleClientId);
 
 const sessionStore = new MySQLStore({
   host: process.env.DB_HOST,
@@ -35,7 +31,6 @@ const sessionStore = new MySQLStore({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // collection: process.env.SESSION_COLLECTION, // Remove if not using MongoDB
 });
 
 app.use(cookieParser());
@@ -62,12 +57,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// CSRF protection
-app.use(csrfProtection);
-
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'images')));
+
+// Set view engine to EJS
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 // Helmet CSP middleware with dynamic nonce
 app.use((req, res, next) => {
@@ -154,27 +150,6 @@ app.use(async function (req, res, next) {
   next();
 });
 
-// CSRF error handler
-app.use((err, req, res, next) => {
-  if (err.code === 'EBADCSRFTOKEN') {
-    console.error("CSRF Token Error on route:", req.originalUrl);
-    return res.status(403).send('Form tampered with');
-  }
-  next(err);
-});
-
-// Set view engine to EJS
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// Register routes
-app.use('/api', calculatorRoutes);
-app.use(registrationRoutes);
-app.use('/', symptomRoutes);
-app.use('/api', secondaryConditionRoutes);
-app.use('/auth', authRoutes);
-app.use('/contact', contactRoutes);
-
 // Main routes
 app.get('/', (req, res) => {
   try {
@@ -189,6 +164,18 @@ app.get('/', (req, res) => {
     res.status(500).send('An error occurred on the server.');
   }
 });
+
+// CSRF protection
+const csrfProtection = csrf();
+app.use(csrfProtection);
+
+// Register routes
+app.use('/api', calculatorRoutes);
+app.use(registrationRoutes);
+app.use('/', symptomRoutes);
+app.use('/api', secondaryConditionRoutes);
+app.use('/auth', authRoutes);
+app.use('/contact', contactRoutes);
 
 app.get('/secondary', (req, res) => {
   console.log('Rendering secondary with CSRF token:', req.csrfToken());
@@ -223,6 +210,15 @@ app.get("/possibleDisabilities", async (req, res) => {
     console.error('Error fetching systems:', err);
     res.status(500).send('Error fetching systems');
   }
+});
+
+// CSRF error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    console.error("CSRF Token Error on route:", req.originalUrl);
+    return res.status(403).send('Form tampered with');
+  }
+  next(err);
 });
 
 // Error handler (last middleware)
@@ -267,4 +263,22 @@ startServer().catch((err) => {
   console.error('Unhandled error during server startup:', err);
   process.exit(1);
 });
+
+
+
+
+
+
+
+
+
+
+
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+console.log(googleClientId);
+
+
+
+
+
 
