@@ -10,7 +10,9 @@ router.get('/', function (req, res) {
   const loggedOut = req.query.loggedOut === 'true';
   res.render('index', { 
     loggedOut: loggedOut,
-    message: null
+    message: null,
+    nonce: res.locals.nonce,
+    csrfToken: req.csrfToken()
   });
 });
 
