@@ -172,6 +172,7 @@ router.post('/login', async function (req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 router.post('/logout', function (req, res) {
   console.log("Received CSRF:", req.body._csrf);
+  
   if (req.session) {
     req.session.destroy(err => {
       if (err) {
