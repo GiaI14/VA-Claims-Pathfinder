@@ -67,7 +67,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Only use Helmet *once*, and configure CSP inline
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -82,11 +81,16 @@ app.use(
         ],
         styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
         frameSrc: ["'self'", "https://accounts.google.com"],
-        connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"],
+        connectSrc: [
+          "'self'",
+          "https://accounts.google.com",
+          "https://play.google.com",
+        ],
       },
     },
   })
 );
+
 
 // CSRF protection setup
 const csrfProtection = csrf();
