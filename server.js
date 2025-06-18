@@ -53,15 +53,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  const nonce = res.locals.nonce;
-
+ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        `'nonce-${nonce}'`,
+        (req, res) => `'nonce-${res.locals.nonce}'`,
         "https://accounts.google.com",
         "https://apis.google.com"
       ],
@@ -69,8 +67,8 @@ app.use((req, res, next) => {
       frameSrc: ["'self'", "https://accounts.google.com"],
       connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
     }
-  })(req, res, next);
-});
+  })
+);
 
 // Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
