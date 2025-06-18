@@ -72,7 +72,7 @@ app.use(express.static(path.join(__dirname, 'images')));
 // Helmet CSP middleware with dynamic nonce
 app.use((req, res, next) => {
   const nonce = res.locals.nonce;
-  helmet.contentSecurityPolicy({
+  helmet.contentSecurityPolicy({  
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: [
