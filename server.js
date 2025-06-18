@@ -159,10 +159,10 @@ app.use(async function (req, res, next) {
 });
 
 // CSRF error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err.code === 'EBADCSRFTOKEN') {
-    console.error("CSRF error: Invalid CSRF token");
-    return res.status(403).json({ error: 'Invalid CSRF token' });
+    console.error("CSRF Token Error on route:", req.originalUrl);
+    return res.status(403).send('Form tampered with');
   }
   next(err);
 });
