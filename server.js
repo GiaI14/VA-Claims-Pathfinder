@@ -49,24 +49,27 @@ app.use(session({
 
 // Helmet CSP middleware with dynamic nonce
 app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString('base64');
+  res.locals.cspNonce = crypto.randomBytes(32).toString('hex');
   next();
 });
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: [
-      "'self'",
-      (req, res) => `'nonce-${res.locals.nonce}'`, // Dynamic function with quotes
-      "https://accounts.google.com",
-      "https://apis.google.com"
-    ],
-    styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
-    frameSrc: ["'self'", "https://accounts.google.com"],
-    connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
-  }
-}));
+// Helmet CSP configuration using a function for the nonce
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        (req, res) => `'nonce-${res.locals.cspNonce}'`, // note the single quotes
+        "https://accounts.google.com",
+        "https://apis.google.com"
+      ],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
+      frameSrc: ["'self'", "https://accounts.google.com"],
+      connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
+    }
+  })
+);
 
 // Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
