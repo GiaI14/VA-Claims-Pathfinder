@@ -62,22 +62,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'images')));
 
 // Helmet CSP middleware with dynamic nonce
-app.use(helmet());
-
 app.use((req, res, next) => {
-  const nonce = res.locals.nonce;
-  const nonceString = `'nonce-${nonce}'`; 
-
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", nonceString, "https://accounts.google.com", "https://apis.google.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
-      frameSrc: ["'self'", "https://accounts.google.com"],
-      connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"],
-    },
-  })(req, res, next);
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  next();
 });
+
+// Only use Helmet *once*, and configure CSP inline
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          (req, res) => `'nonce-${res.locals.nonce}'`,
+          "https://accounts.google.com",
+          "https://apis.google.com",
+        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
+        frameSrc: ["'self'", "https://accounts.google.com"],
+        connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"],
+      },
+    },
+  })
+);
 
 // CSRF protection setup
 const csrfProtection = csrf();
