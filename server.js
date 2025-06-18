@@ -53,22 +53,20 @@ app.use((req, res, next) => {
   next();
 });
 
- app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-        "https://accounts.google.com",
-        "https://apis.google.com"
-      ],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
-      frameSrc: ["'self'", "https://accounts.google.com"],
-      connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
-    }
-  })
-);
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: [
+      "'self'",
+      (req, res) => `'nonce-${res.locals.nonce}'`, // Use a function
+      "https://accounts.google.com",
+      "https://apis.google.com"
+    ],
+    styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
+    frameSrc: ["'self'", "https://accounts.google.com"],
+    connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
+  }
+}));
 
 // Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
