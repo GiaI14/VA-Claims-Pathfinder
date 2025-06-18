@@ -67,14 +67,16 @@
         try {
           console.log('Received credential:', response.credential);
 
-          const authResponse = await fetch('/auth/google/callback', {
+           const authResponse = await fetch('/auth/google/callback', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'CSRF-Token': '<%= csrfToken %>'
             },
             credentials: 'include',
             body: JSON.stringify({
-              credential: response.credential
+              credential: response.credential,
+              _csrf: '<%= csrfToken %>'
             })
           });
 
