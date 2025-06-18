@@ -58,7 +58,7 @@ app.use(helmet.contentSecurityPolicy({
     defaultSrc: ["'self'"],
     scriptSrc: [
       "'self'",
-      (req, res) => `'nonce-${res.locals.nonce}'`, // Use a function
+      (req, res) => `'nonce-${res.locals.nonce}'`, // Dynamic function with quotes
       "https://accounts.google.com",
       "https://apis.google.com"
     ],
