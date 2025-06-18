@@ -248,7 +248,7 @@ async function startServer() {
 
     // Start HTTPS server
     https.createServer(credentials, app).listen(port, '0.0.0.0', () => {
-      console.log(HTTPS Server running at https://67.205.168.90:${port}/);
+      console.log(`HTTPS Server running at https://67.205.168.90:${port}/`);
     });
 
     app.on('error', (error) => {
