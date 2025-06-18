@@ -11,8 +11,7 @@ router.get('/', function (req, res) {
   res.render('index', { 
     loggedOut: loggedOut,
     message: null,
-    nonce: res.locals.nonce,
-    csrfToken: req.csrfToken()
+    nonce: res.locals.nonce
   });
 });
 
