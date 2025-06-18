@@ -4,10 +4,9 @@ const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const csrfProtection = csrf(); //test
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const https = require('https'); // Use https for HTTPS server
+const https = require('https');
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
@@ -26,16 +25,12 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-console.log(googleClientId);
-
 const sessionStore = new MySQLStore({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // collection: process.env.SESSION_COLLECTION, // Remove if not using MongoDB
 });
 
 app.use(cookieParser());
@@ -45,10 +40,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
-  cookie: { 
-    httpOnly: true, 
+  cookie: {
+    httpOnly: true,
     sameSite: 'lax',
-    secure: true, // Set to true if using HTTPS
+    secure: true,
   }
 }));
 
@@ -58,12 +53,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to parse JSON bodies
+// Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// CSRF protection
-app.use(csrfProtection);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -72,38 +64,32 @@ app.use(express.static(path.join(__dirname, 'images')));
 // Helmet CSP middleware with dynamic nonce
 app.use((req, res, next) => {
   const nonce = res.locals.nonce;
-  helmet.contentSecurityPolicy({  
+  helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        'nonce-${nonce}',
-        "https://accounts.google.com",
-        "https://apis.google.com"
-      ],
-      styleSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "https://accounts.google.com"
-      ],
-      frameSrc: [
-        "'self'",
-        "https://accounts.google.com"
-      ],
-      connectSrc: [
-        "'self'",
-        "https://accounts.google.com",
-        "https://play.google.com"
-      ],
+      scriptSrc: ["'self'", `'nonce-${nonce}'`, "https://accounts.google.com", "https://apis.google.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
+      frameSrc: ["'self'", "https://accounts.google.com"],
+      connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"],
     },
   })(req, res, next);
+});
+
+// CSRF protection setup
+const csrfProtection = csrf();
+app.use(csrfProtection);
+
+// Middleware to make CSRF token available to views
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 // Debugging middleware
 app.use((req, res, next) => {
   console.log('Generated Nonce:', res.locals.nonce);
-  console.log("Incoming X-CSRF-Token:", req.headers['x-csrf-token']);
-  console.log("Session cookie:", req.headers.cookie);
+  console.log('Incoming X-CSRF-Token:', req.headers['x-csrf-token']);
+  console.log('Session cookie:', req.headers.cookie);
   next();
 });
 
@@ -122,12 +108,6 @@ app.use((req, res, next) => {
     return res.status(400).send("Bot detected");
   }
   next();
-});
-
-// Middleware to pass CSRF token to all views
-app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken();
-    next();
 });
 
 // Auth status and user loader
@@ -163,11 +143,11 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// Set view engine to EJS
+// Set view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Register routes
+// Routes
 app.use('/api', calculatorRoutes);
 app.use(registrationRoutes);
 app.use('/', symptomRoutes);
@@ -175,7 +155,7 @@ app.use('/api', secondaryConditionRoutes);
 app.use('/auth', authRoutes);
 app.use('/contact', contactRoutes);
 
-// Main routes
+// Root route
 app.get('/', (req, res) => {
   try {
     console.log('Message query:', req.query.message);
@@ -185,14 +165,14 @@ app.get('/', (req, res) => {
       message: req.query.message || null
     });
   } catch (err) {
-    console.error('Error in GET / route:', err);
+    console.error('Error in GET / route:', err.stack || err);
     res.status(500).send('An error occurred on the server.');
   }
 });
 
 app.get('/secondary', (req, res) => {
   console.log('Rendering secondary with CSRF token:', req.csrfToken());
-  res.render('secondary', { 
+  res.render('secondary', {
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce
   });
@@ -213,7 +193,7 @@ app.get("/possibleDisabilities", async (req, res) => {
     const db = getDb();
     const [systems] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
     console.log('Systems:', systems);
-    res.render("possibleDisabilities", { 
+    res.render("possibleDisabilities", {
       title: "Symptom Analysis",
       csrfToken: req.csrfToken(),
       nonce: res.locals.nonce,
@@ -225,7 +205,7 @@ app.get("/possibleDisabilities", async (req, res) => {
   }
 });
 
-// Error handler (last middleware)
+// Generic error handler
 app.use((err, req, res, next) => {
   console.error('Express error:', err);
   res.status(500).send('An error occurred on the server');
@@ -236,17 +216,15 @@ async function startServer() {
   try {
     await connectToDatabase();
     console.log('Database connection established');
-    // Test DB connection
+
     const db = getDb();
     const [testResult] = await db.execute('SELECT 1 as test');
     console.log('Database test query result:', testResult);
 
-    // HTTPS credentials
     const privateKey = fs.readFileSync('server.key', 'utf8');
     const certificate = fs.readFileSync('server.cert', 'utf8');
     const credentials = { key: privateKey, cert: certificate };
 
-    // Start HTTPS server
     https.createServer(credentials, app).listen(port, '0.0.0.0', () => {
       console.log(`HTTPS Server running at https://67.205.168.90:${port}/`);
     });
@@ -262,15 +240,10 @@ async function startServer() {
   }
 }
 
-// Start the server
 startServer().catch((err) => {
   console.error('Unhandled error during server startup:', err);
   process.exit(1);
 });
-
-
-
-
 
 
 
