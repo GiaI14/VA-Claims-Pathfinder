@@ -4,6 +4,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const csrfProtection = csrf(); //test
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const https = require('https'); // Use https for HTTPS server
@@ -66,7 +67,7 @@ app.use((req, res, next) => {
   if (req.path === '/auth/google/callback') {
     return next(); 
   }
-  csrf(req, res, next);
+  csrfProtection(req, res, next);
 });
 
 // Serve static files
