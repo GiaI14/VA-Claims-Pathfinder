@@ -69,7 +69,7 @@ app.use((req, res, next) => {
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        `'nonce-${nonce}'`, // NOTICE: single quotes inside double quotes for CSP to accept
+        `'nonce-${nonce}'`,
         "https://accounts.google.com",
         "https://apis.google.com"
       ],
