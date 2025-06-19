@@ -63,9 +63,10 @@
 <script nonce="<%= nonce %>">
   window.handleCredentialResponse = async function (response) {
     console.group('handleCredentialResponse called');
-    console.log('Received Google credential:', response.credential);
 
     try {
+    console.log('Received Google credential:', response.credential);
+
       const authResponse = await fetch('/auth/google/callback', {
         method: 'POST',
         headers: {
@@ -74,9 +75,10 @@
         credentials: 'include',
         body: JSON.stringify({
           credential: response.credential
-        })
+        }),
       });
 
+      console.log('Fetch completed:', authResponse.status);
       if (!authResponse.ok) {
         const text = await authResponse.text();
         throw new Error(`Auth failed: ${authResponse.status} - ${text}`);
