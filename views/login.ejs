@@ -68,7 +68,7 @@
           console.log('Received credential:', response.credential);
 
           const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+           console.log('Extracted CSRF token:', csrfToken);
            const authResponse = await fetch('/auth/google/callback', {
             method: 'POST',
             headers: {
