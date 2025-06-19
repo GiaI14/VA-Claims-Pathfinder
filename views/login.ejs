@@ -60,44 +60,56 @@
           </div>
     </main>
 
-    <script nonce="<%= nonce %>">
-      window.handleCredentialResponse = async function (response) {
-        console.group('handleCredentialResponse called', response);
+<script nonce="<%= nonce %>">
+  window.handleCredentialResponse = async function (response) {
+    console.group('handleCredentialResponse called');
+    console.log('Received Google credential:', response.credential);
 
-        try {
-          console.log('Received credential:', response.credential);
+    try {
+      const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfMetaTag ? csrfMetaTag.getAttribute('content') : null;
 
-          const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-           console.log('Extracted CSRF token:', csrfToken);
-           const authResponse = await fetch('/auth/google/callback', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': csrfToken
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              credential: response.credential
-            })
-          });
+      if (!csrfToken) {
+        throw new Error('CSRF token not found in <meta> tag');
+      }
 
-          const data = await authResponse.json();
-          console.log('Response data:', data);
+      console.log('Extracted CSRF token:', csrfToken);
 
-          if (data.redirectUrl) {
-            window.location.href = data.redirectUrl;
-          } else {
-            window.location.href = '/';
-          }
+      const authResponse = await fetch('/auth/google/callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          credential: response.credential
+        })
+      });
 
-        } catch (error) {
-          console.error('Auth error:', error);
-          alert('Login failed. Check console for details.');
-        } finally {
-          console.groupEnd();
-        }
-      };
-    </script>
+      if (!authResponse.ok) {
+        const text = await authResponse.text();
+        throw new Error(`Auth failed: ${authResponse.status} - ${text}`);
+      }
+
+      const data = await authResponse.json();
+      console.log('Response data:', data);
+
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        window.location.href = '/';
+      }
+
+    } catch (error) {
+      console.error('Auth error:', error);
+      alert('Login failed: ' + error.message);
+    } finally {
+      console.groupEnd();
+    }
+  };
+</script>
+
 <script nonce="<%= nonce %>">
   if (window.location.search.includes('loggedOut=true')) {
     console.log("Removing loggedOut from URL");
