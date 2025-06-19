@@ -139,8 +139,8 @@
 
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
- <p>DEBUG: Message = <%= message %></p>
-<% if (message === 'success') { %>
+<p>DEBUG: Message = <%= message %></p>
+<% if ((message || '').toString().trim() === 'success') { %>
   <div id="alert-message" class="alert-message">
     Your message has been sent successfully!
   </div>
