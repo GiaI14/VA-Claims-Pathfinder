@@ -75,8 +75,7 @@
             },
             credentials: 'include',
             body: JSON.stringify({
-              credential: response.credential,
-              _csrf: '<%= csrfToken %>'
+              credential: response.credential
             })
           });
 
