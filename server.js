@@ -83,7 +83,7 @@ app.use(express.static(path.join(__dirname, 'images')));
 const csrfProtection = csrf({cookies: false});
 
 function conditionalCsrf(req, res, next) {
-  if(req.path === '/auth/google/callback') {
+  if(req.originalUrl === '/auth/google/callback') {
     return next();
   }
   return csrfProtection(req, res, next);
