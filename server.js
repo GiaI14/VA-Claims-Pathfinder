@@ -86,7 +86,7 @@ function conditionalCsrf(req, res, next) {
   if(req.path === '/ath/google/callback') {
     return next();
   }
-  return csftProtection(req, res, next);
+  return csrfProtection(req, res, next);
 }
 
 app.use(conditionalCsrf);
