@@ -82,15 +82,7 @@ app.use(express.static(path.join(__dirname, 'images')));
 // CSRF protection setup
 const csrfProtection = csrf();
 
-function conditionalCsrf(req, res, next) {
-  if(req.originalUrl === '/auth/google/callback') {
-    return next();
-  }
-  return csrfProtection(req, res, next);
-}
-
-app.use(conditionalCsrf);
-//app.use(csrfProtection);
+app.use(csrfProtection);
 
 // Middleware to make CSRF token available to views
 app.use((req, res, next) => {
