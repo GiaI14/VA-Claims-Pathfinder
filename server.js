@@ -163,7 +163,7 @@ app.use('/', contactRoutes);
 // Root route
 app.get('/', (req, res) => {
   try {
-    console.log('Message query:', req.query.message);
+    console.log('GET / hit - query.message:', req.query.message);
     res.render('index', {
       message: req.query.message || null,
       csrfToken: req.csrfToken(),
