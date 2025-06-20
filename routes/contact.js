@@ -49,8 +49,7 @@ router.post('/contact', async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.messageId);
 
-   //res.redirect('/?message=success');
-    res.redirect(302, 'https://www.vaclaimspathfinder.com/?message=success');
+   res.redirect('/?message=success');
   } catch (err) {
     console.error('Error in /contact route:', err);
     res.status(500).json({ message: 'Internal Server Error', error: err.message });
