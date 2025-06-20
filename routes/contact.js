@@ -20,7 +20,7 @@ transporter.verify(function (error, success) {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/contact', async (req, res) => {
   try {
     console.log('Incoming contact request:', req.body);
 
