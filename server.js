@@ -162,17 +162,12 @@ app.use('/', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  try {
-    console.log('GET / hit - query.message:', req.query.message);
-    res.render('index', {
-      message: req.query.message || null,
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce 
-    });
-  } catch (err) {
-    console.error('Error in GET / route:', err.stack || err);
-    res.status(500).send('An error occurred on the server.');
-  }
+  console.log('✅ GET / hit — query.message:', req.query.message);
+  res.render('index', {
+    message: req.query.message || null,
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce
+  });
 });
 
 app.get('/secondary', (req, res) => {
