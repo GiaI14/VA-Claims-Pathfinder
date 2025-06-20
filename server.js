@@ -165,9 +165,9 @@ app.get('/', (req, res) => {
   try {
     console.log('Message query:', req.query.message);
     res.render('index', {
+      message: req.query.message || null,
       csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: req.query.message || null
+      nonce: res.locals.nonce 
     });
   } catch (err) {
     console.error('Error in GET / route:', err.stack || err);
