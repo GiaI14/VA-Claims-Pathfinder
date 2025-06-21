@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 router.post('/calculate-disability', (req, res) => {
   let { ratings, spouse, childrenUnder18, childrenOver18, numParents } = req.body
