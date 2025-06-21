@@ -197,9 +197,6 @@ router.post('/calculate-disability', (req, res) => {
   })
 })
 
-
-
-
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -246,19 +243,24 @@ router.post('/contact', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    return res.render('index', {
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: 'Your message was sent. Someone will contact you shortly.'
-    });
+//     return res.render('index', {
+//       csrfToken: req.csrfToken(),
+//       nonce: res.locals.nonce,
+//       message: 'Your message was sent. Someone will contact you shortly.'
+//     });
+//   } catch (err) {
+//     console.error('Error in contact form:', err);
+//     return res.status(500).render('index', {
+//       csrfToken: req.csrfToken(),
+//       nonce: res.locals.nonce,
+//       message: 'Internal Server Error: ' + err.message
+//     });
+//   }
+// });
+ return res.redirect('/?message=success');
   } catch (err) {
-    console.error('Error in contact form:', err);
-    return res.status(500).render('index', {
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: 'Internal Server Error: ' + err.message
-    });
+    console.error('Contact form error:', err.message);
+    return res.redirect('/?message=error');
   }
 });
-
 module.exports = router
