@@ -257,7 +257,7 @@ router.post('/contact', async (req, res) => {
 //     });
 //   }
 // });
- return res.redirect('/?message=success');
+ return res.redirect('/');
   } catch (err) {
     console.error('Contact form error:', err.message);
     return res.redirect('/?message=error');
