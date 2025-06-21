@@ -156,9 +156,8 @@ app.use('/auth', authRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  console.log('✅ GET / hit — query.message:', req.query.message);
   res.render('index', {
-    message: req.query.message || null,
+    message: null,
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce
   });
