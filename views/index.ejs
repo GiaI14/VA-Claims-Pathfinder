@@ -140,17 +140,26 @@
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
-  <div class="alert alert-success text-center my-4" id="message-alert">
+  <div class="alert alert-success text-center my-4 flash-message">
     <%= successMessage[0] %>
   </div>
 <% } %>
-
 <% if (errorMessage && errorMessage.length > 0) { %>
-  <div class="alert alert-danger text-center my-4" id="message-alert">
+  <div class="alert alert-danger text-center my-4 flash-message">
     <%= errorMessage[0] %>
   </div>
 <% } %>
 
+<script nonce="<%= nonce %>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(msg => {
+      setTimeout(() => {
+        msg.style.display = 'none';
+      }, 5000);
+    });
+  });
+</script>
      
   <form id="contact-form" method="POST" action="/api/contact">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
