@@ -155,20 +155,14 @@ app.use('/auth', authRoutes);
 //app.use('/', contactRoutes);
 
 // Root route
-// app.get('/', (req, res) => {
-//   res.render('index', {
-//     message: null,
-//     csrfToken: req.csrfToken(),
-//     nonce: res.locals.nonce
-//   });
-// });
 app.get('/', (req, res) => {
   res.render('index', {
-    message: req.query.message || null,
+    message: null,
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce
   });
 });
+
 app.get('/contact-confirmation', (req, res) => {
   console.log('✅ GET /contact-confirmation hit — query.message:', req.query.message);
   res.send(`<h1>Message = ${req.query.message}</h1>`);
