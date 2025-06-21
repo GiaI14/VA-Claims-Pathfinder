@@ -140,13 +140,13 @@
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
-  <div class="alert alert-success text-center my-4" role="alert">
+  <div class="alert alert-success text-center my-4" id="message-alert">
     <%= successMessage[0] %>
   </div>
 <% } %>
 
 <% if (errorMessage && errorMessage.length > 0) { %>
-  <div class="alert alert-danger text-center my-4" role="alert">
+  <div class="alert alert-danger text-center my-4" id="message-alert">
     <%= errorMessage[0] %>
   </div>
 <% } %>
