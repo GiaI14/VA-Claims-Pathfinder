@@ -11,7 +11,7 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-
+const flash = require(flash());
 const calculatorRoutes = require('./routes/calculatorRoutes');
 const { connectToDatabase, getDb } = require('./data/database');
 const registrationRoutes = require('./routes/registration');
@@ -81,6 +81,12 @@ app.use(express.static(path.join(__dirname, 'images')));
 
 // CSRF protection setup
 const csrfProtection = csrf();
+
+app.use(req, res, next) => {
+  res.locals.successMessage = req.flash('success');
+  res.locals.errorMessage = req.flash('error');
+  next();
+});
 
 // Debugging middleware
 app.use((req, res, next) => {
