@@ -27,11 +27,8 @@ router.post('/contact', async (req, res) => {
     const { name, email, message, phone } = req.body;
 
     if (!name || !email || !message) {
-      return res.render('index', {
-        csrfToken: req.csrfToken(),
-        nonce: res.locals.nonce,
-        message: 'All fields are required.'
-      });
+      req.session.formMessage = 'All fields are required.';
+      return res.redirect('/');
     }
 
     const mailOptions = {
@@ -52,18 +49,14 @@ router.post('/contact', async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.messageId);
 
-   res.render('index', {
-  csrfToken: req.csrfToken(),
-  nonce: res.locals.nonce,
-  message: 'Your request was sent. Someone will contact you shortly.'
-});
-  } catch (err) {
-     console.error('Error in /contact route:', err);
-    return res.status(500).render('index', {
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: 'Internal Server Error: ' + err.message
-    });
+
+    req.session.formMessage = 'Your request was sent. Someone will contact you shortly.';
+    res.redirect('/');
+    
+   } catch (err) {
+    console.error('Error in /contact route:', err);
+    req.session.formMessage = 'Internal Server Error: ' + err.message;
+    res.redirect('/');
   }
 });
 
