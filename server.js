@@ -156,7 +156,8 @@ app.use('/', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  console.log('✅ GET / hit — query.message:', req.query.message);
+  console.log('✅ GET / hit')
+  console.log('query:', req.query);
   res.render('index', {
     message: req.query.message || null,
     csrfToken: req.csrfToken(),
