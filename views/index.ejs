@@ -144,6 +144,17 @@
     Message: <%= message %>
   </div>
 <% } %>
+
+<script nonce="<%= nonce %>">
+  document.addEventListener('DOMContentLoaded', () => {
+    const msgElem = document.querySelector('#message-container');
+    if (msgElem) {
+      setTimeout(() => {
+        msgElem.style.display = 'none';
+      }, 5000); // hide after 5 seconds
+    }
+  });
+</script>
      
   <form id="contact-form" method="POST" action="/contact">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
