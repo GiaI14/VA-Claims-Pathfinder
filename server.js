@@ -18,7 +18,7 @@ const registrationRoutes = require('./routes/registration');
 const symptomRoutes = require('./routes/symptomRoutes');
 const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
-//const contactRoutes = require('./routes/contact');
+const contactRoutes = require('./routes/contact');
 
 dotenv.config();
 
@@ -152,7 +152,7 @@ app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/api', secondaryConditionRoutes);
 app.use('/auth', authRoutes);
-//app.use('/', contactRoutes);
+app.use('/', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {
