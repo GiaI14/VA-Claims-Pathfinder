@@ -55,7 +55,7 @@ router.post('/contact', async (req, res) => {
    res.render('index', {
   csrfToken: req.csrfToken(),
   nonce: res.locals.nonce,
-  message: 'success'
+  message: 'Your request was sent. Someone will contact you shortly.'
 });
   } catch (err) {
      console.error('Error in /contact route:', err);
