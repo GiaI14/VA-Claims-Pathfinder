@@ -140,21 +140,21 @@
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
 <% if (message) { %>
-  <div class="alert alert-success" id="message-alert">
-    Message: <%= message %>
+  <div class="alert alert-success text-center my-4" id="message-alert">
+    <%= message %>
   </div>
+  <script nonce="<%= nonce %>">
+    document.addEventListener('DOMContentLoaded', () => {
+      const msgElem = document.querySelector('#message-alert');
+      if (msgElem) {
+        setTimeout(() => {
+          msgElem.style.display = 'none';
+        }, 5000);
+      }
+    });
+  </script>
 <% } %>
 
-<script nonce="<%= nonce %>">
-  document.addEventListener('DOMContentLoaded', () => {
-    const msgElem = document.querySelector('#message-alert');
-    if (msgElem) {
-      setTimeout(() => {
-        msgElem.style.display = 'none';
-      }, 5000); // hide after 5 seconds
-    }
-  });
-</script>
      
   <form id="contact-form" method="POST" action="/">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
