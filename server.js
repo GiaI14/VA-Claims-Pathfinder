@@ -11,7 +11,9 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const flash = require(flash());
+const flash = require('connect-flash');
+
+
 const calculatorRoutes = require('./routes/calculatorRoutes');
 const { connectToDatabase, getDb } = require('./data/database');
 const registrationRoutes = require('./routes/registration');
@@ -74,6 +76,7 @@ app.use((req, res, next) => {
 // Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(flash()); //added 
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
