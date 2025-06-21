@@ -243,24 +243,19 @@ router.post('/contact', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-//     return res.render('index', {
-//       csrfToken: req.csrfToken(),
-//       nonce: res.locals.nonce,
-//       message: 'Your message was sent. Someone will contact you shortly.'
-//     });
-//   } catch (err) {
-//     console.error('Error in contact form:', err);
-//     return res.status(500).render('index', {
-//       csrfToken: req.csrfToken(),
-//       nonce: res.locals.nonce,
-//       message: 'Internal Server Error: ' + err.message
-//     });
-//   }
-// });
- return res.redirect('/');
+    return res.render('index', {
+      csrfToken: req.csrfToken(),
+      nonce: res.locals.nonce,
+      message: 'Your message was sent. Someone will contact you shortly.'
+    });
   } catch (err) {
-    console.error('Contact form error:', err.message);
-    return res.redirect('/?message=error');
+    console.error('Error in contact form:', err);
+    return res.status(500).render('index', {
+      csrfToken: req.csrfToken(),
+      nonce: res.locals.nonce,
+      message: 'Internal Server Error: ' + err.message
+    });
   }
 });
+
 module.exports = router
