@@ -219,14 +219,18 @@ router.post('/contact', async (req, res) => {
   try {
     const { name, email, message, phone } = req.body;
 
-    if (!name || !email || !message) {
-      return res.render('index', {
-        csrfToken: req.csrfToken(),
-        nonce: res.locals.nonce,
-        message: 'All fields are required.'
-      });
+    // if (!name || !email || !message) {
+    //   return res.render('index', {
+    //     csrfToken: req.csrfToken(),
+    //     nonce: res.locals.nonce,
+    //     message: 'All fields are required.'
+    //   });
+    // }
+if (!name || !email || !message) {
+      req.flash('error', 'All fields are required.');
+      return res.redirect('/');
     }
-
+    
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: process.env.CONTACT_RECEIVER_EMAIL,
@@ -243,19 +247,29 @@ router.post('/contact', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    return res.render('index', {
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: 'Your message was sent. Someone will contact you shortly.'
-    });
+//     return res.render('index', {
+//       csrfToken: req.csrfToken(),
+//       nonce: res.locals.nonce,
+//       message: 'Your message was sent. Someone will contact you shortly.'
+//     });
+//   } catch (err) {
+//     console.error('Error in contact form:', err);
+//     return res.status(500).render('index', {
+//       csrfToken: req.csrfToken(),
+//       nonce: res.locals.nonce,
+//       message: 'Internal Server Error: ' + err.message
+//     });
+//   }
+// });
+
+    req.flash('success', 'Your message was sent. Someone will contact you shortly.');
+    return res.redirect('/');
   } catch (err) {
     console.error('Error in contact form:', err);
-    return res.status(500).render('index', {
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      message: 'Internal Server Error: ' + err.message
-    });
+    req.flash('error', 'Internal Server Error: ' + err.message);
+    return res.redirect('/');
   }
 });
+
 
 module.exports = router
