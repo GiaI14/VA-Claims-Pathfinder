@@ -140,9 +140,11 @@
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
 <p style="color:red;">DEBUG: message = "<%= message %>"</p>
- <% if (message) { %>
-    <p>Message: <%= message %></p>
-  <% } %>
+<% if (message) { %>
+  <div class="alert alert-success" id="message-alert">
+    Message: <%= message %>
+  </div>
+<% } %>
      
   <form id="contact-form" method="POST" action="/contact">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
