@@ -218,7 +218,7 @@ transporter.verify((error, success) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/contact', async (req, res) => {
   try {
     const { name, email, message, phone } = req.body;
 
