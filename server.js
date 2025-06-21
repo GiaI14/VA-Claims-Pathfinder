@@ -156,10 +156,9 @@ app.use('/', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-   const message = req.session.formMessage || null;
-   req.session.formMessage = null;
+  console.log('✅ GET / hit — query.message:', req.query.message);
   res.render('index', {
-    message, 
+    message: req.query.message || null,
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce
   });
