@@ -164,6 +164,11 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/contact-confirmation', (req, res) => {
+  console.log('✅ GET /contact-confirmation hit — query.message:', req.query.message);
+  res.send(`<h1>Message = ${req.query.message}</h1>`);
+});
+
 app.get('/secondary', (req, res) => {
   console.log('Rendering secondary with CSRF token:', req.csrfToken());
   res.render('secondary', {
