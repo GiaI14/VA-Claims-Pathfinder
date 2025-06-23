@@ -159,8 +159,7 @@
       }, 5000);
     });
   });
-</script>
-   <div class="full-page">  
+</script>  
   <form id="contact-form" method="POST" action="/api/contact">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div>
@@ -182,7 +181,6 @@
     <button type="submit">Send</button>
   </form>
 </section>
-</div>
 <%- include('includes/footer') %>
 </body>
 </html>
