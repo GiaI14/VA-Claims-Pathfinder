@@ -274,7 +274,8 @@ select {
     max-width: 100px;
     width: 100%;
 }
-.full-page {
+
+#contact-form {
   width: 100vw;
   height: 100vh;
   background-color: #f0f0f0; /* Just for visibility */
