@@ -138,7 +138,7 @@
             </script>
 
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
-  <h2>Contact Us</h2>
+  <h2 id="contact-us">Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
   <div class="alert alert-success text-center my-4 flash-message">
     <%= successMessage[0] %>
@@ -180,7 +180,7 @@
       <label for="message">Message:</label><br />
       <textarea id="message" name="message" rows="5" required></textarea>
     </div>
-    <button type="submit">Send</button>
+    <button id="send-button" type="submit">Send</button>
   </form>
 </section>
 <%- include('includes/footer') %>
