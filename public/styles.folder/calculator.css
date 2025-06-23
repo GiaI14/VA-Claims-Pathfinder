@@ -277,11 +277,11 @@ select {
 
 
 #contact-us {
-    margin: 0 auto;
+    margin-left: 20px;
 }
 
 #send-button {
-    margin: 0 auto
+    margin-left: 20px;
 }
 
 /* Flex row for name, email, phone */
