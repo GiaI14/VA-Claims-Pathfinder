@@ -276,6 +276,13 @@ select {
 }
 
 
+#contact-us {
+    margin: 0 auto;
+}
+
+#send-button {
+    margin: 0 auto
+}
 
 /* Flex row for name, email, phone */
 .row {
