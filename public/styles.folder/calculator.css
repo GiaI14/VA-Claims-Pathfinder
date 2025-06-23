@@ -338,10 +338,6 @@ select {
   color: #666;
 }
 
-#contact-form {
-    width: 80%;
-}
-
 
 @media (max-width: 900px) {
     .three-column-layout {
