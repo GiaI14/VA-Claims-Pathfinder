@@ -281,7 +281,7 @@ select {
 .row {
   display: flex;
   gap: 1rem;
-  width: 100%;
+  width: 80%;
   flex-wrap: wrap;
 }
 
