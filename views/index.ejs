@@ -136,7 +136,7 @@
                     });
                 });
             </script>
-<div class="full-page">
+
 <section id="contact" style="padding: 2rem; background-color: #f7f7f7;">
   <h2>Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
@@ -160,7 +160,7 @@
     });
   });
 </script>
-     
+   <div class="full-page">  
   <form id="contact-form" method="POST" action="/api/contact">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div>
