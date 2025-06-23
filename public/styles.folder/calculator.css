@@ -277,12 +277,31 @@ select {
 
 
 
+/* Flex row for name, email, phone */
+.row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.row .form-group {
+  flex: 1 1 0;
+  min-width: 200px;
+}
+
+/* Full width for message */
+.full-width {
+  width: 100%;
+}
+
+/* Reuse earlier form-group/input styling */
 .form-group {
   position: relative;
-  width: 100%;
   margin-bottom: 1.5rem;
 }
 
+/* Inputs */
 .form-group input,
 .form-group textarea {
   width: 100%;
@@ -291,15 +310,18 @@ select {
   padding: 0.5rem 0;
   font-size: 1rem;
   background-color: transparent;
+  color: #333;
   outline: none;
   transition: border-color 0.3s ease;
 }
 
+/* Focus state */
 .form-group input:focus,
 .form-group textarea:focus {
   border-bottom-color: #007BFF;
 }
 
+/* Label below input */
 .form-group label {
   display: block;
   margin-top: 0.4rem;
