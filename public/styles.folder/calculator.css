@@ -283,6 +283,7 @@ select {
   gap: 1rem;
   width: 80%;
   flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 .row .form-group {
@@ -292,7 +293,8 @@ select {
 
 /* Full width for message */
 .full-width {
-  width: 100%;
+  width: 80%;
+  margin: 0 auto;
 }
 
 /* Reuse earlier form-group/input styling */
