@@ -284,6 +284,9 @@ select {
     margin-left: 180px;
 }
 
+.alert alert-success text-center my-4 flash-message {
+    margin-left: 180px;
+}
 /* Flex row for name, email, phone */
 .row {
   display: flex;
