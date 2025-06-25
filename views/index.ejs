@@ -138,15 +138,15 @@
             </script>
 
 <section id="contact" style="padding: 2rem 0;">
- <div class="center-content" style="max-width: 1800px; margin: 0 auto;">
+ <div class="center-content">
   <h2 id="contact-us">Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
-  <div class="alert alert-success text-center my-4 flash-message">
+  <div class="alert alert-success text-center my-4 flash-message contact-alert">
     <%= successMessage[0] %>
   </div>
 <% } %>
 <% if (errorMessage && errorMessage.length > 0) { %>
-  <div class="alert alert-danger text-center my-4 flash-message">
+  <div class="alert alert-danger text-center my-4 flash-message contact-alert">
     <%= errorMessage[0] %>
   </div>
 <% } %>
