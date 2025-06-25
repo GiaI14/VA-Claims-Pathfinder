@@ -284,9 +284,12 @@ select {
     margin-left: 180px;
 }
 
-.alert alert-success text-center my-4 flash-message {
-    margin-left: 180px;
+.contact-alert {
+  margin-left: 175px;
+  width: calc(80% - 175px);
+  text-align: left;
 }
+
 /* Flex row for name, email, phone */
 .row {
   display: flex;
