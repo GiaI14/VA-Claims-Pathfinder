@@ -141,12 +141,12 @@
  <div class="center-content">
   <h2 id="contact-us">Contact Us</h2>
 <% if (successMessage && successMessage.length > 0) { %>
-  <div class="alert alert-success text-center my-4 flash-message contact-alert">
+  <div class="alert alert-success text-center my-4 flash-message contact-alert" style="color: green;">
     <%= successMessage[0] %>
   </div>
 <% } %>
 <% if (errorMessage && errorMessage.length > 0) { %>
-  <div class="alert alert-danger text-center my-4 flash-message contact-alert">
+  <div class="alert alert-danger text-center my-4 flash-message contact-alert" style="color: red;">
     <%= errorMessage[0] %>
   </div>
 <% } %>
