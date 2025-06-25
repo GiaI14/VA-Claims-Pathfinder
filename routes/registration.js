@@ -135,7 +135,9 @@ router.post('/login', async function (req, res) {
       return res.render('login', {
         errorMessage: "User does not exist. Please register!",
         email: enteredEmail,
-        googleClientId: process.env.GOOGLE_CLIENT_ID
+        googleClientId: process.env.GOOGLE_CLIENT_ID,
+        csrfToken: req.csrfToken(),
+        loggedOut: false
       });
     }
 
