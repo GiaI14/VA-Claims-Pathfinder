@@ -85,79 +85,155 @@ router.get('/reset-password', async (req, res) => {
    }
 }); 
 
+// router.post('/forgot-password', async (req, res) => {
+//     try {
+//         const [googleUsers] = await pool.query(
+//             'SELECT 1 FROM google_users WHERE email = ?',
+//             [req.body.email]
+//         );
+
+//         if (googleUsers.length > 0) {
+//             return res.render('forgot-password', {
+//                 csrfToken: req.csrfToken(),
+//                 errorMessage: 'Google users must reset via Google',
+//                 successMessage: null
+//             });
+//         }
+
+//         const [users] = await pool.query(
+//             'SELECT * FROM users WHERE email = ?',
+//             [req.body.email]
+//         );
+//         const user = users[0];
+
+//         if (!user) {
+//             return res.render('forgot-password', {
+//                 csrfToken: req.csrfToken(),
+//                 successMessage: 'If account exists, reset link sent',
+//                 errorMessage: null
+//             });
+//         }
+
+//         const token = crypto.randomBytes(32).toString('hex');
+//         const expiresAt = new Date(Date.now() + 3600000);
+
+//         await pool.query(
+//             'UPDATE users SET resetToken = ?, resetTokenExpiration = ? WHERE email = ?',
+//             [token, expiresAt, user.email]
+//         );
+
+//         const resetLink = `${req.protocol}://${req.get('host')}/auth/reset-password?token=${token}`;
+
+//         const mailOptions = {
+//             from: process.env.SMTP_FROM,
+//             to: user.email,
+//             subject: "Reset Your Password",
+//             text: `You requested a password reset. Click the link below to reset your password:\n\n${resetLink}\n\nIf you did not request this, ignore this email.`,
+//             html: `
+//                 <p>Hello,</p>
+//                 <p>You requested a password reset. Click the link below to set a new password:</p>
+//                 <p><a href="${resetLink}">Reset Password</a></p>
+//                 <p>This link is valid for 1 hour. If you didn’t request this, you can safely ignore it.</p>
+//                 <br />
+//                 <p>Best regards,<br>VA Claims Pathfinder</p>
+//             `,
+//         };
+
+//         await transporter.sendMail(mailOptions);
+
+//         res.render('forgot-password', {
+//             csrfToken: req.csrfToken(),
+//             successMessage: 'If an account exists, a reset link has been sent to your email.',
+//             errorMessage: null
+//         });
+//     } catch (error) {  // <-- This catch block was misplaced
+//         console.error('Email failed:', error);
+//         await pool.query(
+//             'UPDATE users SET resetToken = NULL, resetTokenExpiration = NULL WHERE email = ?',
+//             [req.body.email]  // Use req.body.email instead of user.email for safety
+//         );
+//         res.render('forgot-password', {
+//             csrfToken: req.csrfToken(),
+//             errorMessage: 'Failed to send email. Please try again.',
+//             successMessage: null
+//         });
+//     }
+// });
 router.post('/forgot-password', async (req, res) => {
-    try {
-        const [googleUsers] = await pool.query(
-            'SELECT 1 FROM google_users WHERE email = ?',
-            [req.body.email]
-        );
+  try {
+    const email = req.body.email;
 
-        if (googleUsers.length > 0) {
-            return res.render('forgot-password', {
-                csrfToken: req.csrfToken(),
-                errorMessage: 'Google users must reset via Google',
-                successMessage: null
-            });
-        }
+    // ✅ Step 1: Check if email exists in `users` table
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+    const user = users[0];
 
-        const [users] = await pool.query(
-            'SELECT * FROM users WHERE email = ?',
-            [req.body.email]
-        );
-        const user = users[0];
+    if (user) {
+      // Proceed with password reset for registered user
+      const token = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 3600000);
 
-        if (!user) {
-            return res.render('forgot-password', {
-                csrfToken: req.csrfToken(),
-                successMessage: 'If account exists, reset link sent',
-                errorMessage: null
-            });
-        }
+      await pool.query(
+        'UPDATE users SET resetToken = ?, resetTokenExpiration = ? WHERE email = ?',
+        [token, expiresAt, email]
+      );
 
-        const token = crypto.randomBytes(32).toString('hex');
-        const expiresAt = new Date(Date.now() + 3600000);
+      const resetLink = `${req.protocol}://${req.get('host')}/auth/reset-password?token=${token}`;
 
-        await pool.query(
-            'UPDATE users SET resetToken = ?, resetTokenExpiration = ? WHERE email = ?',
-            [token, expiresAt, user.email]
-        );
+      const mailOptions = {
+        from: process.env.SMTP_FROM,
+        to: email,
+        subject: "Reset Your Password",
+        html: `
+          <p>Hello,</p>
+          <p>You requested a password reset. Click the link below to set a new password:</p>
+          <p><a href="${resetLink}">Reset Password</a></p>
+          <p>This link is valid for 1 hour. If you didn’t request this, you can safely ignore it.</p>
+          <br />
+          <p>Best regards,<br>VA Claims Pathfinder</p>
+        `,
+      };
 
-        const resetLink = `${req.protocol}://${req.get('host')}/auth/reset-password?token=${token}`;
+      await transporter.sendMail(mailOptions);
 
-        const mailOptions = {
-            from: process.env.SMTP_FROM,
-            to: user.email,
-            subject: "Reset Your Password",
-            text: `You requested a password reset. Click the link below to reset your password:\n\n${resetLink}\n\nIf you did not request this, ignore this email.`,
-            html: `
-                <p>Hello,</p>
-                <p>You requested a password reset. Click the link below to set a new password:</p>
-                <p><a href="${resetLink}">Reset Password</a></p>
-                <p>This link is valid for 1 hour. If you didn’t request this, you can safely ignore it.</p>
-                <br />
-                <p>Best regards,<br>VA Claims Pathfinder</p>
-            `,
-        };
-
-        await transporter.sendMail(mailOptions);
-
-        res.render('forgot-password', {
-            csrfToken: req.csrfToken(),
-            successMessage: 'If an account exists, a reset link has been sent to your email.',
-            errorMessage: null
-        });
-    } catch (error) {  // <-- This catch block was misplaced
-        console.error('Email failed:', error);
-        await pool.query(
-            'UPDATE users SET resetToken = NULL, resetTokenExpiration = NULL WHERE email = ?',
-            [req.body.email]  // Use req.body.email instead of user.email for safety
-        );
-        res.render('forgot-password', {
-            csrfToken: req.csrfToken(),
-            errorMessage: 'Failed to send email. Please try again.',
-            successMessage: null
-        });
+      return res.render('forgot-password', {
+        csrfToken: req.csrfToken(),
+        successMessage: 'If an account exists, a reset link has been sent to your email.',
+        errorMessage: null
+      });
     }
+
+    // ✅ Step 2: If not found, check if user is a Google user
+    const [googleUsers] = await pool.query(
+      'SELECT 1 FROM google_users WHERE email = ?',
+      [email]
+    );
+
+    if (googleUsers.length > 0) {
+      return res.render('forgot-password', {
+        csrfToken: req.csrfToken(),
+        errorMessage: 'This account was created with Google. Please reset your password via Google.',
+        successMessage: null
+      });
+    }
+
+    // ✅ Step 3: Not found in either table
+    return res.render('forgot-password', {
+      csrfToken: req.csrfToken(),
+      successMessage: 'If an account exists, a reset link has been sent to your email.',
+      errorMessage: null
+    });
+
+  } catch (error) {
+    console.error('Email failed:', error);
+    return res.render('forgot-password', {
+      csrfToken: req.csrfToken(),
+      errorMessage: 'Something went wrong. Please try again.',
+      successMessage: null
+    });
+  }
 });
 
 router.post('/reset-password', async (req, res) => {
