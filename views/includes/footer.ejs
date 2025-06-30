@@ -1,5 +1,5 @@
 <footer class="site-footer">
-  <div class="container footer-content">
+  <div class="footer-container">
     <div class="footer-left">
       <img src="/path-to-your-logo.png" alt="VA Claims Pathfinder Logo" style="height: 40px; margin-right: 8px;">
       <span>VA Claims Pathfinder</span>
@@ -26,24 +26,29 @@
     border-top: 1px solid #ddd;
   }
 
-  .footer-content {
+  .footer-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    max-width: 960px;
     text-align: center;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
 
   .footer-left,
+  .footer-center,
   .footer-right {
-    flex: 0.5;
-    min-width: 150px;
+    flex: 1;
+    min-width: 200px;
   }
 
-.footer-center {
-   flex: 2;
-   text-align: center;
- }
+  .footer-logo {
+    height: 40px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
 
   .footer-left {
     display: flex;
@@ -70,7 +75,7 @@
   }
 
   @media (max-width: 768px) {
-    .footer-content {
+    .footer-container {
       flex-direction: column;
       text-align: center;
     }
