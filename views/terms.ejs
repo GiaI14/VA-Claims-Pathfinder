@@ -21,6 +21,10 @@
 </head>
 
 <body>
+<body>
+  <div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
+<main>
   <h1>Terms and Conditions</h1>
   <p><strong>Effective Date:</strong> [Insert Date]</p>
 
@@ -72,6 +76,9 @@
     📧 Email: [Your Email] <br>
     📍 Address: [Your Business Address]
   </p>
+</main>
+<%- include('includes/footer') %>
+  </div>
 </body>
 
 </html>
