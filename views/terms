@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('includes/head', { title: 'Terms and Conditions', nonce: nonce }) %>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      padding: 2rem;
+      line-height: 1.6;
+      background-color: #fff;
+      color: #333;
+    }
+    h1, h2 {
+      color: #1a1a1a;
+    }
+    p, li {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Terms and Conditions</h1>
+  <p><strong>Effective Date:</strong> [Insert Date]</p>
+
+  <p>Welcome to VA Claims Pathfinder (“we”, “our”, or “us”). By accessing or using our website and services (the “App”), you agree to be bound by these Terms and Conditions (“Terms”). If you do not agree with any part of these Terms, you must not use the App.</p>
+
+  <h2>1. Purpose of the App</h2>
+  <p>
+    VA Claims Pathfinder is a tool designed to help veterans explore potential secondary conditions related to their current service-connected disabilities and identify possible VA-rated conditions based on symptoms they provide. The App uses symptom-based input and known VA disability codes to suggest possibilities. This information is intended as a guide only and does not guarantee any specific outcome regarding VA claims.
+  </p>
+
+  <h2>2. No Medical or Legal Advice</h2>
+  <p>
+    The information provided by VA Claims Pathfinder is not medical advice, not legal advice, and not a substitute for evaluation by qualified medical or legal professionals. You should consult a licensed professional before making any decisions regarding your VA claims or healthcare.
+  </p>
+
+  <h2>3. No Guarantee of Claim Outcomes</h2>
+  <p>
+    VA claim outcomes depend on a variety of factors, including the discretion of VA adjudicators, the quality and content of medical evaluations (C&P exams), and individual case details. Therefore, we cannot and do not guarantee that the VA will approve any claim suggested or implied by the App.
+  </p>
+
+  <h2>4. User Responsibilities</h2>
+  <p>
+    You are responsible for the accuracy of the information you provide in the App. The results you receive are based on your input and should be reviewed and interpreted with discretion. Misuse of the App or reliance without professional consultation is at your own risk.
+  </p>
+
+  <h2>5. Limitation of Liability</h2>
+  <p>
+    Under no circumstances shall VA Claims Pathfinder, its owners, or its affiliates be liable for any direct, indirect, incidental, or consequential damages arising out of the use or inability to use the App, including any decisions made or actions taken based on its suggestions.
+  </p>
+
+  <h2>6. Intellectual Property</h2>
+  <p>
+    All content, logos, algorithms, and features of the App are the intellectual property of VA Claims Pathfinder and may not be copied, distributed, or reproduced without written permission.
+  </p>
+
+  <h2>7. Privacy</h2>
+  <p>
+    We are committed to protecting your privacy. Please review our <a href="/privacy-policy">Privacy Policy</a> to understand how your information is collected and used.
+  </p>
+
+  <h2>8. Changes to Terms</h2>
+  <p>
+    We reserve the right to modify these Terms at any time. Continued use of the App after any such changes constitutes your acceptance of the new Terms.
+  </p>
+
+  <h2>9. Contact Information</h2>
+  <p>
+    For questions about these Terms, please contact us at:<br>
+    📧 Email: [Your Email] <br>
+    📍 Address: [Your Business Address]
+  </p>
+</body>
+
+</html>
