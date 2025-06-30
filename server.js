@@ -212,6 +212,10 @@ app.get("/possibleDisabilities", async (req, res) => {
   }
 });
 
+app.get('/terms', (req, res) => {
+  res.render('terms');
+});
+
 // Generic error handler
 app.use((err, req, res, next) => {
   console.error('Express error:', err);
