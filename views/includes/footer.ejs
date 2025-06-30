@@ -19,72 +19,68 @@
 
 <style>
   .site-footer {
-    background: #f8f9fa;
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    color: #555;
-    border-top: 1px solid #ddd;
-  }
+  background: #f8f9fa;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #555;
+  border-top: 1px solid #ddd;
+}
 
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+  flex-basis: 33.33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 250px;
+}
+
+.footer-left {
+  justify-content: flex-start;
+}
+
+.footer-right {
+  justify-content: flex-end;
+}
+
+.footer-logo {
+  height: 40px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.site-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
   .footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 960px;
+    flex-direction: column;
     text-align: center;
-    margin: 0 auto;
-    padding: 0 1rem;
   }
 
   .footer-left,
   .footer-center,
   .footer-right {
-    flex: 1;
-    min-width: 200px;
+    justify-content: center;
+    margin-top: 0.5rem;
   }
-
-  .footer-logo {
-    height: 40px;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
-  .footer-left {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-  }
-
-  .footer-center {
-    text-align: center;
-  }
-
-  .footer-right {
-    text-align: right;
-  }
-
-  .site-footer a {
-    color: #007bff;
-    text-decoration: none;
-  }
-
-  .site-footer a:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    .footer-container {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .footer-left,
-    .footer-right {
-      justify-content: center;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-  }
+}
 </style>
