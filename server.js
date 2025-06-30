@@ -213,7 +213,7 @@ app.get("/possibleDisabilities", async (req, res) => {
 });
 
 app.get('/terms', (req, res) => {
-  res.render('terms');
+  res.render('terms', {nonce: res.locals.nonce || '' });
 });
 
 // Generic error handler
