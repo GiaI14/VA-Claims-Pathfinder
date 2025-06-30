@@ -18,7 +18,7 @@
 </footer>
 
 <style>
-  .site-footer {
+ .site-footer {
   background: #f8f9fa;
   padding: 1rem 0;
   font-size: 0.9rem;
@@ -30,35 +30,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 960px; /* THIS pulls everything closer */
   margin: 0 auto;
-  padding: 0 1rem;
   flex-wrap: wrap;
+  padding: 0 1rem;
 }
 
 .footer-left,
 .footer-center,
 .footer-right {
-  flex-basis: 33.33%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-width: 250px;
-}
-
-.footer-left {
-  justify-content: flex-start;
-}
-
-.footer-right {
-  justify-content: flex-end;
+  flex: 1;
+  min-width: 200px;
 }
 
 .footer-logo {
   height: 40px;
   margin-right: 8px;
   vertical-align: middle;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.footer-center {
+  text-align: center;
+}
+
+.footer-right {
+  text-align: right;
 }
 
 .site-footer a {
@@ -77,10 +80,11 @@
   }
 
   .footer-left,
-  .footer-center,
   .footer-right {
     justify-content: center;
+    text-align: center;
     margin-top: 0.5rem;
   }
 }
+
 </style>
