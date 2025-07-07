@@ -157,12 +157,13 @@ input[type="password"]:focus {
 
 @media (max-width: 600px) {
   body {
-    padding-top: 50px;  
+    padding-top: 30px;  
   }
 
   #signup-page {
     max-width: 95vw;
-    padding: 0.2rem;
+    padding: 1rem;
+    margin: 0.5rem auto 0.3rem auto;
   }
 
   h1 {
