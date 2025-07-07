@@ -13,7 +13,7 @@
 }
 
 body {
-  padding-top: 135px;  
+  padding-top: 100px;  
   background-color: var(--light-gray);
   color: var(--text-color);
   font-family: 'Source Sans Pro', Arial, sans-serif;
