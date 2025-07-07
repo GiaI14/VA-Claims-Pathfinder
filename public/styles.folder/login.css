@@ -289,6 +289,14 @@ input[type="password"]:focus {
 }
 
 @media (max-width: 500px) {
+    body {
+    padding-top: 0;  
+  }
+  
+  .page-wrapper {
+    padding-top: 10px;
+  }
+  
   main {
     max-width: 95vw;
     padding: 0.5rem;
