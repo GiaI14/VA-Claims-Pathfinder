@@ -216,6 +216,10 @@ app.get('/terms', (req, res) => {
   res.render('terms', {nonce: res.locals.nonce || '' });
 });
 
+app.get('/policy', (req, res) => {
+  res.render('terms', {nonce: res.locals.nonce || '' });
+});
+
 // Generic error handler
 app.use((err, req, res, next) => {
   console.error('Express error:', err);
