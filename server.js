@@ -217,7 +217,7 @@ app.get('/terms', (req, res) => {
 });
 
 app.get('/policy', (req, res) => {
-  res.render('terms', {nonce: res.locals.nonce || '' });
+  res.render('policy', {nonce: res.locals.nonce || '' });
 });
 
 // Generic error handler
