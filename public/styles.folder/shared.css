@@ -21,8 +21,6 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
-  margin: 0;
-  padding: 0;
   line-height: 1.6;
 }
 
@@ -152,7 +150,7 @@ body {
 }
 
   main {
-    flex: 1;
+    flex: 0;
  }
 
 footer{
