@@ -11,6 +11,12 @@
   --gray-background: #3a3a3a;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: var(--background-color);
@@ -144,6 +150,10 @@ body {
   flex-direction: column;
   padding-top: 100px;
 }
+
+  main {
+    flex: 1;
+ }
 
 footer{
    width: 100%;
