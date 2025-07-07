@@ -159,7 +159,11 @@ input[type="password"]:focus {
   body {
     padding-top: 0;  
   }
-
+  
+  .page-wrapper {
+    padding-top: 20px;
+  }
+  
   #signup-page {
     max-width: 95vw;
     padding: 1rem;
