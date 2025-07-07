@@ -24,7 +24,7 @@ body {
   max-width: 400px;
   width: 100%;
   box-sizing: border-box;
-  margin: 1.8rem auto; 
+  margin: 1.8rem auto 0.5rem auto; 
   padding: 1.8rem;  
   background-color: white;
   border-radius: 7.2px; 
