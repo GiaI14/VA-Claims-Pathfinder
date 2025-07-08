@@ -84,6 +84,7 @@ app.use(express.static(path.join(__dirname, 'images')));
 
 // CSRF protection setup
 const csrfProtection = csrf();
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   res.locals.successMessage = req.flash('success');
@@ -152,8 +153,6 @@ app.use((err, req, res, next) => {
 // Set view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-app.use(csrfProtection);
 
 // Routes
 app.use('/api', calculatorRoutes);
