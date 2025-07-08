@@ -8,21 +8,19 @@
     </div>
     <ul class="nav-menu" id="nav-menu">
       <li><a href="/">Rating Calculator</a></li>
-      <% if (isAuth) { %> 
-        <li><a href="/secondary">Secondary Conditions</a></li>
-        <li><a href="/possibleDisabilities">Possible Disabilities</a></li>
-      <% } %>
-      <% if (!isAuth) { %>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/signup">Signup</a></li>
-      <% } else { %>
-        <li>
-          <form action="/logout" method="POST">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
-            <button id="nav-logout-btn">Logout</button>
-          </form>
-        </li>
-      <% } %>
+     <% if (isAuth) { %> 
+  <li><a href="/secondary">Secondary Conditions</a></li>
+  <li><a href="/possibleDisabilities">Possible Disabilities</a></li>
+  <li>
+    <form action="/logout" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+      <button id="nav-logout-btn">Logout</button>
+    </form>
+  </li>
+<% } else { %>
+  <li><a href="/login">Login</a></li>
+  <li><a href="/signup">Signup</a></li>
+<% } %>
     </ul>
   </nav>
   <%- include('mobile-drawer', { nonce: nonce }) %>
