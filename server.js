@@ -181,7 +181,7 @@ app.get('/secondary', (req, res) => {
   console.log('Rendering secondary with CSRF token:', req.csrfToken());
   res.render('secondary', {
     csrfToken: req.csrfToken(),
-    isAuth: req.session.inLoggedIn,
+    isAuth: req.session.isLoggedIn,
     nonce: res.locals.nonce
   });
 });
