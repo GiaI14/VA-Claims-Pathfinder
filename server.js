@@ -86,6 +86,12 @@ app.use(express.static(path.join(__dirname, 'images')));
 const csrfProtection = csrf();
 
 app.use((req, res, next) => {
+  res.locals.isAuth = req.session.isAuthenticated || false;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
+app.use((req, res, next) => {
   res.locals.successMessage = req.flash('success');
   res.locals.errorMessage = req.flash('error');
   next();
