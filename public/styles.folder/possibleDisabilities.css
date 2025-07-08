@@ -12,7 +12,7 @@ main.container {
     max-width: 800px;
     margin: 40px auto;
     background-color: #ffffff;
-    padding: 0px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -37,7 +37,7 @@ h1, h2 {
 h1 {
     text-align: center;
     width: 100%;
-    margin: 30px auto 20px;
+    margin: 30px auto 0px;
     color: #202c2c; /* Optional: keeps your existing color */
     font-size: 2.5em; /* Optional: adjust size as needed */
 }
