@@ -23,7 +23,7 @@ h1, h2 {
 h1 {
     text-align: center;
     width: 100%;
-    margin: 20 auto 10px;
+    margin: 20px auto 0;
     font-size: 2.5em;
 }
 
