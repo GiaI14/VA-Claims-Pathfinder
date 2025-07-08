@@ -213,11 +213,17 @@ app.get("/possibleDisabilities", async (req, res) => {
 });
 
 app.get('/terms', (req, res) => {
-  res.render('terms', {nonce: res.locals.nonce || '' });
+  res.render('terms', {
+    nonce: res.locals.nonce || '',
+    csrfToken: req.csrfToken()
+  });
 });
 
 app.get('/policy', (req, res) => {
-  res.render('policy', {nonce: res.locals.nonce || '' });
+  res.render('policy', {
+    nonce: res.locals.nonce || '',
+    csrfToken: req.csrfToken()
+  });
 });
 
 // Generic error handler
