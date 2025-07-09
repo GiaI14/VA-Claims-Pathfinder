@@ -248,7 +248,8 @@ router.post('/auth/google/callback', async (req, res) => {
           req.session.save((err) => {
               if (err) {
                   console.error('Session save error:', err);
-                  return res.redirect('/login');
+                  //return res.redirect('/login');
+                  return res.status(500).json({success: false, error: "Session not saved"});
               }
 
               console.log('Auth successful for:', payload.email);
