@@ -120,13 +120,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Auth status and user loader
 app.use(async function (req, res, next) {
   res.locals.isAuth = req.session.isAuthenticated || false;
   if (req.session.isAuthenticated) {
     try {
       const db = getDb();
-      const [results] = await db.execute('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
+      let results;
+      if (req.session.user && req.session.user.google_id) {
+        // Google user
+        [results] = await db.execute('SELECT * FROM google_users WHERE id = ?', [req.session.user.id]);
+      } else {
+        // Regular user
+        [results] = await db.execute('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
+      }
       if (results.length > 0) {
         res.locals.user = results[0];
         req.user = results[0];
@@ -143,6 +149,30 @@ app.use(async function (req, res, next) {
   console.log('Middleware - isAuth:', res.locals.isAuth);
   next();
 });
+
+// Auth status and user loader
+// app.use(async function (req, res, next) {
+//   res.locals.isAuth = req.session.isAuthenticated || false;
+//   if (req.session.isAuthenticated) {
+//     try {
+//       const db = getDb();
+//       const [results] = await db.execute('SELECT * FROM users WHERE id = ?', [req.session.user.id]);
+//       if (results.length > 0) {
+//         res.locals.user = results[0];
+//         req.user = results[0];
+//         console.log('User:', res.locals.user);
+//       } else {
+//         req.session.isAuthenticated = false;
+//         console.log('User not found:', req.session.user.id);
+//       }
+//     } catch (err) {
+//       console.error('Error fetching user:', err);
+//       req.session.isAuthenticated = false;
+//     }
+//   }
+//   console.log('Middleware - isAuth:', res.locals.isAuth);
+//   next();
+// });
 
 // CSRF error handler
 app.use((err, req, res, next) => {
