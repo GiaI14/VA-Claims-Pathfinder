@@ -369,6 +369,11 @@ select {
     }
     #contact {
         margin-left: 60px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem; 
     }
 
     #send-button {
