@@ -21,10 +21,8 @@ body {
     margin-top: 80px;
 }
 
-html{
+html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
     background-color: var(--light-gray);
 
 h1 {
