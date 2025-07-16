@@ -362,24 +362,22 @@ select {
     .three-column-layout {
         grid-template-columns: 1fr;
         gap: 10px;
-        min-height: 100vh;
     }
-    .column {
-        padding: 10px 0;
-        min-height: 100vh;
-        background-color: var(light-gray);
-    }
+   
     body {
         margin-top: 30px;
     }
     #contact-us {
-    margin-left: 60px;
+        margin-left: 60px;
     }
 
     #send-button {
     margin-left: 60px;
     }
-    
+
+     .column {
+        padding: 10px 0;
+    }
     .center-content {
         padding: 15px;
     }
