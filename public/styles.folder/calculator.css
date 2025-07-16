@@ -232,18 +232,6 @@ select {
 #toggle-dependents:hover {
     background-color: #2f4141;
 }
-
-#contact {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--background-color); /* make sure this matches your intended color */
-  padding: 2rem 1rem;
-  box-sizing: border-box;
-}
     
 .dependents-row {
     display: flex;
