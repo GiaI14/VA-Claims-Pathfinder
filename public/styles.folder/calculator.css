@@ -368,7 +368,6 @@ select {
         margin-top: 30px;
     }
     #contact {
-        margin-left: 60px;
         min-height: 100vh;
         display: flex;
         justify-content: center;
