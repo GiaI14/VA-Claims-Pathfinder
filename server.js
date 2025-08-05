@@ -194,7 +194,22 @@ app.use('/auth', authRoutes);
 //app.use('/', contactRoutes);
 
 // Root route
+// app.get('/', (req, res) => {
+//   res.render('index', {
+//     message: null,
+//     csrfToken: req.csrfToken(),
+//     nonce: res.locals.nonce
+//   });
+// });
 app.get('/', (req, res) => {
+  res.render('home', {
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce
+  });
+});
+
+// Move calculator to a new route
+app.get('/calculator', (req, res) => {
   res.render('index', {
     message: null,
     csrfToken: req.csrfToken(),
