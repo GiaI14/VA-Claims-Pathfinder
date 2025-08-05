@@ -195,16 +195,15 @@ app.use('/auth', authRoutes);
 
 
 app.get('/', (req, res) => {
-  console.log('Home route hit');
-  res.render('home', {
-    csrfToken: req.csrfToken(),
-    nonce: res.locals.nonce
-  });
+  res.render('index', {
+  message: null,
+  csrfToken: req.csrfToken(),
+  nonce: res.locals.nonce
+});
 });
 
-// Move calculator to a new route
 app.get('/calculator', (req, res) => {
-  res.render('index', {
+  res.render('calculator', {
     message: null,
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce
