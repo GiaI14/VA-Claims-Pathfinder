@@ -87,7 +87,14 @@ app.use(express.static(path.join(__dirname, 'images')));
 
 // CSRF protection setup
 const csrfProtection = csrf();
-app.use(csrfProtection);
+//app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next();
+  }
+  return csrfProtection(req, res, next);
+});
 
 app.use((req, res, next) => {
   res.locals.successMessage = req.flash('success');
