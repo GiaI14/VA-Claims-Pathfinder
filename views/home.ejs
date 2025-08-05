@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { 
+  nonce: nonce, 
+  customStyles: '<link rel="stylesheet" href="/styles.folder/info.css">' 
+}) %>
+<link rel="stylesheet" href="/styles.folder/shared.css">
 
+<body>
+  <div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
+
+    <div class="center-content">
+      <h1>Welcome to VA Claims Pathfinder</h1>
+      <p>This tool helps veterans understand and calculate their VA disability ratings.</p>
+
+      <a href="/index" class="calculator-button">Disability Calculator</a>
+    </div>
+
+    <%- include('includes/footer') %>
+  </div>
+</body>
+</html>
