@@ -80,6 +80,7 @@ app.use(flash()); //added
 
 app.use('/api', calculatorRoutes);
 app.use('/api', secondaryConditionRoutes);
+app.use('/images', express.static('images'));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
