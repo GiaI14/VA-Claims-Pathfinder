@@ -13,23 +13,36 @@
 
         <form id="symptom-form">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
           <h2>New Symptoms</h2>
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
               <div class="input-group">
-                <label>
+                <label for="selectedSystemInput">
                   System Affected
-                  <div class="custom-dropdown">
-                    <% systems.forEach(function(system) { %>
-                    <div class="dropdown-item" data-system="<%= system %>">
-                      <%= system %>
-                      <div class="hover-image">
-                        <img src="/images/<%= systemImages[system] %>" alt="<%= system %>" />
-                      </div>
-                    </div>
-                    <% }); %>
-                  </div>
                 </label>
+                <!-- Visible input to hold selected system -->
+                <input
+                  type="text"
+                  id="selectedSystemInput"
+                  name="selectedSystem"
+                  placeholder="Select a system"
+                  readonly
+                  required
+                  style="margin-bottom: 10px; padding: 8px; width: 300px;"
+                />
+
+                <div class="custom-dropdown" id="customDropdown">
+                  <% systems.forEach(function(system) { %>
+                  <div class="dropdown-item" data-system="<%= system %>">
+                    <%= system %>
+                    <div class="hover-image">
+                      <img src="/images/<%= systemImages[system] %>" alt="<%= system %>" />
+                    </div>
+                  </div>
+                  <% }); %>
+                </div>
+
                 <label>
                   Symptoms:
                   <input
@@ -40,12 +53,15 @@
                   />
                 </label>
               </div>
+
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
+
           <div class="button-row">
             <button type="button" id="addEntryButton">Add Another Entry</button>
           </div>
+
           <div class="analyze-section">
             <button id="analyzeButton">Analyze Symptoms</button>
           </div>
@@ -58,55 +74,56 @@
       </div>
 
       <!-- Styles -->
-    <style>
-  .custom-dropdown {
-    border: 1px solid #ccc;
-    width: 300px;
-    max-height: 300px;
-    overflow-y: auto;
-    position: relative;
-    background: white;
-  }
-  .dropdown-item {
-    padding: 10px;
-    cursor: pointer;
-    position: relative;
-    border-bottom: 1px solid #eee;
-  }
-  .dropdown-item:hover {
-    background-color: #f5f5f5;
-  }
-  .hover-image {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: 0;
-    width: 200px;
-    border: 1px solid #ccc;
-    background: white;
-    z-index: 10;
-  }
-  .dropdown-item:hover .hover-image {
-    display: block;
-  }
-  .hover-image img {
-    width: 100%;
-    height: auto;
-  }
-</style>
+      <style>
+        .custom-dropdown {
+          border: 1px solid #ccc;
+          width: 300px;
+          max-height: 300px;
+          overflow-y: auto;
+          padding: 0;
+          margin: 0;
+          user-select: none;
+          background: white;
+        }
 
-<div class="custom-dropdown">
-  <% systems.forEach(function(system) { %>
-  <div class="dropdown-item">
-    <%= system %>
-    <div class="hover-image">
-      <img src="/images/<%= systemImages[system] %>" alt="<%= system %>" />
-    </div>
-  </div>
-  <% }); %>
-</div>
+        .dropdown-item {
+          padding: 10px;
+          position: relative;
+          cursor: pointer;
+          border-bottom: 1px solid #eee;
+          list-style: none;
+        }
 
-      
+        .dropdown-item:hover {
+          background-color: #f5f5f5;
+        }
+
+        .dropdown-item.selected {
+          background-color: #d0eaff;
+        }
+
+        .hover-image {
+          display: none;
+          position: absolute;
+          left: 100%;
+          top: 0;
+          z-index: 100;
+          width: 200px;
+          background-color: white;
+          border: 1px solid #ccc;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-item:hover .hover-image {
+          display: block;
+        }
+
+        .hover-image img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      </style>
 
       <!-- Scripts -->
       <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
@@ -116,8 +133,22 @@
         document.addEventListener('DOMContentLoaded', function () {
           console.log('Symptom Analysis page loaded');
 
-          // You can remove the systemImages object here if not used for other things.
-          // And you can remove the JS event listener for .body-part change if not needed.
+          const dropdown = document.getElementById('customDropdown');
+          const selectedInput = document.getElementById('selectedSystemInput');
+
+          dropdown.addEventListener('click', function (e) {
+            const item = e.target.closest('.dropdown-item');
+            if (!item) return;
+
+            const selectedSystem = item.dataset.system;
+            selectedInput.value = selectedSystem;
+
+            // Highlight selected item
+            document.querySelectorAll('.dropdown-item').forEach(el => {
+              el.classList.remove('selected');
+            });
+            item.classList.add('selected');
+          });
         });
       </script>
 
@@ -126,4 +157,3 @@
     </div>
   </body>
 </html>
-
