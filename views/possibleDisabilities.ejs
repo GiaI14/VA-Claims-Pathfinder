@@ -9,7 +9,11 @@
     <div class="container">
       <h1>Symptoms Analysis</h1>
       <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-      
+
+   <div id="systemImageContainer" class="image-container">
+      <img id="systemImage" src="" alt="Body system" style="display: none;" />
+   </div>
+
       <form id="symptom-form">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <h2>New Symptoms</h2>
