@@ -190,7 +190,7 @@
             const csrfToken = document.getElementById('csrfToken').value;
 
             try {
-              const response = await fetch('/api/analyze-symptoms', {
+              const response = await fetch('/symptoms/analyze-symptoms', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
