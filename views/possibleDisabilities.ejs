@@ -3,19 +3,35 @@
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
   <style>
-    /* Image container styling */
-    .image-container {
-      text-align: center;
-      margin: 1em 0;
-    }
+  .condition {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
 
-    #systemImage {
-      max-width: 512px;
-      max-height: 512px;
-      border: 1px solid #ddd;
-      display: none;
-    }
-  </style>
+  .condition .hover-image {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 200px; /* adjust as needed */
+    z-index: 10;
+    background-color: white; /* optional, avoid black bg */
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+
+  .condition:hover .hover-image {
+    display: block;
+  }
+</style>
+<div class="condition">
+  Hover over this condition
+  <div class="hover-image">
+    <img src="/images/your-image.jpg" alt="Condition image" width="200">
+  </div>
+</div>
+
   <body>
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
