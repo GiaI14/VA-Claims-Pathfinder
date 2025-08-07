@@ -156,7 +156,7 @@
           });
 
           // Handle form submission for analysis
-          document.getElementById('symptom-form').addEventListener('submit', function (e) {
+          document.getElementById('symptom-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const resultsDiv = document.getElementById('results');
@@ -186,13 +186,55 @@
               });
             }
 
-            // Here you can call your analysis function or API
-            // For demo purposes, let's just display the collected data:
-            const formattedResults = entries.map(entry => {
-              return `<h3>System: ${entry.system}</h3><p>Symptoms: ${entry.symptoms.join(', ')}</p>`;
-            }).join('<hr>');
+            // Send the data to backend API for analysis
+            const csrfToken = document.getElementById('csrfToken').value;
 
-            resultsDiv.innerHTML = formattedResults;
+            try {
+              const response = await fetch('/api/analyze-symptoms', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-csrf-token': csrfToken
+                },
+                body: JSON.stringify(entries)
+              });
+
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to analyze symptoms');
+              }
+
+              const analysisResults = await response.json();
+
+              // Render results from backend
+              if (!Array.isArray(analysisResults) || analysisResults.length === 0) {
+                resultsDiv.innerHTML = '<p>No results returned.</p>';
+                return;
+              }
+
+              resultsDiv.innerHTML = analysisResults.map(result => {
+                if (result.message) {
+                  return `<h3>${result.system}</h3><p>${result.message}</p>`;
+                }
+
+                return `
+                  <h3>${result.system}</h3>
+                  <p><strong>Symptoms:</strong> ${result.symptoms.join(', ')}</p>
+                  ${result.possibleConditions.map(condition => `
+                    <div style="margin-left: 1em; margin-bottom: 0.5em;">
+                      <strong>${condition.condition_name} (${condition.medical_code})</strong><br/>
+                      Match: ${condition.match_percentage}%<br/>
+                      Matched Symptoms: ${condition.matched_symptoms.join(', ')}<br/>
+                      Presumptive: ${condition.is_presumptive ? 'Yes' : 'No'}<br/>
+                      ${condition.qualifying_circumstance ? `Qualifying Circumstance: ${condition.qualifying_circumstance}<br/>` : ''}
+                      ${condition.evidence_basis ? `Evidence Basis: ${condition.evidence_basis}<br/>` : ''}
+                    </div>
+                  `).join('')}
+                `;
+              }).join('<hr>');
+            } catch (err) {
+              resultsDiv.innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
+            }
           });
         });
       </script>
