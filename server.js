@@ -189,7 +189,7 @@ app.set('view engine', 'ejs');
 
 // Routes
 app.use(registrationRoutes);
-app.use('/symptoms', symptomRoutes);
+app.use('/', symptomRoutes);
 app.use('/auth', authRoutes);
 //app.use('/', contactRoutes);
 
