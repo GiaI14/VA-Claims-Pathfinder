@@ -2,35 +2,6 @@
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-  <style>
-  .condition {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-  }
-
-  .condition .hover-image {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 200px; /* adjust as needed */
-    z-index: 10;
-    background-color: white; /* optional, avoid black bg */
-    border: 1px solid #ccc;
-    padding: 5px;
-  }
-
-  .condition:hover .hover-image {
-    display: block;
-  }
-</style>
-<div class="condition">
-  Hover over this condition
-  <div class="hover-image">
-    <img src="/images/your-image.jpg" alt="Condition image" width="200">
-  </div>
-</div>
 
   <body>
     <div class="page-wrapper">
@@ -51,13 +22,60 @@
             <div class="symptom-entry">
               <div class="input-group">
                 <label>
-                  System Affected:
-                  <select class="body-part" required>
-                    <option value="">Select a system</option>
+                  System Affected 
+
+                <div class="custom-dropdown">
                     <% systems.forEach(function(system) { %>
-                    <option value="<%= system %>"><%= system %></option>
-                    <% }); %>
-                  </select>
+                    <div class="dropdown-item" data-system="<%= system %>">
+                    <%= system %>
+                <div class="hover-image">
+                  <img src="/images/<%= systemImages[system] %>" alt="<%= system %>" />
+              </div>
+              </div>
+            <% }); %>
+            </div>
+
+<style>
+  .custom-dropdown {
+    border: 1px solid #ccc;
+    width: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .dropdown-item {
+    padding: 10px;
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .hover-image {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    z-index: 100;
+    width: 200px;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+
+  .dropdown-item:hover .hover-image {
+    display: block;
+  }
+
+  .hover-image img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+
+
                 </label>
                 <label>
                   Symptoms:
