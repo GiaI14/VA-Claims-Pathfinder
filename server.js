@@ -262,7 +262,7 @@ app.get("/possibleDisabilities", async (req, res) => {
       csrfToken: req.csrfToken(),
       nonce: res.locals.nonce,
       systems: systems.map(row => row.systems),
-      systemImages,
+      
     });
   } catch (err) {
     console.error('Error fetching systems:', err);
