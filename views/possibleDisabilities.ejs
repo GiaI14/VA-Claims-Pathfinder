@@ -34,29 +34,34 @@
           <h2>New Symptoms</h2>
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
-              <div class="input-group">
-                <label>
-                  System Affected:
-                  <select class="body-part" required>
-                    <option value="">Select a system</option>
-                    <% systems.forEach(function(system) { %>
-                      <option value="<%= system %>"><%= system %></option>
-                    <% }); %>
-                  </select>
-                </label>
-                <label>
-                  Symptoms:
-                  <input
-                    type="text"
-                    class="symptoms"
-                    placeholder="Enter at least 5 symptoms (comma separated)"
-                    required
-                  />
-                </label>
-              </div>
-              <button type="button" class="remove-entry-button">Remove Entry</button>
-            </div>
-          </div>
+  <div class="input-group">
+    <div class="form-left">
+      <label>
+        System Affected:
+        <select class="body-part" required>
+          <option value="">Select a system</option>
+          <% systems.forEach(function(system) { %>
+            <option value="<%= system %>"><%= system %></option>
+          <% }); %>
+        </select>
+      </label>
+      <label>
+        Symptoms:
+        <input
+          type="text"
+          class="symptoms"
+          placeholder="Enter at least 5 symptoms (comma separated)"
+          required
+        />
+      </label>
+      <button type="button" class="remove-entry-button">Remove Entry</button>
+    </div>
+    <div class="form-right image-container">
+      <img class="system-image" src="" alt="Body system" style="display:none; max-width:200px; max-height:200px; border:1px solid #ddd;" />
+    </div>
+  </div>
+</div>
+
 
           <div class="button-row">
             <button type="button" id="addEntryButton">Add Another Entry</button>
