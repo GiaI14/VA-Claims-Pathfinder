@@ -2,260 +2,65 @@
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-  <style>
-    .symptom-entry .input-group {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 1em;
-    }
-
-    .form-left {
-      flex: 1;
-    }
-
-    .form-right {
-      flex: 0 0 auto;
-      text-align: center;
-    }
-
-    .system-image {
-      max-width: 200px;
-      max-height: 200px;
-      border: 1px solid #ddd;
-      display: none;
-    }
-
-    .remove-entry-button {
-      margin-top: 0.5em;
-      display: inline-block;
-    }
-  </style>
   <body>
-    <div class="page-wrapper">
-      <%- include('includes/header', { nonce: nonce }) %>
+    <%- include('includes/header', { nonce: nonce }) %>
 
-      <div class="container">
-        <h1>Symptoms Analysis</h1>
-        <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-
-        <form id="symptom-form">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <h2>New Symptoms</h2>
-
-          <div id="symptomEntriesContainer">
-            <div class="symptom-entry">
-              <div class="input-group">
-                <div class="form-left">
-                  <label>
-                    System Affected:
-                    <select class="body-part" required>
-                      <option value="">Select a system</option>
-                      <% systems.forEach(function(system) { %>
-                        <option value="<%= system %>"><%= system %></option>
-                      <% }); %>
-                    </select>
-                  </label>
-                  <label>
-                    Symptoms:
-                    <input
-                      type="text"
-                      class="symptoms"
-                      placeholder="Enter at least 5 symptoms (comma separated)"
-                      required
-                    />
-                  </label>
-                  <button type="button" class="remove-entry-button">Remove Entry</button>
-                </div>
-                <div class="form-right image-container">
-                  <img class="system-image" src="" alt="Body system" />
-                </div>
-              </div>
+    <div class="container">
+      <h1>Symptoms Analysis</h1>
+      <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+      
+      <!-- Symptoms Section -->
+      <form id="symptom-form">
+        <h2>New Symptoms</h2>
+        <div id="symptomEntriesContainer">
+          <div class="symptom-entry">
+            <div class="input-group">
+              <label>
+                System Affected:
+                <select class="body-part" required>
+                  <option value="">Select a system</option>
+                  <% systems.forEach(function(system) { %>
+                    <option value="<%= system %>"><%= system %></option>
+                  <% }); %>
+                </select>
+              </label>
+              <label>
+                Symptoms:
+                <input
+                  type="text"
+                  class="symptoms"
+                  placeholder="Enter symptoms (comma separated)"
+                  required
+                />
+              </label>
             </div>
+            <button type="button" class="remove-entry-button">Remove Entry</button>
           </div>
+        </div>
+        <div class="button-row">
+          <button type="button" id="addEntryButton">Add Another Entry</button>
+        </div>
+        <div class="analyze-section">
+          <button id="analyzeButton">Analyze Symptoms</button>
+        </div>
 
-          <div class="button-row">
-            <button type="button" id="addEntryButton">Add Another Entry</button>
-          </div>
+  
+        <input type="text" name="honeypot" style="display: none;">
+      </form>
 
-          <div class="analyze-section">
-            <button type="submit" id="analyzeButton">Analyze Symptoms</button>
-          </div>
-
-          <input type="text" name="honeypot" style="display: none" />
-        </form>
-
-        <!-- Results Display -->
-        <div id="results"></div>
-      </div>
-
-      <!-- Scripts -->
-      <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-      <script nonce="<%= nonce %>">
-        document.addEventListener('DOMContentLoaded', function () {
-          console.log('Symptom Analysis page loaded');
-
-          const systemImages = {
-            'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-            'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-            'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-            'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-            'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-            'Endocrine system': '512px-Endocrine_English.svg.png',
-            'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-            'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-            'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-            'Musculoskeletal system': '512px-Muscles_front_and_back-es.png',
-            'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-            'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
-            'Ear': 'Auditory_System.jpg',
-            'Sense Organs': 'Sense-Organ.png',
-          };
-
-          // Change event for system dropdowns
-          document.getElementById('symptomEntriesContainer').addEventListener('change', function (e) {
-            if (e.target.classList.contains('body-part')) {
-              const selectedSystem = e.target.value;
-              const entry = e.target.closest('.symptom-entry');
-              const img = entry.querySelector('.system-image');
-
-              if (systemImages[selectedSystem]) {
-                img.src = '/images/' + systemImages[selectedSystem];
-                img.style.display = 'block';
-              } else {
-                img.style.display = 'none';
-                img.src = '';
-              }
-            }
-          });
-
-          // Add new symptom entry
-          document.getElementById('addEntryButton').addEventListener('click', function () {
-            const container = document.getElementById('symptomEntriesContainer');
-
-            const entryDiv = document.createElement('div');
-            entryDiv.className = 'symptom-entry';
-            entryDiv.innerHTML = `
-              <div class="input-group">
-                <div class="form-left">
-                  <label>
-                    System Affected:
-                    <select class="body-part" required>
-                      <option value="">Select a system</option>
-                      <% systems.forEach(function(system) { %>
-                        <option value="<%= system %>"><%= system %></option>
-                      <% }); %>
-                    </select>
-                  </label>
-                  <label>
-                    Symptoms:
-                    <input
-                      type="text"
-                      class="symptoms"
-                      placeholder="Enter at least 5 symptoms (comma separated)"
-                      required
-                    />
-                  </label>
-                  <button type="button" class="remove-entry-button">Remove Entry</button>
-                </div>
-                <div class="form-right image-container">
-                  <img class="system-image" src="" alt="Body system" />
-                </div>
-              </div>
-            `;
-            container.appendChild(entryDiv);
-          });
-
-          // Remove symptom entry
-          document.getElementById('symptomEntriesContainer').addEventListener('click', function (e) {
-            if (e.target.classList.contains('remove-entry-button')) {
-              const entry = e.target.closest('.symptom-entry');
-              if (entry) entry.remove();
-            }
-          });
-
-          // Form submission
-          document.getElementById('symptom-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // Clear previous results
-
-            const entries = [];
-            const symptomEntries = document.querySelectorAll('.symptom-entry');
-
-            for (const entry of symptomEntries) {
-              const systemSelect = entry.querySelector('.body-part');
-              const symptomsInput = entry.querySelector('.symptoms');
-
-              if (!systemSelect.value) {
-                alert('Please select a system for each entry.');
-                return;
-              }
-
-              if (!symptomsInput.value || symptomsInput.value.split(',').length < 5) {
-                alert('Please enter at least 5 symptoms separated by commas.');
-                return;
-              }
-
-              entries.push({
-                system: systemSelect.value,
-                symptoms: symptomsInput.value.split(',').map(s => s.trim()).filter(s => s),
-              });
-            }
-
-            const csrfToken = document.getElementById('csrfToken').value;
-
-            try {
-              const response = await fetch('/api/analyze-symptoms', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'x-csrf-token': csrfToken
-                },
-                body: JSON.stringify(entries)
-              });
-
-              if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to analyze symptoms');
-              }
-
-              const analysisResults = await response.json();
-
-              if (!Array.isArray(analysisResults) || analysisResults.length === 0) {
-                resultsDiv.innerHTML = '<p>No results returned.</p>';
-                return;
-              }
-
-              resultsDiv.innerHTML = analysisResults.map(result => {
-                if (result.message) {
-                  return `<h3>${result.system}</h3><p>${result.message}</p>`;
-                }
-
-                return `
-                  <h3>${result.system}</h3>
-                  <p><strong>Symptoms:</strong> ${result.symptoms.join(', ')}</p>
-                  ${result.possibleConditions.map(condition => `
-                    <div style="margin-left: 1em; margin-bottom: 0.5em;">
-                      <strong>${condition.condition_name} (${condition.medical_code})</strong><br/>
-                      Match: ${condition.match_percentage}%<br/>
-                      Presumptive: ${condition.is_presumptive ? 'Yes' : 'No'}<br/>
-                      ${condition.qualifying_circumstance ? `Qualifying Circumstance: ${condition.qualifying_circumstance}<br/>` : ''}
-                      ${condition.evidence_basis ? `Evidence Basis: ${condition.evidence_basis}<br/>` : ''}
-                    </div>
-                  `).join('')}
-                `;
-              }).join('<hr>');
-            } catch (err) {
-              resultsDiv.innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
-            }
-          });
-        });
-      </script>
-
-      <div class="spacer"></div>
-      <%- include('includes/footer') %>
+      <!-- Results Display -->
+      <div id="results"></div>
     </div>
+
+    <!-- Scripts -->
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+    
+    <script nonce="<%= nonce %>">
+      document.addEventListener('DOMContentLoaded', function() {
+        // Any inline scripts can go here if needed
+        console.log('Symptom Analysis page loaded');
+      });
+    </script>
   </body>
 </html>
