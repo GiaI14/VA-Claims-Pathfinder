@@ -60,6 +60,46 @@ function tokenizeAndNormalize(symptoms) {
         .filter(token => token.length > 1); // Remove single-character tokens
 }
 
+////////////////////////////////////////////////////////////////////
+const systemImages = {
+  "Dental and Oral Conditions": "/images/512px-202402_Oral_Cavity.svg.png",
+  "Hemic and Lymphatic Systems": "/images/512px-2201_Anatomy_of_the_Lymphatic_System.jpg",
+  "Cardiovascular system": "/images/512px-Circulatory_System_en_edited.svg.png",
+  "Skin": "/images/512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png",
+  "Digestive System": "/images/512px-Digestive_system_diagram_en.svg.png",
+  "Endocrine system": "/images/512px-Endocrine_English.svg",
+  "Gynecological conditions and disprders of the breast": "/images/512px-Female_genital_system_-_Sagittal_view.svg.png",
+  "Eye": "/images/512px-Lateral_orbit_nerves_chngd.jpg",
+  "Genitourinary system": "/images/512px-Male_and_female_genital_organs.svg.png",
+  "Musculoskeletal system": "/images/512px-Muscles_front_and_back-es.png",
+  "Respiratory system": "/images/512px-Respiratory_system_complete_fr_simplified.svg.png",
+  "Nervous System": "/images/512px-TE-Nervous_system_diagram.svg.png",
+  "Ear": "/images/Auditory_System.jpg",
+  "Sense Organs": "/images/Sense-Organ.png"
+};
+
+document.getElementById('symptomEntriesContainer').addEventListener('change', (event) => {
+  if (event.target.classList.contains('body-part')) {
+    const selectedSystem = event.target.value;
+    let img = event.target.parentElement.querySelector('.system-image');
+
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'system-image';
+      img.style.maxWidth = '200px';
+      img.style.marginTop = '10px';
+      event.target.parentElement.appendChild(img);
+    }
+
+    if (systemImages[selectedSystem]) {
+      img.src = systemImages[selectedSystem];
+      img.alt = selectedSystem + ' Image';
+      img.style.display = 'block';
+    } else {
+      img.style.display = 'none';
+    }
+  }
+});
 
 ///////////////////////////////////////////////////////////////////////////////////
 router.post("/api/analyze-symptoms", (req, res, next) => {
