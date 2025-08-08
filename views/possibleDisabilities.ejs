@@ -2,6 +2,22 @@
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
+  <style>
+    .symptom-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .input-group {
+      flex-grow: 1;
+    }
+    .system-image {
+      max-width: 100px;
+      max-height: 100px;
+      border: 1px solid #ddd;
+      display: none;
+    }
+  </style>
   <body>
     <%- include('includes/header', { nonce: nonce }) %>
 
@@ -34,6 +50,8 @@
                 />
               </label>
             </div>
+            <!-- Image will be inserted here -->
+            <img class="system-image" alt="System Image" />
             <button type="button" class="remove-entry-button">Remove Entry</button>
           </div>
         </div>
@@ -44,7 +62,6 @@
           <button id="analyzeButton">Analyze Symptoms</button>
         </div>
 
-  
         <input type="text" name="honeypot" style="display: none;">
       </form>
 
@@ -55,11 +72,59 @@
     <!-- Scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-    
+
     <script nonce="<%= nonce %>">
       document.addEventListener('DOMContentLoaded', function() {
-        // Any inline scripts can go here if needed
         console.log('Symptom Analysis page loaded');
+
+        const systemImages = {
+          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
+          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
+          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
+          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
+          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
+          'Endocrine system': '512px-Endocrine_English.svg.png',
+          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
+          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
+          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
+          'Musculoskeletal system': '512px-Muscles_front_and_back-es.png',
+          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
+          'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
+          'Ear': 'Auditory_System.jpg',
+          'Sense Organs': 'Sense-Organ.png',
+        };
+
+        // When a system is selected, show its image in the sibling img.system-image
+        document.getElementById('symptomEntriesContainer').addEventListener('change', function(e) {
+          if (e.target.classList.contains('body-part')) {
+            const selectedSystem = e.target.value;
+            const entryDiv = e.target.closest('.symptom-entry');
+            const imgEl = entryDiv.querySelector('.system-image');
+            if (selectedSystem && systemImages[selectedSystem]) {
+              imgEl.src = '/images/' + systemImages[selectedSystem];
+              imgEl.style.display = 'block';
+            } else {
+              imgEl.src = '';
+              imgEl.style.display = 'none';
+            }
+          }
+        });
+
+        // Add new symptom entry (clone the existing one, including image element)
+        document.getElementById('addEntryButton').addEventListener('click', function() {
+          const container = document.getElementById('symptomEntriesContainer');
+          const templateEntry = container.querySelector('.symptom-entry');
+          const newEntry = templateEntry.cloneNode(true);
+
+          // Reset inputs and hide image in the cloned entry
+          newEntry.querySelector('.body-part').selectedIndex = 0;
+          newEntry.querySelector('.symptoms').value = '';
+          const imgEl = newEntry.querySelector('.system-image');
+          imgEl.src = '';
+          imgEl.style.display = 'none';
+
+          container.appendChild(newEntry);
+        });
       });
     </script>
   </body>
