@@ -113,26 +113,86 @@
             }
           }
         });
+  document.getElementById('addEntryButton').addEventListener('click', function() {
+  const container = document.getElementById('symptomEntriesContainer');
 
-        // Add new symptom entry (clone the existing one, including image element)
-        document.getElementById('addEntryButton').addEventListener('click', function() {
-          const container = document.getElementById('symptomEntriesContainer');
-          const templateEntry = container.querySelector('.symptom-entry');
-          const newEntry = templateEntry.cloneNode(true);
+  // Create new symptom entry div
+  const entryDiv = document.createElement('div');
+  entryDiv.className = 'symptom-entry';
+  entryDiv.style.display = 'flex';
+  entryDiv.style.alignItems = 'flex-start';
+  entryDiv.style.gap = '1rem';
 
-         const selectEl = newEntry.querySelector('.body-part');
-  const symptomInput = newEntry.querySelector('.symptoms');
-  const imgEl = newEntry.querySelector('.system-image');
+  // Create input-group div
+  const inputGroup = document.createElement('div');
+  inputGroup.className = 'input-group';
+  inputGroup.style.flexGrow = '1';
 
-  selectEl.selectedIndex = 0;
-  symptomInput.value = '';
+  // Create label + select for systems
+  const labelSystem = document.createElement('label');
+  labelSystem.textContent = 'System Affected:';
 
-  // Reset image source and hide it
-  imgEl.src = '';
-  imgEl.style.display = 'none';
+  const selectSystem = document.createElement('select');
+  selectSystem.className = 'body-part';
+  selectSystem.required = true;
 
-  container.appendChild(newEntry);
+  // Default option
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Select a system';
+  selectSystem.appendChild(defaultOption);
+
+  // Add systems from your existing systems list rendered on server-side
+  <% systems.forEach(function(system) { %>
+    const option = document.createElement('option');
+    option.value = '<%= system %>';
+    option.textContent = '<%= system %>';
+    selectSystem.appendChild(option);
+  <% }); %>
+
+  labelSystem.appendChild(selectSystem);
+
+  // Create label + input for symptoms
+  const labelSymptoms = document.createElement('label');
+  labelSymptoms.textContent = 'Symptoms:';
+
+  const inputSymptoms = document.createElement('input');
+  inputSymptoms.type = 'text';
+  inputSymptoms.className = 'symptoms';
+  inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
+  inputSymptoms.required = true;
+
+  labelSymptoms.appendChild(inputSymptoms);
+
+  // Append labels to input-group
+  inputGroup.appendChild(labelSystem);
+  inputGroup.appendChild(labelSymptoms);
+
+  // Create img for system image
+  const systemImage = document.createElement('img');
+  systemImage.className = 'system-image';
+  systemImage.alt = 'System Image';
+  systemImage.style.maxWidth = '250px';
+  systemImage.style.maxHeight = '250px';
+  systemImage.style.border = '1px solid #ddd';
+  systemImage.style.display = 'none';
+
+  // Create remove button
+  const removeButton = document.createElement('button');
+  removeButton.type = 'button';
+  removeButton.className = 'remove-entry-button';
+  removeButton.textContent = 'Remove Entry';
+
+  // Append everything to entryDiv
+  entryDiv.appendChild(inputGroup);
+  entryDiv.appendChild(systemImage);
+  entryDiv.appendChild(removeButton);
+
+  // Append new entry to container
+  container.appendChild(entryDiv);
 });
+
+       
       });
     </script>
   </body>
