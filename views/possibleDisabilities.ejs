@@ -76,138 +76,64 @@
     <!-- Scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+
     <script nonce="<%= nonce %>">
-  const systems = <%- JSON.stringify(systems) %>;
-</script>
-   document.addEventListener('DOMContentLoaded', function() {
-  console.log('Symptom Analysis page loaded');
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Symptom Analysis page loaded');
 
-  const systemImages = {
-    'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-    'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-    'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-    'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-    'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-    'Endocrine system': '512px-Endocrine_English.svg.png',
-    'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-    'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-    'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-    'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
-    'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-    'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
-    'Ear': 'Auditory_System.jpg',
-    'Sense Organs': 'Sense-Organ.png',
-  };
+        const systemImages = {
+          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
+          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
+          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
+          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
+          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
+          'Endocrine system': '512px-Endocrine_English.svg.png',
+          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
+          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
+          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
+          'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
+          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
+          'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
+          'Ear': 'Auditory_System.jpg',
+          'Sense Organs': 'Sense-Organ.png',
+        };
 
-  const container = document.getElementById('symptomEntriesContainer');
-  const addEntryButton = document.getElementById('addEntryButton');
+        // When a system is selected, show its image in the sibling img.system-image
+        document.getElementById('symptomEntriesContainer').addEventListener('change', function(e) {
+          if (e.target.classList.contains('body-part')) {
+            const selectedSystem = e.target.value;
+            const entryDiv = e.target.closest('.symptom-entry');
+            const imgEl = entryDiv.querySelector('.system-image');
+            if (selectedSystem && systemImages[selectedSystem]) {
+              imgEl.src = '/images/' + systemImages[selectedSystem];
+              imgEl.style.display = 'block';
+            } else {
+              imgEl.src = '';
+              imgEl.style.display = 'none';
+            }
+          }
+        });
 
-  // When system changes, show image
-  container.addEventListener('change', function(e) {
-    if (e.target.classList.contains('body-part')) {
-      const selectedSystem = e.target.value;
-      const entryDiv = e.target.closest('.symptom-entry');
-      const imgEl = entryDiv.querySelector('.system-image');
+        // Add new symptom entry (clone the existing one, including image element)
+        document.getElementById('addEntryButton').addEventListener('click', function() {
+          const container = document.getElementById('symptomEntriesContainer');
+          const templateEntry = container.querySelector('.symptom-entry');
+          const newEntry = templateEntry.cloneNode(true);
 
-      if (selectedSystem && systemImages[selectedSystem]) {
-        imgEl.src = '/images/' + systemImages[selectedSystem];
-        imgEl.style.display = 'block';
-      } else {
-        imgEl.src = '';
-        imgEl.style.display = 'none';
-      }
-    }
-  });
+         const selectEl = newEntry.querySelector('.body-part');
+  const symptomInput = newEntry.querySelector('.symptoms');
+  const imgEl = newEntry.querySelector('.system-image');
 
-  // Remove entry handler (delegated)
-  container.addEventListener('click', function(e) {
-    if (e.target.classList.contains('remove-entry-button')) {
-      const entries = container.querySelectorAll('.symptom-entry');
-      if (entries.length > 1) {
-        e.target.closest('.symptom-entry').remove();
-      } else {
-        alert('You must have at least one symptom entry.');
-      }
-    }
-  });
+  selectEl.selectedIndex = 0;
+  symptomInput.value = '';
 
-  // Add new entry (no cloning, build fresh elements)
-  addEntryButton.addEventListener('click', function() {
-    const entryDiv = document.createElement('div');
-    entryDiv.className = 'symptom-entry';
-    entryDiv.style.display = 'flex';
-    entryDiv.style.alignItems = 'flex-start';
-    entryDiv.style.gap = '1rem';
+  // Reset image source and hide it
+  imgEl.src = '';
+  imgEl.style.display = 'none';
 
-    const inputGroup = document.createElement('div');
-    inputGroup.className = 'input-group';
-    inputGroup.style.flexGrow = '1';
-
-    // Label and select for system
-    const labelSystem = document.createElement('label');
-    labelSystem.textContent = 'System Affected: ';
-
-    const selectSystem = document.createElement('select');
-    selectSystem.className = 'body-part';
-    selectSystem.required = true;
-
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Select a system';
-    selectSystem.appendChild(defaultOption);
-
-    systems.forEach(sys => {
-      const option = document.createElement('option');
-      option.value = sys;
-      option.textContent = sys;
-      selectSystem.appendChild(option);
-    });
-
-    labelSystem.appendChild(selectSystem);
-
-    // Label and input for symptoms
-    const labelSymptoms = document.createElement('label');
-    labelSymptoms.textContent = 'Symptoms: ';
-
-    const inputSymptoms = document.createElement('input');
-    inputSymptoms.type = 'text';
-    inputSymptoms.className = 'symptoms';
-    inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
-    inputSymptoms.required = true;
-
-    labelSymptoms.appendChild(inputSymptoms);
-
-    inputGroup.appendChild(labelSystem);
-    inputGroup.appendChild(labelSymptoms);
-
-    // Image
-    const img = document.createElement('img');
-    img.className = 'system-image';
-    img.alt = 'System Image';
-    img.style.maxWidth = '250px';
-    img.style.maxHeight = '250px';
-    img.style.border = '1px solid #ddd';
-    img.style.display = 'none';
-
-    // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'remove-entry-button';
-    removeBtn.textContent = 'Remove Entry';
-
-    // Append all
-    entryDiv.appendChild(inputGroup);
-    entryDiv.appendChild(img);
-    entryDiv.appendChild(removeBtn);
-
-    container.appendChild(entryDiv);
-  });
-
+  container.appendChild(newEntry);
 });
-
-
-       
       });
     </script>
   </body>
-</html>
+</html> 
