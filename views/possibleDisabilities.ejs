@@ -76,7 +76,9 @@
     <!-- Scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-
+    <script nonce="<%= nonce %>">
+  const systems = <%- JSON.stringify(systems) %>;
+</script>
    document.addEventListener('DOMContentLoaded', function() {
   console.log('Symptom Analysis page loaded');
 
