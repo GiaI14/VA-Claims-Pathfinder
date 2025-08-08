@@ -12,61 +12,64 @@
       flex-grow: 1;
     }
     .system-image {
-      max-width: 150px;
-      max-height: 100px;
+      max-width: 150px;    /* Larger image */
+      max-height: 150px;
       border: 1px solid #ddd;
       display: none;
     }
   </style>
   <body>
-    <%- include('includes/header', { nonce: nonce }) %>
+    <div class="page-wrapper">
+      <%- include('includes/header', { nonce: nonce }) %>
 
-    <div class="container">
-      <h1>Symptoms Analysis</h1>
-      <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-      
-      <!-- Symptoms Section -->
-      <form id="symptom-form">
-        <h2>New Symptoms</h2>
-        <div id="symptomEntriesContainer">
-          <div class="symptom-entry">
-            <div class="input-group">
-              <label>
-                System Affected:
-                <select class="body-part" required>
-                  <option value="">Select a system</option>
-                  <% systems.forEach(function(system) { %>
-                    <option value="<%= system %>"><%= system %></option>
-                  <% }); %>
-                </select>
-              </label>
-              <label>
-                Symptoms:
-                <input
-                  type="text"
-                  class="symptoms"
-                  placeholder="Enter symptoms (comma separated)"
-                  required
-                />
-              </label>
+      <div class="container">
+        <h1>Symptoms Analysis</h1>
+        <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+
+        <!-- Symptoms Section -->
+        <form id="symptom-form">
+          <h2>New Symptoms</h2>
+          <div id="symptomEntriesContainer">
+            <div class="symptom-entry">
+              <div class="input-group">
+                <label>
+                  System Affected:
+                  <select class="body-part" required>
+                    <option value="">Select a system</option>
+                    <% systems.forEach(function(system) { %>
+                      <option value="<%= system %>"><%= system %></option>
+                    <% }); %>
+                  </select>
+                </label>
+                <label>
+                  Symptoms:
+                  <input
+                    type="text"
+                    class="symptoms"
+                    placeholder="Enter symptoms (comma separated)"
+                    required
+                  />
+                </label>
+              </div>
+              <img class="system-image" alt="System Image" />
+              <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
-            <!-- Image will be inserted here -->
-            <img class="system-image" alt="System Image" />
-            <button type="button" class="remove-entry-button">Remove Entry</button>
           </div>
-        </div>
-        <div class="button-row">
-          <button type="button" id="addEntryButton">Add Another Entry</button>
-        </div>
-        <div class="analyze-section">
-          <button id="analyzeButton">Analyze Symptoms</button>
-        </div>
+          <div class="button-row">
+            <button type="button" id="addEntryButton">Add Another Entry</button>
+          </div>
+          <div class="analyze-section">
+            <button id="analyzeButton">Analyze Symptoms</button>
+          </div>
 
-        <input type="text" name="honeypot" style="display: none;">
-      </form>
+          <input type="text" name="honeypot" style="display: none;">
+        </form>
 
-      <!-- Results Display -->
-      <div id="results"></div>
+        <!-- Results Display -->
+        <div id="results"></div>
+      </div>
+
+      <%- include('includes/footer') %>
     </div>
 
     <!-- Scripts -->
@@ -76,55 +79,6 @@
     <script nonce="<%= nonce %>">
       document.addEventListener('DOMContentLoaded', function() {
         console.log('Symptom Analysis page loaded');
-
-        const systemImages = {
-          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-          'Endocrine system': '512px-Endocrine_English.svg.png',
-          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-          'Musculoskeletal system': '512px-Muscles_front_and_back-es.png',
-          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-          'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
-          'Ear': 'Auditory_System.jpg',
-          'Sense Organs': 'Sense-Organ.png',
-        };
-
-        // When a system is selected, show its image in the sibling img.system-image
-        document.getElementById('symptomEntriesContainer').addEventListener('change', function(e) {
-          if (e.target.classList.contains('body-part')) {
-            const selectedSystem = e.target.value;
-            const entryDiv = e.target.closest('.symptom-entry');
-            const imgEl = entryDiv.querySelector('.system-image');
-            if (selectedSystem && systemImages[selectedSystem]) {
-              imgEl.src = '/images/' + systemImages[selectedSystem];
-              imgEl.style.display = 'block';
-            } else {
-              imgEl.src = '';
-              imgEl.style.display = 'none';
-            }
-          }
-        });
-
-        // Add new symptom entry (clone the existing one, including image element)
-        document.getElementById('addEntryButton').addEventListener('click', function() {
-          const container = document.getElementById('symptomEntriesContainer');
-          const templateEntry = container.querySelector('.symptom-entry');
-          const newEntry = templateEntry.cloneNode(true);
-
-          // Reset inputs and hide image in the cloned entry
-          newEntry.querySelector('.body-part').selectedIndex = 0;
-          newEntry.querySelector('.symptoms').value = '';
-          const imgEl = newEntry.querySelector('.system-image');
-          imgEl.src = '';
-          imgEl.style.display = 'none';
-
-          container.appendChild(newEntry);
-        });
       });
     </script>
   </body>
