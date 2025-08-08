@@ -120,15 +120,19 @@
           const templateEntry = container.querySelector('.symptom-entry');
           const newEntry = templateEntry.cloneNode(true);
 
-          // Reset inputs and hide image in the cloned entry
-          newEntry.querySelector('.body-part').selectedIndex = 0;
-          newEntry.querySelector('.symptoms').value = '';
-          const imgEl = newEntry.querySelector('.system-image');
-          imgEl.src = '';
-          imgEl.style.display = 'none';
+         const selectEl = newEntry.querySelector('.body-part');
+  const symptomInput = newEntry.querySelector('.symptoms');
+  const imgEl = newEntry.querySelector('.system-image');
 
-          container.appendChild(newEntry);
-        });
+  selectEl.selectedIndex = 0;
+  symptomInput.value = '';
+
+  // Reset image source and hide it
+  imgEl.src = '';
+  imgEl.style.display = 'none';
+
+  container.appendChild(newEntry);
+});
       });
     </script>
   </body>
