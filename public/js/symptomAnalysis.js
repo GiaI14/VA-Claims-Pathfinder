@@ -158,26 +158,3 @@ function displayResults(data) {
   });
 } 
 
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
-
-lightbox.addEventListener('click', function(e) {
-  // Close if clicking on overlay background or the image itself
-  if (e.target === lightbox || e.target === lightboxImg) {
-    closeLightbox();
-  }
-});
-
-function closeLightbox() {
-  lightbox.style.display = 'none';
-  lightboxImg.src = '';
-}
-window.closeLightbox = closeLightbox; 
-
-document.getElementById('symptomEntriesContainer').addEventListener('click', function(e) {
-  if (e.target.classList.contains('system-image') && e.target.src) {
-    lightboxImg.src = e.target.src;
-    lightbox.style.display = 'flex';  // use flex to align center (matching CSS)
-  }
-});
-
