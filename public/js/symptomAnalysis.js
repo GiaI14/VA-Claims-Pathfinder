@@ -158,15 +158,11 @@ function displayResults(data) {
   });
 } 
 
-symptomEntriesContainer.addEventListener('click', function(e) {
-  if (e.target.classList.contains('system-image') && e.target.src) {
-    lightboxImg.src = e.target.src;
-    lightbox.style.display = 'block';
-  }
-});
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
 
-// Close lightbox when clicking outside OR on the image itself
 lightbox.addEventListener('click', function(e) {
+  // Close if clicking on overlay background or the image itself
   if (e.target === lightbox || e.target === lightboxImg) {
     closeLightbox();
   }
@@ -177,3 +173,4 @@ function closeLightbox() {
   lightboxImg.src = '';
 }
 window.closeLightbox = closeLightbox; 
+
