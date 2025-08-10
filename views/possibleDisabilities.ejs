@@ -1,154 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Symptom Analysis</title>
+  <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
+  <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
   <style>
-    /* Layout styling */
     .symptom-entry {
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      align-items: center;
+      align-items: flex-start;
+      gap: 1rem;
     }
-
-    /* Image styling */
+    .input-group {
+      flex-grow: 1;
+    }
     .system-image {
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 400px;
+      max-height: 400px;
+      border: 1px solid #ddd;
       display: none;
-      cursor: zoom-in;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .system-image:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      cursor: pointer; /* clickable */
     }
 
-    /* Lightbox overlay */
-    #image-lightbox {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.8);
+    /* Lightbox styles */
+    .lightbox {
       display: none;
-      align-items: center;
-      justify-content: center;
+      position: fixed;
       z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
     }
-    #image-lightbox img {
+    .lightbox img {
+      display: block;
       max-width: 90%;
       max-height: 90%;
-      cursor: zoom-out;
-      transition: transform 0.2s ease;
+      margin: 5% auto;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
-</head>
-<body>
-  <h1>Symptom Analysis</h1>
+  <body>
+    <div class="page-wrapper">
+      <%- include('includes/header', { nonce: nonce }) %>
 
-  <div id="symptomEntriesContainer">
-    <div class="symptom-entry">
-      <select class="body-part">
-        <option value="">Select System</option>
-        <% systems.forEach(function(system) { %>
-          <option value="<%= system.name %>"><%= system.name %></option>
-        <% }); %>
-      </select>
-      <input type="text" placeholder="Symptom Description">
-      <img class="system-image" src="" alt="System Image">
-      <button type="button" class="remove-entry-button">Remove</button>
+      <div class="container">
+        <h1>Symptoms Analysis</h1>
+        <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
+        
+        <!-- Symptoms Section -->
+        <form id="symptom-form">
+          <h2>New Symptoms</h2>
+          <div id="symptomEntriesContainer">
+            <div class="symptom-entry">
+              <div class="input-group">
+                <label>
+                  System Affected:
+                  <select class="body-part" required>
+                    <option value="">Select a system</option>
+                    <% systems.forEach(function(system) { %>
+                      <option value="<%= system %>"><%= system %></option>
+                    <% }); %>
+                  </select>
+                </label>
+                <label>
+                  Symptoms:
+                  <input
+                    type="text"
+                    class="symptoms"
+                    placeholder="Enter symptoms (comma separated)"
+                    required
+                  />
+                </label>
+              </div>
+              <!-- Image will be inserted here -->
+              <img class="system-image" alt="System Image" />
+              <button type="button" class="remove-entry-button">Remove Entry</button>
+            </div>
+          </div>
+          <div class="button-row">
+            <button type="button" id="addEntryButton">Add Another Entry</button>
+          </div>
+          <div class="analyze-section">
+            <button id="analyzeButton">Analyze Symptoms</button>
+          </div>
+
+          <input type="text" name="honeypot" style="display: none;">
+        </form>
+
+        <!-- Results Display -->
+        <div id="results"></div>
+      </div>
+
+      <!-- Lightbox Overlay -->
+      <div id="lightbox" class="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Large View">
+      </div>
+
+      <%- include('includes/footer') %>
     </div>
-  </div>
 
-  <button type="button" id="addEntryButton">Add Symptom Entry</button>
+    <!-- Scripts -->
+    <script nonce="<%= nonce %>">
+      // Expose systems array from server-side to client-side
+      const systems = <%- JSON.stringify(systems) %>;
 
-  <!-- Lightbox -->
-  <div id="image-lightbox">
-    <img id="lightbox-img" src="" alt="Large view">
-  </div>
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Symptom Analysis page loaded');
 
-  <script nonce="<%= nonce %>">
-    const systems = <%- JSON.stringify(systems) %>;
+        const systemImages = {
+          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
+          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
+          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
+          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
+          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
+          'Endocrine system': '512px-Endocrine_English.svg.png',
+          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
+          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
+          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
+          'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
+          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
+          'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
+          'Ear': 'Auditory_System.jpg',
+          'Sense Organs': 'Sense-Organ.png',
+        };
 
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Symptom Analysis page loaded');
+        const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
+        const addEntryButton = document.getElementById('addEntryButton');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
-      // Mapping of system names to image files
-      const systemImages = {
-        "Nervous System": "nervous.jpg",
-        "Digestive System": "digestive.jpg",
-        "Circulatory System": "circulatory.jpg",
-        "Respiratory System": "respiratory.jpg"
-        // Add more as needed
-      };
+        // When a system is selected, show the corresponding image
+        symptomEntriesContainer.addEventListener('change', function(e) {
+          if (e.target.classList.contains('body-part')) {
+            const selectedSystem = e.target.value;
+            const entryDiv = e.target.closest('.symptom-entry');
+            const imgEl = entryDiv.querySelector('.system-image');
 
-      const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-      const addEntryButton = document.getElementById('addEntryButton');
-      const lightbox = document.getElementById('image-lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-
-      function closeLightbox() {
-        lightbox.style.display = 'none';
-      }
-
-      // Close lightbox when clicking background or image
-      lightbox.addEventListener('click', closeLightbox);
-      lightboxImg.addEventListener('click', closeLightbox);
-
-      // Open lightbox when clicking a system image
-      symptomEntriesContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('system-image') && e.target.src) {
-          lightboxImg.src = e.target.src;
-          lightbox.style.display = 'flex';
-        }
-      });
-
-      // Show/hide system image when system is selected
-      symptomEntriesContainer.addEventListener('change', function(e) {
-        if (e.target.classList.contains('body-part')) {
-          const selectedSystem = e.target.value;
-          const entryDiv = e.target.closest('.symptom-entry');
-          const imgEl = entryDiv.querySelector('.system-image');
-
-          if (selectedSystem && systemImages[selectedSystem]) {
-            imgEl.src = '/images/' + systemImages[selectedSystem];
-            imgEl.style.display = 'block';
-          } else {
-            imgEl.src = '';
-            imgEl.style.display = 'none';
+            if (selectedSystem && systemImages[selectedSystem]) {
+              imgEl.src = '/images/' + systemImages[selectedSystem];
+              imgEl.style.display = 'block';
+            } else {
+              imgEl.src = '';
+              imgEl.style.display = 'none';
+            }
           }
-        }
-      });
+        });
 
-      // Remove entry button
-      symptomEntriesContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-entry-button')) {
-          const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
-          if (entries.length > 1) {
-            e.target.closest('.symptom-entry').remove();
-          } else {
-            alert('You must have at least one symptom entry.');
+        // Click on image to open lightbox
+        symptomEntriesContainer.addEventListener('click', function(e) {
+          if (e.target.classList.contains('system-image') && e.target.src) {
+            lightboxImg.src = e.target.src;
+            lightbox.style.display = 'block';
           }
-        }
-      });
+        });
 
-      // Add new symptom entry
-      addEntryButton.addEventListener('click', function() {
-        const newEntry = document.createElement('div');
-        newEntry.className = 'symptom-entry';
-        newEntry.innerHTML = `
-          <select class="body-part">
-            <option value="">Select System</option>
-            ${systems.map(system => `<option value="${system.name}">${system.name}</option>`).join('')}
-          </select>
-          <input type="text" placeholder="Symptom Description">
-          <img class="system-image" src="" alt="System Image">
-          <button type="button" class="remove-entry-button">Remove</button>
-        `;
-        symptomEntriesContainer.appendChild(newEntry);
+        // Close lightbox when clicking outside image
+        lightbox.addEventListener('click', function(e) {
+          if (e.target === lightbox) {
+            closeLightbox();
+          }
+        });
+
+        function closeLightbox() {
+          lightbox.style.display = 'none';
+          lightboxImg.src = '';
+        }
+        window.closeLightbox = closeLightbox; // expose for close button
+
+        // Remove symptom entry handler (delegation)
+        symptomEntriesContainer.addEventListener('click', function(e) {
+          if (e.target.classList.contains('remove-entry-button')) {
+            const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+            if (entries.length > 1) {
+              e.target.closest('.symptom-entry').remove();
+            } else {
+              alert('You must have at least one symptom entry.');
+            }
+          }
+        });
+
+        // Add new symptom entry with fresh DOM elements
+        addEntryButton.addEventListener('click', function() {
+          const entryDiv = document.createElement('div');
+          entryDiv.className = 'symptom-entry';
+          entryDiv.style.display = 'flex';
+          entryDiv.style.alignItems = 'flex-start';
+          entryDiv.style.gap = '1rem';
+
+          const inputGroup = document.createElement('div');
+          inputGroup.className = 'input-group';
+          inputGroup.style.flexGrow = '1';
+
+          const labelSystem = document.createElement('label');
+          labelSystem.textContent = 'System Affected: ';
+          const selectSystem = document.createElement('select');
+          selectSystem.className = 'body-part';
+          selectSystem.required = true;
+
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = 'Select a system';
+          selectSystem.appendChild(defaultOption);
+
+          systems.forEach(sys => {
+            const option = document.createElement('option');
+            option.value = sys;
+            option.textContent = sys;
+            selectSystem.appendChild(option);
+          });
+
+          labelSystem.appendChild(selectSystem);
+
+          const labelSymptoms = document.createElement('label');
+          labelSymptoms.textContent = 'Symptoms: ';
+          const inputSymptoms = document.createElement('input');
+          inputSymptoms.type = 'text';
+          inputSymptoms.className = 'symptoms';
+          inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
+          inputSymptoms.required = true;
+          labelSymptoms.appendChild(inputSymptoms);
+
+          inputGroup.appendChild(labelSystem);
+          inputGroup.appendChild(labelSymptoms);
+
+          const img = document.createElement('img');
+          img.className = 'system-image';
+          img.alt = 'System Image';
+          img.style.maxWidth = '250px';
+          img.style.maxHeight = '250px';
+          img.style.border = '1px solid #ddd';
+          img.style.display = 'none';
+          img.style.cursor = 'pointer';
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'remove-entry-button';
+          removeBtn.textContent = 'Remove Entry';
+
+          entryDiv.appendChild(inputGroup);
+          entryDiv.appendChild(img);
+          entryDiv.appendChild(removeBtn);
+
+          symptomEntriesContainer.appendChild(entryDiv);
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
