@@ -2,7 +2,6 @@
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-  <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>"></script>
   <style>
     .symptom-entry {
       display: flex;
@@ -13,18 +12,13 @@
       flex-grow: 1;
     }
     .system-image {
-      max-width: 250px;
-      max-height: 250px;
+      max-width: 400px;
+      max-height: 400px;
       border: 1px solid #ddd;
       display: none;
-      cursor: zoom-in;
-      transition: transform 0.2s ease;
+      cursor: pointer; /* clickable */
     }
 
-     .system-image:hover {
-      transform: scale(1.02); /* slight pop-out */
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
     /* Lightbox styles */
     .lightbox {
       display: none;
