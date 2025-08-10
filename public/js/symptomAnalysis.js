@@ -174,3 +174,10 @@ function closeLightbox() {
 }
 window.closeLightbox = closeLightbox; 
 
+document.getElementById('symptomEntriesContainer').addEventListener('click', function(e) {
+  if (e.target.classList.contains('system-image') && e.target.src) {
+    lightboxImg.src = e.target.src;
+    lightbox.style.display = 'flex';  // use flex to align center (matching CSS)
+  }
+});
+
