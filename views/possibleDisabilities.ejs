@@ -16,6 +16,37 @@
       max-height: 400px;
       border: 1px solid #ddd;
       display: none;
+      cursor: pointer; /* clickable */
+    }
+
+    /* Lightbox styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .lightbox img {
+      display: block;
+      max-width: 90%;
+      max-height: 90%;
+      margin: 5% auto;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
   <body>
@@ -70,11 +101,17 @@
         <div id="results"></div>
       </div>
 
+      <!-- Lightbox Overlay -->
+      <div id="lightbox" class="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Large View">
+      </div>
+
       <%- include('includes/footer') %>
     </div>
 
     <!-- Scripts -->
-   <script nonce="<%= nonce %>">
+    <script nonce="<%= nonce %>">
       // Expose systems array from server-side to client-side
       const systems = <%- JSON.stringify(systems) %>;
 
@@ -100,6 +137,8 @@
 
         const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
         const addEntryButton = document.getElementById('addEntryButton');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
         // When a system is selected, show the corresponding image
         symptomEntriesContainer.addEventListener('change', function(e) {
@@ -117,6 +156,27 @@
             }
           }
         });
+
+        // Click on image to open lightbox
+        symptomEntriesContainer.addEventListener('click', function(e) {
+          if (e.target.classList.contains('system-image') && e.target.src) {
+            lightboxImg.src = e.target.src;
+            lightbox.style.display = 'block';
+          }
+        });
+
+        // Close lightbox when clicking outside image
+        lightbox.addEventListener('click', function(e) {
+          if (e.target === lightbox) {
+            closeLightbox();
+          }
+        });
+
+        function closeLightbox() {
+          lightbox.style.display = 'none';
+          lightboxImg.src = '';
+        }
+        window.closeLightbox = closeLightbox; // expose for close button
 
         // Remove symptom entry handler (delegation)
         symptomEntriesContainer.addEventListener('click', function(e) {
@@ -142,10 +202,8 @@
           inputGroup.className = 'input-group';
           inputGroup.style.flexGrow = '1';
 
-          // Create label and select for system
           const labelSystem = document.createElement('label');
           labelSystem.textContent = 'System Affected: ';
-
           const selectSystem = document.createElement('select');
           selectSystem.className = 'body-part';
           selectSystem.required = true;
@@ -164,22 +222,18 @@
 
           labelSystem.appendChild(selectSystem);
 
-          // Create label and input for symptoms
           const labelSymptoms = document.createElement('label');
           labelSymptoms.textContent = 'Symptoms: ';
-
           const inputSymptoms = document.createElement('input');
           inputSymptoms.type = 'text';
           inputSymptoms.className = 'symptoms';
           inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
           inputSymptoms.required = true;
-
           labelSymptoms.appendChild(inputSymptoms);
 
           inputGroup.appendChild(labelSystem);
           inputGroup.appendChild(labelSymptoms);
 
-          // Create image element
           const img = document.createElement('img');
           img.className = 'system-image';
           img.alt = 'System Image';
@@ -187,19 +241,17 @@
           img.style.maxHeight = '250px';
           img.style.border = '1px solid #ddd';
           img.style.display = 'none';
+          img.style.cursor = 'pointer';
 
-          // Create remove button
           const removeBtn = document.createElement('button');
           removeBtn.type = 'button';
           removeBtn.className = 'remove-entry-button';
           removeBtn.textContent = 'Remove Entry';
 
-          // Append all to entry div
           entryDiv.appendChild(inputGroup);
           entryDiv.appendChild(img);
           entryDiv.appendChild(removeBtn);
 
-          // Append entry div to container
           symptomEntriesContainer.appendChild(entryDiv);
         });
       });
