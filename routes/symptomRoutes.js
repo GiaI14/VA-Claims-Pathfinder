@@ -160,6 +160,16 @@ router.post("/api/analyze-symptoms", (req, res, next) => {
     }
 });
 
+symptomEntriesContainer.addEventListener('click', function(e) {
+  if (e.target.classList.contains('system-image') && e.target.src) {
+    lightboxImg.src = e.target.src;
+    lightbox.style.display = 'block';
+  }
+});
 
+// Close when clicking image inside lightbox
+lightboxImg.addEventListener('click', function() {
+  closeLightbox();
+});
 
 module.exports = router;
