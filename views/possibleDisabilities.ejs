@@ -48,6 +48,21 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+.system-image {
+  position: relative;
+  max-width: 400px;
+  max-height: 400px;
+  border: 1px solid #ddd;
+  display: none;
+  cursor: zoom-in; /* show it's clickable */
+  transition: transform 0.2s ease;
+}
+.system-image:hover {
+  transform: scale(1.02); /* slight pop-out */
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
   </style>
   <body>
     <div class="page-wrapper">
