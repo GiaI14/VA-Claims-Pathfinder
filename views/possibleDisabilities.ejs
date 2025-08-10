@@ -2,6 +2,7 @@
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
+  <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>"></script>
   <style>
     .symptom-entry {
       display: flex;
@@ -261,6 +262,5 @@
         });
       });
     </script>
-  <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>"></script>
   </body>
 </html>
