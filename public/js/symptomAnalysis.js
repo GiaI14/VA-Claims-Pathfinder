@@ -156,4 +156,24 @@ function displayResults(data) {
     section.innerHTML = htmlContent;
     resultsContainer.appendChild(section);
   });
+} 
+
+symptomEntriesContainer.addEventListener('click', function(e) {
+  if (e.target.classList.contains('system-image') && e.target.src) {
+    lightboxImg.src = e.target.src;
+    lightbox.style.display = 'block';
+  }
+});
+
+// Close lightbox when clicking outside OR on the image itself
+lightbox.addEventListener('click', function(e) {
+  if (e.target === lightbox || e.target === lightboxImg) {
+    closeLightbox();
+  }
+});
+
+function closeLightbox() {
+  lightbox.style.display = 'none';
+  lightboxImg.src = '';
 }
+window.closeLightbox = closeLightbox; 
