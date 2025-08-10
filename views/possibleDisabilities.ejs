@@ -16,9 +16,14 @@
       max-height: 250px;
       border: 1px solid #ddd;
       display: none;
-      cursor: pointer; /* clickable */
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
     }
 
+     .system-image:hover {
+      transform: scale(1.02); /* slight pop-out */
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
     /* Lightbox styles */
     .lightbox {
       display: none;
