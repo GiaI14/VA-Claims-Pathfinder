@@ -107,21 +107,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
 
   if (allEntries.length > 1) {
-    // More than one entry — remove this one
+    // If more than one entry, just remove this entry
     entry.remove();
   } else {
-    // Only one entry left — reset it instead of removing and do NOT alert
-    const symptomsInput = entry.querySelector('.symptoms');
-    const systemSelect = entry.querySelector('.body-part');
+    // Only one entry left - reset its inputs and hide image, no alert
+    entry.querySelector('.symptoms').value = '';
+    entry.querySelector('.body-part').selectedIndex = 0;
     const img = entry.querySelector('.system-image');
-
-    symptomsInput.value = '';
-    systemSelect.selectedIndex = 0;
     img.src = '';
     img.style.display = 'none';
   }
 }
-
 
 
   // Analyze symptoms form submit handler
