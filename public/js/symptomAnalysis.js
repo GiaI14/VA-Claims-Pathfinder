@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // More than one entry — remove this one
     entry.remove();
   } else {
-    // Only one entry left — reset its inputs instead of removing
+    // Only one entry left — reset it instead of removing and do NOT alert
     const symptomsInput = entry.querySelector('.symptoms');
     const systemSelect = entry.querySelector('.body-part');
     const img = entry.querySelector('.system-image');
@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
     img.style.display = 'none';
   }
 }
+
 
 
   // Analyze symptoms form submit handler
