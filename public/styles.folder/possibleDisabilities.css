@@ -112,34 +112,27 @@ input[type="text"], input[type="number"] {
 button.remove-entry-button {
   background-color: #440705;
   color: white;
+  margin-bottom: 5px;
+  margin-right: 20px;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  width: auto;
-  align-self: flex-start; /* align left inside flex container */
-  margin-top: 5px;
-  order: 2;
 }
-
 
 button.remove-entry-button:hover {
   background-color: #290303;
 }
 
 .symptom-entry {
-    position: flex;
-    flex-direction: wrap;
-    gap: 1rem;
-    align-items: flex-start;
+    position: relative;
+    padding-bottom: 40px;
+    margin-bottom: 15px;
   }
-
-
- .input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+  
+  .input-group {
+    margin-bottom: 10px;
+  }
   
   .input-group label {
     display: block;
@@ -151,6 +144,12 @@ button.remove-entry-button:hover {
     max-width: 99.5%;
     margin-top: 5px;
     box-sizing: border-box;
+  }
+  
+  .symptom-entry button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 
 .button-row button,
@@ -201,11 +200,7 @@ button.remove-entry-button:hover {
 }
 
 .input-group {
-  flex: 1 1 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  order: 1;
+  margin-bottom: 20px;
 }
 
 .input-group label {
@@ -301,4 +296,3 @@ button.remove-entry-button:hover {
       margin-top: 40px;
     }
   }
-  
