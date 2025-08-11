@@ -101,15 +101,27 @@ document.addEventListener("DOMContentLoaded", function () {
     symptomEntriesContainer.appendChild(entryDiv);
   }
 
-  // Remove symptom entry but require at least one
-  function removeSymptomEntry(button) {
-    const entry = button.closest('.symptom-entry');
-    if (entry && document.querySelectorAll('.symptom-entry').length > 1) {
-      entry.remove();
-    } else {
-      alert("You must have at least one symptom entry.");
-    }
+ function removeSymptomEntry(button) {
+  const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
+  const entry = button.closest('.symptom-entry');
+  const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+
+  if (allEntries.length > 1) {
+    // More than one entry — remove this one
+    entry.remove();
+  } else {
+    // Only one entry left — reset its inputs instead of removing
+    const symptomsInput = entry.querySelector('.symptoms');
+    const systemSelect = entry.querySelector('.body-part');
+    const img = entry.querySelector('.system-image');
+
+    symptomsInput.value = '';
+    systemSelect.selectedIndex = 0;
+    img.src = '';
+    img.style.display = 'none';
   }
+}
+
 
   // Analyze symptoms form submit handler
   async function analyzeSymptoms(event) {
