@@ -112,14 +112,14 @@ input[type="text"], input[type="number"] {
 button.remove-entry-button {
   background-color: #440705;
   color: white;
-  margin-bottom: 5px;
-  margin-right: 20px;
+  margin: 5px 0 10px 0; /* top 5px, bottom 10px, left 0 */
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  display: block; /* so it sits on its own line */
+  width: fit-content; /* button shrinks to content width */
 }
-
 button.remove-entry-button:hover {
   background-color: #290303;
 }
