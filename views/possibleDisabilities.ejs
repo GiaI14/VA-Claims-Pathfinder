@@ -36,35 +36,44 @@
                   />
                 </label>
               </div>
-              <!-- Image insert-->
-                <img class="system-image" alt="System Image" />
-                <button type="button" class="remove-entry-button">Remove Entry</button>
+
+              <!-- Image insert (hidden until a valid system is chosen) -->
+              <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
+
+              <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
+
           <div class="button-row">
             <button type="button" id="addEntryButton">Add Another Entry</button>
           </div>
+
           <div class="analyze-section">
-            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
+            <!-- keep the button exactly as before (no name changes) -->
+            <button id="analyzeButton">Analyze Symptoms</button>
           </div>
 
           <input type="text" name="honeypot" style="display: none;">
         </form>
 
-        <!-- Results Display -->
+        <!-- Results Display (unchanged) -->
         <div id="results"></div>
       </div>
 
       <!-- Lightbox Overlay -->
-      <div id="lightbox" class="lightbox" style="display:none;">
-        <span class="close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View" />
+      <div id="lightbox" class="lightbox" style="display: none;">
+        <span class="close" aria-label="Close">&times;</span>
+        <img id="lightbox-img" src="" alt="Large View">
       </div>
 
       <%- include('includes/footer') %>
     </div>
 
-    <!-- Scripts -->
+    <!-- Keep your original scripts so analysis/display logic still runs -->
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+
+    <!-- Image/lightbox handler (no variable renames) -->
     <script nonce="<%= nonce %>">
       const systems = <%- JSON.stringify(systems) %>;
 
@@ -88,13 +97,10 @@
 
         const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
         const addEntryButton = document.getElementById('addEntryButton');
-        const analyzeButton = document.getElementById('analyzeButton');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
-        const resultsDiv = document.getElementById('results');
-        const csrfToken = document.getElementById('csrfToken').value;
 
-        // Show image when system selected
+        // Show/hide image when system is selected or cleared
         symptomEntriesContainer.addEventListener('change', function(e) {
           if (e.target.classList.contains('body-part')) {
             const selectedSystem = e.target.value;
@@ -112,7 +118,7 @@
           }
         });
 
-        // Open lightbox
+        // Open lightbox when user clicks image (works for dynamic entries too)
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('system-image') && e.target.src) {
             lightboxImg.src = e.target.src;
@@ -122,20 +128,22 @@
 
         // Close when clicking background or image
         lightbox.addEventListener('click', function(e) {
+          // close when clicking on overlay background or the image itself
           if (e.target === lightbox || e.target === lightboxImg) {
             closeLightbox();
           }
         });
 
         // Close when clicking the X
-        document.querySelector('.lightbox .close').addEventListener('click', closeLightbox);
+        const closeBtn = document.querySelector('.lightbox .close');
+        if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
         function closeLightbox() {
           lightbox.style.display = 'none';
           lightboxImg.src = '';
         }
 
-        // Remove entry
+        // Remove entry (ensures at least one entry remains)
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('remove-entry-button')) {
             const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
@@ -147,7 +155,7 @@
           }
         });
 
-        // Add entry
+        // Add entry (keeps same class names and attributes so analysis code continues to work)
         addEntryButton.addEventListener('click', function() {
           const entryDiv = document.createElement('div');
           entryDiv.className = 'symptom-entry';
@@ -204,56 +212,6 @@
 
           symptomEntriesContainer.appendChild(entryDiv);
         });
-
-        // ANALYSIS FUNCTION
-        document.getElementById('symptom-form').addEventListener('submit', async function(e) {
-          e.preventDefault();
-
-          // Gather all symptom entries data
-          const entries = Array.from(document.querySelectorAll('.symptom-entry'));
-          const data = entries.map(entry => ({
-            system: entry.querySelector('.body-part').value.trim(),
-            symptoms: entry.querySelector('.symptoms').value.trim()
-          }));
-
-          // Basic validation
-          for (const entry of data) {
-            if (!entry.system) {
-              alert('Please select a system for each entry.');
-              return;
-            }
-            if (!entry.symptoms || entry.symptoms.split(',').length < 1) {
-              alert('Please enter at least one symptom per entry.');
-              return;
-            }
-          }
-
-          try {
-            const response = await fetch('/api/analyze-symptoms', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'CSRF-Token': csrfToken
-              },
-              body: JSON.stringify({ symptomsData: data })
-            });
-
-            if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
-
-            const result = await response.json();
-
-            // Display results
-            resultsDiv.innerHTML = '';
-            if (result && result.analysis) {
-              resultsDiv.textContent = JSON.stringify(result.analysis, null, 2);
-            } else {
-              resultsDiv.textContent = 'No analysis result found.';
-            }
-          } catch (err) {
-            alert('Error analyzing symptoms: ' + err.message);
-          }
-        });
-
       });
     </script>
   </body>
