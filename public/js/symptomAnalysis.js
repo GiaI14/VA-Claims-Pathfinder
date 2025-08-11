@@ -15,6 +15,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Analyze symptoms
   analyzeButton.addEventListener('click', analyzeSymptoms);
+
+  // ===========================
+  // Lightbox setup
+  // ===========================
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeBtn = lightbox?.querySelector('.close');
+
+  // Open lightbox when clicking any image with .clickable-image
+  document.body.addEventListener('click', function(e) {
+    if (e.target.classList.contains('clickable-image')) {
+      lightboxImg.src = e.target.src;
+      lightbox.style.display = 'flex';
+    }
+  });
+
+  // Close lightbox on close button click
+  closeBtn?.addEventListener('click', function() {
+    closeLightbox();
+  });
+
+  // Close lightbox when clicking outside the image
+  lightbox?.addEventListener('click', function(e) {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  // Close lightbox with ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+      closeLightbox();
+    }
+  });
+
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lightboxImg.src = '';
+  }
 });
 
 function addSymptomEntry() {
@@ -90,7 +129,6 @@ async function analyzeSymptoms(event) {
   }
 }
 
-
 function displayResults(data) {
   const resultsContainer = document.getElementById("results");
   resultsContainer.innerHTML = "";
@@ -122,6 +160,8 @@ function displayResults(data) {
               ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
               <span class="match-percentage">${condition.match_percentage.toFixed(2)}% match</span>
             </div>
+
+            ${condition.imageUrl ? `<img src="${condition.imageUrl}" class="clickable-image" style="max-width:150px;cursor:zoom-in;" />` : ''}
 
             ${hasDetails ? `
               <div class="condition-details">
@@ -156,5 +196,4 @@ function displayResults(data) {
     section.innerHTML = htmlContent;
     resultsContainer.appendChild(section);
   });
-} 
-
+}
