@@ -116,7 +116,7 @@ button.remove-entry-button {
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 8px; /* space above button */
+  width: auto;
   align-self: flex-start; /* align left inside flex container */
 }
 
@@ -126,18 +126,16 @@ button.remove-entry-button:hover {
 }
 
 .symptom-entry {
-    position: relative;
-    padding-bottom: 40px;
-    margin-bottom: 15px;
+    position: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  .symptom-entry button {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
+
 
  .input-group {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
   
   .input-group label {
