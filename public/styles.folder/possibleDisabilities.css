@@ -112,13 +112,14 @@ input[type="text"], input[type="number"] {
 button.remove-entry-button {
   background-color: #440705;
   color: white;
-  margin-bottom: 5px;
-  margin-right: 20px;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 8px; /* space above button */
+  align-self: flex-start; /* align left inside flex container */
 }
+
 
 button.remove-entry-button:hover {
   background-color: #290303;
@@ -130,9 +131,13 @@ button.remove-entry-button:hover {
     margin-bottom: 15px;
   }
   
-  .input-group {
-    margin-bottom: 10px;
-  }
+ .input-group {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  align-items: flex-start; /* align children to left */
+  gap: 8px; /* spacing between elements */
+  margin-bottom: 20px;
+}
   
   .input-group label {
     display: block;
@@ -144,12 +149,6 @@ button.remove-entry-button:hover {
     max-width: 99.5%;
     margin-top: 5px;
     box-sizing: border-box;
-  }
-  
-  .symptom-entry button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
   }
 
 .button-row button,
