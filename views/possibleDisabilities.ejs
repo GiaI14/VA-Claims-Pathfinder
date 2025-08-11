@@ -155,63 +155,64 @@
           }
         });
 
-        // Add entry (keeps same class names and attributes so analysis code continues to work)
         addEntryButton.addEventListener('click', function() {
-          const entryDiv = document.createElement('div');
-          entryDiv.className = 'symptom-entry';
+  const entryDiv = document.createElement('div');
+  entryDiv.className = 'symptom-entry';
 
-          const inputGroup = document.createElement('div');
-          inputGroup.className = 'input-group';
+  const inputGroup = document.createElement('div');
+  inputGroup.className = 'input-group';
 
-          const labelSystem = document.createElement('label');
-          labelSystem.textContent = 'System Affected: ';
-          const selectSystem = document.createElement('select');
-          selectSystem.className = 'body-part';
-          selectSystem.required = true;
+  const labelSystem = document.createElement('label');
+  labelSystem.textContent = 'System Affected: ';
+  const selectSystem = document.createElement('select');
+  selectSystem.className = 'body-part';
+  selectSystem.required = true;
 
-          const defaultOption = document.createElement('option');
-          defaultOption.value = '';
-          defaultOption.textContent = 'Select a system';
-          selectSystem.appendChild(defaultOption);
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Select a system';
+  selectSystem.appendChild(defaultOption);
 
-          systems.forEach(sys => {
-            const option = document.createElement('option');
-            option.value = sys;
-            option.textContent = sys;
-            selectSystem.appendChild(option);
-          });
+  systems.forEach(sys => {
+    const option = document.createElement('option');
+    option.value = sys;
+    option.textContent = sys;
+    selectSystem.appendChild(option);
+  });
 
-          labelSystem.appendChild(selectSystem);
+  labelSystem.appendChild(selectSystem);
 
-          const labelSymptoms = document.createElement('label');
-          labelSymptoms.textContent = 'Symptoms: ';
-          const inputSymptoms = document.createElement('input');
-          inputSymptoms.type = 'text';
-          inputSymptoms.className = 'symptoms';
-          inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
-          inputSymptoms.required = true;
-          labelSymptoms.appendChild(inputSymptoms);
+  const labelSymptoms = document.createElement('label');
+  labelSymptoms.textContent = 'Symptoms: ';
+  const inputSymptoms = document.createElement('input');
+  inputSymptoms.type = 'text';
+  inputSymptoms.className = 'symptoms';
+  inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
+  inputSymptoms.required = true;
+  labelSymptoms.appendChild(inputSymptoms);
 
-          inputGroup.appendChild(labelSystem);
-          inputGroup.appendChild(labelSymptoms);
+  inputGroup.appendChild(labelSystem);
+  inputGroup.appendChild(labelSymptoms);
 
-          const img = document.createElement('img');
-          img.className = 'system-image';
-          img.alt = 'System Image';
-          img.style.display = 'none';
-          img.style.cursor = 'pointer';
+  // Image element, starts hidden and with correct class & cursor
+  const img = document.createElement('img');
+  img.className = 'system-image';
+  img.alt = 'System Image';
+  img.style.display = 'none';
+  img.style.cursor = 'pointer';
 
-          const removeBtn = document.createElement('button');
-          removeBtn.type = 'button';
-          removeBtn.className = 'remove-entry-button';
-          removeBtn.textContent = 'Remove Entry';
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'remove-entry-button';
+  removeBtn.textContent = 'Remove Entry';
 
-          entryDiv.appendChild(inputGroup);
-          entryDiv.appendChild(img);
-          entryDiv.appendChild(removeBtn);
+  entryDiv.appendChild(inputGroup);
+  entryDiv.appendChild(img);
+  entryDiv.appendChild(removeBtn);
 
-          symptomEntriesContainer.appendChild(entryDiv);
-        });
+  symptomEntriesContainer.appendChild(entryDiv);
+});
+
       });
     </script>
   </body>
