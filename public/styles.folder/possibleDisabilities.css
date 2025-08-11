@@ -118,6 +118,7 @@ button.remove-entry-button {
   cursor: pointer;
   width: auto;
   align-self: flex-start; /* align left inside flex container */
+  margin-top: 0
 }
 
 
@@ -128,7 +129,8 @@ button.remove-entry-button:hover {
 .symptom-entry {
     position: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 1rem;
+    align-items: center;
   }
 
 
