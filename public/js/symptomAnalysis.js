@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
 
     if (allEntries.length > 1) {
-      // Remove the clicked entry if more than one exists
       entry.remove();
     } else {
       // Reset inputs and hide image if only one left, no alert
@@ -116,6 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
       img.src = '';
       img.style.display = 'none';
     }
+     const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
   }
 
   // Analyze symptoms form submit handler
