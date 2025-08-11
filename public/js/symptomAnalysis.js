@@ -236,6 +236,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       section.innerHTML = htmlContent;
       resultsContainer.appendChild(section);
+     
     });
+  resultsContainer.scrollIntoView({ behavior: 'smooth'});
   }
 });
