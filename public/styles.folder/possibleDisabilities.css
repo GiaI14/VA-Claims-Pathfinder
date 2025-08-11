@@ -130,12 +130,13 @@ button.remove-entry-button:hover {
     padding-bottom: 40px;
     margin-bottom: 15px;
   }
-  
+  .symptom-entry button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
  .input-group {
-  display: flex;
-  flex-direction: column; /* stack vertically */
-  align-items: flex-start; /* align children to left */
-  gap: 8px; /* spacing between elements */
   margin-bottom: 20px;
 }
   
