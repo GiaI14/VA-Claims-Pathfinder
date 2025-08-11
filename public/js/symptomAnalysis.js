@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputSymptoms = document.createElement('input');
     inputSymptoms.type = 'text';
     inputSymptoms.className = 'symptoms';
-    inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
+    inputSymptoms.placeholder = 'Enter at least 5 symptoms (comma separated)';
     inputSymptoms.required = true;
     labelSymptoms.appendChild(inputSymptoms);
 
