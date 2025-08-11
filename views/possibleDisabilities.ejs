@@ -15,7 +15,7 @@
         <form id="symptom-form">
           <h2>New Symptoms</h2>
           <div id="symptomEntriesContainer">
-            <!-- Only one initial symptom-entry here -->
+            <!-- One initial symptom-entry -->
             <div class="symptom-entry">
               <div class="input-group">
                 <label>
@@ -140,17 +140,8 @@
         });
         closeBtn.addEventListener('click', closeLightbox);
 
-        // Remove entry, but keep at least one
-        symptomEntriesContainer.addEventListener('click', function(e) {
-          if (e.target.classList.contains('remove-entry-button')) {
-            const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
-            if (entries.length > 1) {
-              e.target.closest('.symptom-entry').remove();
-            } else {
-              alert('You must have at least one symptom entry.');
-            }
-          }
-        });
+        // **Removed remove entry logic here**
+
       });
     </script>
   </body>
