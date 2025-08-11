@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
     selectSystem.appendChild(defaultOption);
 
     // Use the same systems array from your server-side by making it global or passing to client
-    // Assuming you expose "systems" as a global variable in your EJS file
     systems.forEach(sys => {
       const option = document.createElement('option');
       option.value = sys;
@@ -101,24 +100,23 @@ document.addEventListener("DOMContentLoaded", function () {
     symptomEntriesContainer.appendChild(entryDiv);
   }
 
- function removeSymptomEntry(button) {
-  const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-  const entry = button.closest('.symptom-entry');
-  const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+  // Remove symptom entry or reset last one
+  function removeSymptomEntry(button) {
+    const entry = button.closest('.symptom-entry');
+    const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
 
-  if (allEntries.length > 1) {
-    // If more than one entry, just remove this entry
-    entry.remove();
-  } else {
-    // Only one entry left - reset its inputs and hide image, no alert
-    entry.querySelector('.symptoms').value = '';
-    entry.querySelector('.body-part').selectedIndex = 0;
-    const img = entry.querySelector('.system-image');
-    img.src = '';
-    img.style.display = 'none';
+    if (allEntries.length > 1) {
+      // Remove the clicked entry if more than one exists
+      entry.remove();
+    } else {
+      // Reset inputs and hide image if only one left, no alert
+      entry.querySelector('.symptoms').value = '';
+      entry.querySelector('.body-part').selectedIndex = 0;
+      const img = entry.querySelector('.system-image');
+      img.src = '';
+      img.style.display = 'none';
+    }
   }
-}
-
 
   // Analyze symptoms form submit handler
   async function analyzeSymptoms(event) {
