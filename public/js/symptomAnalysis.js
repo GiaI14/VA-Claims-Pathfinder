@@ -3,26 +3,62 @@ document.addEventListener("DOMContentLoaded", function () {
   const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
 
-  // new entry adding
+  // Lightbox elements
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeBtn = lightbox ? lightbox.querySelector('.close') : null;
+
+  // --- Add symptom entry ---
   addEntryButton.addEventListener('click', addSymptomEntry);
 
-  //Removing entry 
-  symptomEntriesContainer.addEventListener('click', function(event) {
+  // --- Remove symptom entry ---
+  symptomEntriesContainer.addEventListener('click', function (event) {
     if (event.target.classList.contains('remove-entry-button')) {
       removeSymptomEntry(event.target);
     }
   });
 
-  // Analyze symptoms
+  // --- Analyze symptoms ---
   analyzeButton.addEventListener('click', analyzeSymptoms);
+
+  // --- Open lightbox when image clicked ---
+  symptomEntriesContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('system-image') && event.target.src) {
+      lightboxImg.src = event.target.src;
+      lightbox.style.display = 'flex';
+    }
+  });
+
+  // --- Close lightbox when overlay clicked ---
+  lightbox?.addEventListener('click', function (event) {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  // --- Close lightbox when enlarged image clicked ---
+  lightboxImg?.addEventListener('click', function () {
+    closeLightbox();
+  });
+
+  // --- Close lightbox when close button clicked ---
+  closeBtn?.addEventListener('click', function () {
+    closeLightbox();
+  });
+
+  // Close function
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lightboxImg.src = '';
+  }
 });
 
 function addSymptomEntry() {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const templateEntry = symptomEntriesContainer.querySelector('.symptom-entry');
   const newEntry = templateEntry.cloneNode(true);
-  
-  // Clearing values in the cloned entry
+
+  // Clear input values
   newEntry.querySelector('.symptoms').value = '';
   newEntry.querySelector('.body-part').selectedIndex = 0;
 
@@ -59,7 +95,7 @@ async function analyzeSymptoms(event) {
     return;
   }
 
-  // Validate that each entry has at least 5 symptoms
+  // Require at least 5 symptoms
   const invalidEntries = symptomsData.filter(entry => entry.symptoms.length < 5);
   if (invalidEntries.length > 0) {
     alert("Each entry must have at least 5 symptoms. Please check your inputs.");
@@ -77,8 +113,6 @@ async function analyzeSymptoms(event) {
       credentials: "include",
     });
 
-    console.log("CSRF token being sent:", csrfToken);
-
     if (!response.ok) throw new Error("Failed to analyze symptoms");
 
     const result = await response.json();
@@ -86,10 +120,9 @@ async function analyzeSymptoms(event) {
   } catch (error) {
     console.error("Error analyzing symptoms:", error.message);
     document.getElementById("results").innerHTML =
-      <p>An error occurred while processing your request. Details: ${error.message}</p>;
+      `<p>An error occurred while processing your request. Details: ${error.message}</p>`;
   }
 }
-
 
 function displayResults(data) {
   const resultsContainer = document.getElementById("results");
@@ -104,51 +137,51 @@ function displayResults(data) {
     const section = document.createElement("div");
     section.classList.add("result-section");
 
-    let htmlContent = <h3>${entry.system}</h3>;
+    let htmlContent = `<h3>${entry.system}</h3>`;
 
     if (entry.message) {
-      htmlContent += <p>${entry.message}</p>;
+      htmlContent += `<p>${entry.message}</p>`;
     } else if (entry.possibleConditions?.length > 0) {
-      htmlContent += <div class="conditions-container">;
-      
+      htmlContent += `<div class="conditions-container">`;
+
       entry.possibleConditions.forEach((condition) => {
         const hasDetails = condition.presumptive_raw || 
                          condition.qualifying_circumstance || 
                          condition.evidence_basis;
 
-        htmlContent += 
+        htmlContent += `
           <div class="condition-block">
             <div class="condition-title">
               ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
               <span class="match-percentage">${condition.match_percentage.toFixed(2)}% match</span>
             </div>
 
-            ${hasDetails ? 
+            ${hasDetails ? `
               <div class="condition-details">
-                ${condition.presumptive_raw ? 
+                ${condition.presumptive_raw ? `
                   <div class="detail-item">
                     <span class="detail-label"><strong>Presumptive Type:</strong></span>
                     <span class="detail-text">${condition.presumptive_raw}</span>
-                  </div> : ''}
+                  </div>` : ''}
                 
-                ${condition.qualifying_circumstance ? 
+                ${condition.qualifying_circumstance ? `
                   <div class="detail-item">
                     <span class="detail-label"><strong>Qualifying Circumstances:</strong></span>
                     <span class="detail-text">${condition.qualifying_circumstance}</span>
-                  </div> : ''}
+                  </div>` : ''}
                 
-                ${condition.evidence_basis ? 
+                ${condition.evidence_basis ? `
                   <div class="detail-item">
                     <span class="detail-label"><strong>Evidence Basis:</strong></span>
                     <span class="detail-text">${condition.evidence_basis}</span>
-                  </div> : ''}
+                  </div>` : ''}
               </div>
-             : ''}
+            ` : ''}
           </div>
-        ;
+        `;
       });
-      
-      htmlContent += </div>; // Close conditions-container
+
+      htmlContent += `</div>`; // Close conditions-container
     } else {
       htmlContent += "<p>No specific conditions matched. Please provide more detailed symptoms.</p>";
     }
@@ -156,4 +189,5 @@ function displayResults(data) {
     section.innerHTML = htmlContent;
     resultsContainer.appendChild(section);
   });
-}  
+}
+
