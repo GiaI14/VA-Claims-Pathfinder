@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
   <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
   <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
@@ -45,7 +45,7 @@
             <button type="button" id="addEntryButton">Add Another Entry</button>
           </div>
           <div class="analyze-section">
-            <button id="analyzeButton">Analyze Symptoms</button>
+            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
           </div>
 
           <input type="text" name="honeypot" style="display: none;">
@@ -56,9 +56,9 @@
       </div>
 
       <!-- Lightbox Overlay -->
-      <div id="lightbox" class="lightbox">
+      <div id="lightbox" class="lightbox" style="display:none;">
         <span class="close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View">
+        <img id="lightbox-img" src="" alt="Large View" />
       </div>
 
       <%- include('includes/footer') %>
@@ -88,8 +88,11 @@
 
         const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
         const addEntryButton = document.getElementById('addEntryButton');
+        const analyzeButton = document.getElementById('analyzeButton');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
+        const resultsDiv = document.getElementById('results');
+        const csrfToken = document.getElementById('csrfToken').value;
 
         // Show image when system selected
         symptomEntriesContainer.addEventListener('change', function(e) {
@@ -101,6 +104,7 @@
             if (selectedSystem && systemImages[selectedSystem]) {
               imgEl.src = '/images/' + systemImages[selectedSystem];
               imgEl.style.display = 'block';
+              imgEl.style.cursor = 'pointer';
             } else {
               imgEl.src = '';
               imgEl.style.display = 'none';
@@ -200,6 +204,56 @@
 
           symptomEntriesContainer.appendChild(entryDiv);
         });
+
+        // ANALYSIS FUNCTION
+        document.getElementById('symptom-form').addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          // Gather all symptom entries data
+          const entries = Array.from(document.querySelectorAll('.symptom-entry'));
+          const data = entries.map(entry => ({
+            system: entry.querySelector('.body-part').value.trim(),
+            symptoms: entry.querySelector('.symptoms').value.trim()
+          }));
+
+          // Basic validation
+          for (const entry of data) {
+            if (!entry.system) {
+              alert('Please select a system for each entry.');
+              return;
+            }
+            if (!entry.symptoms || entry.symptoms.split(',').length < 1) {
+              alert('Please enter at least one symptom per entry.');
+              return;
+            }
+          }
+
+          try {
+            const response = await fetch('/api/analyze-symptoms', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken
+              },
+              body: JSON.stringify({ symptomsData: data })
+            });
+
+            if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+
+            const result = await response.json();
+
+            // Display results
+            resultsDiv.innerHTML = '';
+            if (result && result.analysis) {
+              resultsDiv.textContent = JSON.stringify(result.analysis, null, 2);
+            } else {
+              resultsDiv.textContent = 'No analysis result found.';
+            }
+          } catch (err) {
+            alert('Error analyzing symptoms: ' + err.message);
+          }
+        });
+
       });
     </script>
   </body>
