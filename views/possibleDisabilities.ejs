@@ -16,28 +16,29 @@
       max-height: 250px;
       border: 1px solid #ddd;
       display: none;
-      cursor: pointer; /* clickable */
+      cursor: pointer;
     }
 
-    /* Lightbox styles */
+    /* Lightbox overlay */
     .lightbox {
       display: none;
       position: fixed;
       z-index: 9999;
-      left: 0;
       top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
     }
+    /* Center image inside flexbox container */
     .lightbox img {
-      display: block;
       max-width: 90%;
-      max-height: 90%;
-      margin: 5% auto;
+      max-height: 80%;
       border-radius: 8px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
     }
     .lightbox .close {
       position: absolute;
@@ -47,6 +48,10 @@
       font-size: 40px;
       font-weight: bold;
       cursor: pointer;
+      z-index: 10000;
+    }
+    .lightbox .close:hover {
+      color: #ccc;
     }
   </style>
   <body>
@@ -103,7 +108,7 @@
 
       <!-- Lightbox Overlay -->
       <div id="lightbox" class="lightbox">
-        <span class="close" onclick="closeLightbox()">&times;</span>
+        <span class="close">&times;</span>
         <img id="lightbox-img" src="" alt="Large View">
       </div>
 
@@ -112,12 +117,9 @@
 
     <!-- Scripts -->
     <script nonce="<%= nonce %>">
-      // Expose systems array from server-side to client-side
       const systems = <%- JSON.stringify(systems) %>;
 
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('Symptom Analysis page loaded');
-
         const systemImages = {
           'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
           'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
@@ -140,7 +142,7 @@
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
 
-        // When a system is selected, show the corresponding image
+        // Show image when system selected
         symptomEntriesContainer.addEventListener('change', function(e) {
           if (e.target.classList.contains('body-part')) {
             const selectedSystem = e.target.value;
@@ -157,28 +159,30 @@
           }
         });
 
-        // Click on image to open lightbox
+        // Open lightbox
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('system-image') && e.target.src) {
             lightboxImg.src = e.target.src;
-            lightbox.style.display = 'block';
+            lightbox.style.display = 'flex';
           }
         });
 
-        // Close lightbox when clicking outside image
+        // Close when clicking background or image
         lightbox.addEventListener('click', function(e) {
-          if (e.target === lightbox) {
+          if (e.target === lightbox || e.target === lightboxImg) {
             closeLightbox();
           }
         });
+
+        // Close when clicking the X
+        document.querySelector('.lightbox .close').addEventListener('click', closeLightbox);
 
         function closeLightbox() {
           lightbox.style.display = 'none';
           lightboxImg.src = '';
         }
-        window.closeLightbox = closeLightbox; // expose for close button
 
-        // Remove symptom entry handler (delegation)
+        // Remove entry
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('remove-entry-button')) {
             const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
@@ -190,17 +194,13 @@
           }
         });
 
-        // Add new symptom entry with fresh DOM elements
+        // Add entry
         addEntryButton.addEventListener('click', function() {
           const entryDiv = document.createElement('div');
           entryDiv.className = 'symptom-entry';
-          entryDiv.style.display = 'flex';
-          entryDiv.style.alignItems = 'flex-start';
-          entryDiv.style.gap = '1rem';
 
           const inputGroup = document.createElement('div');
           inputGroup.className = 'input-group';
-          inputGroup.style.flexGrow = '1';
 
           const labelSystem = document.createElement('label');
           labelSystem.textContent = 'System Affected: ';
@@ -237,9 +237,6 @@
           const img = document.createElement('img');
           img.className = 'system-image';
           img.alt = 'System Image';
-          img.style.maxWidth = '250px';
-          img.style.maxHeight = '250px';
-          img.style.border = '1px solid #ddd';
           img.style.display = 'none';
           img.style.cursor = 'pointer';
 
