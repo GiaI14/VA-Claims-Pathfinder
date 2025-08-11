@@ -36,35 +36,44 @@
                   />
                 </label>
               </div>
-              <!-- Image insert-->
+
+              <!-- Image insert (hidden until a valid system is chosen) -->
               <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
+
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
+
           <div class="button-row">
             <button type="button" id="addEntryButton">Add Another Entry</button>
           </div>
+
           <div class="analyze-section">
+            <!-- keep the button exactly as before (no name changes) -->
             <button id="analyzeButton">Analyze Symptoms</button>
           </div>
 
           <input type="text" name="honeypot" style="display: none;">
         </form>
 
-        <!-- Results Display -->
+        <!-- Results Display (unchanged) -->
         <div id="results"></div>
       </div>
 
       <!-- Lightbox Overlay -->
       <div id="lightbox" class="lightbox" style="display: none;">
-        <span class="close">&times;</span>
+        <span class="close" aria-label="Close">&times;</span>
         <img id="lightbox-img" src="" alt="Large View">
       </div>
 
       <%- include('includes/footer') %>
     </div>
 
-    <!-- Scripts -->
+    <!-- Keep your original scripts so analysis/display logic still runs -->
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+
+    <!-- Image/lightbox handler (no variable renames) -->
     <script nonce="<%= nonce %>">
       const systems = <%- JSON.stringify(systems) %>;
 
@@ -109,7 +118,7 @@
           }
         });
 
-        // Open lightbox
+        // Open lightbox when user clicks image (works for dynamic entries too)
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('system-image') && e.target.src) {
             lightboxImg.src = e.target.src;
@@ -119,20 +128,22 @@
 
         // Close when clicking background or image
         lightbox.addEventListener('click', function(e) {
+          // close when clicking on overlay background or the image itself
           if (e.target === lightbox || e.target === lightboxImg) {
             closeLightbox();
           }
         });
 
         // Close when clicking the X
-        document.querySelector('.lightbox .close').addEventListener('click', closeLightbox);
+        const closeBtn = document.querySelector('.lightbox .close');
+        if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
 
         function closeLightbox() {
           lightbox.style.display = 'none';
           lightboxImg.src = '';
         }
 
-        // Remove entry
+        // Remove entry (ensures at least one entry remains)
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('remove-entry-button')) {
             const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
@@ -144,7 +155,7 @@
           }
         });
 
-        // Add entry
+        // Add entry (keeps same class names and attributes so analysis code continues to work)
         addEntryButton.addEventListener('click', function() {
           const entryDiv = document.createElement('div');
           entryDiv.className = 'symptom-entry';
