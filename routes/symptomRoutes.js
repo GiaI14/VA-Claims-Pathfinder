@@ -48,19 +48,6 @@ function calculateSimilarity(str1, str2) {
     return (jaroWinkler + (1 - levenshtein)) / 2;
 }
 
-function tokenizeAndNormalize(symptoms) {
-    if (typeof symptoms !== 'string') {
-        return [];
-    }
-
-    return symptoms
-        .split(",")
-        .flatMap(symptom => symptom.trim().toLowerCase().split(/\s+/)) // Split by spaces too
-        .map(token => token.replace(/[^\w]/g, '')) // Remove non-alphanumeric characters
-        .filter(token => token.length > 1); // Remove single-character tokens
-}
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 router.post("/api/analyze-symptoms", (req, res, next) => {
