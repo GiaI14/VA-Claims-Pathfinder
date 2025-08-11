@@ -15,6 +15,7 @@
         <form id="symptom-form">
           <h2>New Symptoms</h2>
           <div id="symptomEntriesContainer">
+            <!-- Only one initial symptom-entry here -->
             <div class="symptom-entry">
               <div class="input-group">
                 <label>
@@ -37,7 +38,7 @@
                 </label>
               </div>
 
-              <!-- Image insert (hidden until a valid system is chosen) -->
+              <!-- Image insert (hidden initially) -->
               <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
 
               <button type="button" class="remove-entry-button">Remove Entry</button>
@@ -49,31 +50,30 @@
           </div>
 
           <div class="analyze-section">
-            <!-- keep the button exactly as before (no name changes) -->
-            <button id="analyzeButton">Analyze Symptoms</button>
+            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
           </div>
 
           <input type="text" name="honeypot" style="display: none;">
         </form>
 
-        <!-- Results Display (unchanged) -->
+        <!-- Results Display -->
         <div id="results"></div>
       </div>
 
       <!-- Lightbox Overlay -->
       <div id="lightbox" class="lightbox" style="display: none;">
         <span class="close" aria-label="Close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View">
+        <img id="lightbox-img" src="" alt="Large View" />
       </div>
 
       <%- include('includes/footer') %>
     </div>
 
-    <!-- Keep your original scripts so analysis/display logic still runs -->
+    <!-- Your existing scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
 
-    <!-- Image/lightbox handler (no variable renames) -->
+    <!-- Image/lightbox handler -->
     <script nonce="<%= nonce %>">
       const systems = <%- JSON.stringify(systems) %>;
 
@@ -96,9 +96,6 @@
         };
 
         const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-        const addEntryButton = document.getElementById('addEntryButton');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
 
         // Show/hide image when system is selected or cleared
         symptomEntriesContainer.addEventListener('change', function(e) {
@@ -118,32 +115,32 @@
           }
         });
 
-        // Open lightbox when user clicks image (works for dynamic entries too)
+        // Open lightbox when image clicked
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('system-image') && e.target.src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
             lightboxImg.src = e.target.src;
             lightbox.style.display = 'flex';
           }
         });
 
-        // Close when clicking background or image
-        lightbox.addEventListener('click', function(e) {
-          // close when clicking on overlay background or the image itself
-          if (e.target === lightbox || e.target === lightboxImg) {
-            closeLightbox();
-          }
-        });
-
-        // Close when clicking the X
-        const closeBtn = document.querySelector('.lightbox .close');
-        if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+        // Close lightbox logic
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = lightbox.querySelector('.close');
 
         function closeLightbox() {
           lightbox.style.display = 'none';
           lightboxImg.src = '';
         }
 
-        // Remove entry (ensures at least one entry remains)
+        lightbox.addEventListener('click', e => {
+          if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
+        });
+        closeBtn.addEventListener('click', closeLightbox);
+
+        // Remove entry, but keep at least one
         symptomEntriesContainer.addEventListener('click', function(e) {
           if (e.target.classList.contains('remove-entry-button')) {
             const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
@@ -153,64 +150,6 @@
               alert('You must have at least one symptom entry.');
             }
           }
-        });
-
-        // Add entry (keeps same class names and attributes so analysis code continues to work)
-        addEntryButton.addEventListener('click', function() {
-          const entryDiv = document.createElement('div');
-          entryDiv.className = 'symptom-entry';
-
-          const inputGroup = document.createElement('div');
-          inputGroup.className = 'input-group';
-
-          const labelSystem = document.createElement('label');
-          labelSystem.textContent = 'System Affected: ';
-          const selectSystem = document.createElement('select');
-          selectSystem.className = 'body-part';
-          selectSystem.required = true;
-
-          const defaultOption = document.createElement('option');
-          defaultOption.value = '';
-          defaultOption.textContent = 'Select a system';
-          selectSystem.appendChild(defaultOption);
-
-          systems.forEach(sys => {
-            const option = document.createElement('option');
-            option.value = sys;
-            option.textContent = sys;
-            selectSystem.appendChild(option);
-          });
-
-          labelSystem.appendChild(selectSystem);
-
-          const labelSymptoms = document.createElement('label');
-          labelSymptoms.textContent = 'Symptoms: ';
-          const inputSymptoms = document.createElement('input');
-          inputSymptoms.type = 'text';
-          inputSymptoms.className = 'symptoms';
-          inputSymptoms.placeholder = 'Enter symptoms (comma separated)';
-          inputSymptoms.required = true;
-          labelSymptoms.appendChild(inputSymptoms);
-
-          inputGroup.appendChild(labelSystem);
-          inputGroup.appendChild(labelSymptoms);
-
-          const img = document.createElement('img');
-          img.className = 'system-image';
-          img.alt = 'System Image';
-          img.style.display = 'none';
-          img.style.cursor = 'pointer';
-
-          const removeBtn = document.createElement('button');
-          removeBtn.type = 'button';
-          removeBtn.className = 'remove-entry-button';
-          removeBtn.textContent = 'Remove Entry';
-
-          entryDiv.appendChild(inputGroup);
-          entryDiv.appendChild(img);
-          entryDiv.appendChild(removeBtn);
-
-          symptomEntriesContainer.appendChild(entryDiv);
         });
       });
     </script>
