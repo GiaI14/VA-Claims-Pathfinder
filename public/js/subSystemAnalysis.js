@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 
+
   function resetEntry(entry) {
     entry.querySelector('.system-select').value = '';
     entry.querySelector('.sub-system-select').innerHTML = `<option value="">Select a sub-system</option>`;
