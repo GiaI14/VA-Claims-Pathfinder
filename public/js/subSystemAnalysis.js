@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const symptomList = entry.querySelector('.symptom-list');
       const img = entry.querySelector('.system-image');
 
-      subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
+      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
       symptomList.innerHTML = '';
 
       if (system) {
         // Show system image if available
         if (systemImages[system]) {
-          img.src = /images/${systemImages[system]};
+          img.src = `/images/${systemImages[system]}`;
           img.style.display = 'block';
         } else {
           img.src = '';
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-          const res = await fetch(/api/sub-systems/${encodeURIComponent(system)});
+          const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
           const subSystems = await res.json();
 
           subSystems.forEach(sub => {
@@ -91,13 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         // Fetch symptoms for selected sub-system
-        const res = await fetch(/api/symptoms/${encodeURIComponent(subSystem)});
+        const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
         const symptoms = await res.json();
 
         // Render each symptom as a checkbox
         symptoms.forEach(symptom => {
           const label = document.createElement('label');
-          label.innerHTML = <input type="checkbox" value="${symptom}"> ${symptom};
+          label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
           symptomList.appendChild(label);
         });
       } catch (error) {
@@ -146,88 +146,73 @@ document.addEventListener('DOMContentLoaded', () => {
       displayResults(results);
     } catch (err) {
       console.error('Error analyzing symptoms:', err);
-      document.getElementById('results').innerHTML = <p>Error: ${err.message}</p>;
+      document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
     }
   });
-  
- function addSymptomEntry() {
-  const entryDiv = document.createElement('div');
-  entryDiv.className = 'symptom-entry';
 
-  // Row container for system, sub-system, and image
-  const topRow = document.createElement('div');
-  topRow.className = 'top-row';
+  function addSymptomEntry() {
+    const entryDiv = document.createElement('div');
+    entryDiv.className = 'symptom-entry';
 
-  // System select
-  const labelSystem = document.createElement('label');
-  labelSystem.textContent = 'System Affected: ';
-  const selectSystem = document.createElement('select');
-  selectSystem.className = 'system-select';
-  selectSystem.required = true;
+    // System select
+    const labelSystem = document.createElement('label');
+    labelSystem.textContent = 'System Affected: ';
+    const selectSystem = document.createElement('select');
+    selectSystem.className = 'system-select';
+    selectSystem.required = true;
 
-  const defaultOptionSys = document.createElement('option');
-  defaultOptionSys.value = '';
-  defaultOptionSys.textContent = 'Select a system';
-  selectSystem.appendChild(defaultOptionSys);
+    const defaultOptionSys = document.createElement('option');
+    defaultOptionSys.value = '';
+    defaultOptionSys.textContent = 'Select a system';
+    selectSystem.appendChild(defaultOptionSys);
 
-  systems.forEach(sys => {
-    const option = document.createElement('option');
-    option.value = sys;
-    option.textContent = sys;
-    selectSystem.appendChild(option);
-  });
+    systems.forEach(sys => {
+      const option = document.createElement('option');
+      option.value = sys;
+      option.textContent = sys;
+      selectSystem.appendChild(option);
+    });
 
-  labelSystem.appendChild(selectSystem);
+    labelSystem.appendChild(selectSystem);
 
-  // Sub-system select
-  const labelSubSystem = document.createElement('label');
-  labelSubSystem.textContent = ' Sub-System: ';
-  const selectSubSystem = document.createElement('select');
-  selectSubSystem.className = 'sub-system-select';
-  selectSubSystem.required = true;
-  selectSubSystem.innerHTML = <option value="">Select a sub-system</option>;
-  labelSubSystem.appendChild(selectSubSystem);
+    // Sub-system select
+    const labelSubSystem = document.createElement('label');
+    labelSubSystem.textContent = ' Sub-System: ';
+    const selectSubSystem = document.createElement('select');
+    selectSubSystem.className = 'sub-system-select';
+    selectSubSystem.required = true;
+    selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
+    labelSubSystem.appendChild(selectSubSystem);
 
-  // Image
-  const img = document.createElement('img');
-  img.className = 'system-image';
-  img.alt = 'System Image';
-  img.style.display = 'none';
-  img.style.cursor = 'pointer';
+    // Symptom list container
+    const symptomListDiv = document.createElement('div');
+    symptomListDiv.className = 'symptom-list';
 
-  // Append system, sub-system, and image to topRow
-  topRow.appendChild(labelSystem);
-  topRow.appendChild(labelSubSystem);
-  topRow.appendChild(img);
+    // Image
+    const img = document.createElement('img');
+    img.className = 'system-image';
+    img.alt = 'System Image';
+    img.style.display = 'none';
+    img.style.cursor = 'pointer';
 
-  // Symptoms grid container (below topRow)
-  const symptomsWrapper = document.createElement('div');
-  symptomsWrapper.className = 'symptoms-wrapper';
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'remove-entry-button';
+    removeBtn.textContent = 'Remove Entry';
 
-  // Symptom list container
-  const symptomListDiv = document.createElement('div');
-  symptomListDiv.className = 'symptom-list';
+    entryDiv.appendChild(labelSystem);
+    entryDiv.appendChild(labelSubSystem);
+    entryDiv.appendChild(symptomListDiv);
+    entryDiv.appendChild(img);
+    entryDiv.appendChild(removeBtn);
 
-  symptomsWrapper.appendChild(symptomListDiv);
-
-  // Remove button
-  const removeBtn = document.createElement('button');
-  removeBtn.type = 'button';
-  removeBtn.className = 'remove-entry-button';
-  removeBtn.textContent = 'Remove Entry';
-
-  entryDiv.appendChild(topRow);
-  entryDiv.appendChild(symptomsWrapper);
-  entryDiv.appendChild(removeBtn);
-
-  symptomEntriesContainer.appendChild(entryDiv);
-}
-
-
+    symptomEntriesContainer.appendChild(entryDiv);
+  }
 
   function resetEntry(entry) {
     entry.querySelector('.system-select').value = '';
-    entry.querySelector('.sub-system-select').innerHTML = <option value="">Select a sub-system</option>;
+    entry.querySelector('.sub-system-select').innerHTML = `<option value="">Select a sub-system</option>`;
     entry.querySelector('.symptom-list').innerHTML = '';
     const img = entry.querySelector('.system-image');
     img.src = '';
@@ -247,12 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const section = document.createElement('div');
       section.classList.add('result-section');
 
-      let htmlContent = <h3>${entry.system} → ${entry.subSystem}</h3>;
+      let htmlContent = `<h3>${entry.system} → ${entry.subSystem}</h3>`;
 
       if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
-        htmlContent += <p>No specific conditions matched. Please provide more detailed symptoms.</p>;
+        htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
       } else {
-        htmlContent += <div class="conditions-container">;
+        htmlContent += `<div class="conditions-container">`;
 
         entry.possibleConditions.forEach(condition => {
           const hasDetails =
@@ -260,22 +245,22 @@ document.addEventListener('DOMContentLoaded', () => {
             condition.qualifying_circumstance ||
             condition.evidence_basis;
 
-          htmlContent += 
+          htmlContent += `
             <div class="condition-block">
               <div class="condition-title">
                 ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
               </div>
-              ${hasDetails ? 
+              ${hasDetails ? `
               <div class="condition-details">
-                ${condition.presumptive_raw ? <div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div> : ''}
-                ${condition.qualifying_circumstance ? <div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div> : ''}
-                ${condition.evidence_basis ? <div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div> : ''}
-              </div> : ''}
+                ${condition.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>` : ''}
+                ${condition.qualifying_circumstance ? `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>` : ''}
+                ${condition.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>` : ''}
+              </div>` : ''}
             </div>
-          ;
+          `;
         });
 
-        htmlContent += </div>;
+        htmlContent += `</div>`;
       }
 
       section.innerHTML = htmlContent;
