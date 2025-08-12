@@ -2,27 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
+  const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
 
-  // Grab systems from first select options for new entries
+  // Systems from initial options on page load
   const systems = Array.from(document.querySelectorAll('.system-select > option'))
-    .slice(1) // skip placeholder option
+    .slice(1) // skip placeholder
     .map(opt => opt.value);
 
-  addEntryButton.addEventListener('click', addSymptomEntry);
-
-  symptomEntriesContainer.addEventListener('click', e => {
-    if (e.target.classList.contains('remove-entry-button')) {
-      const entry = e.target.closest('.symptom-entry');
-      if (symptomEntriesContainer.children.length > 1) {
-        entry.remove();
-      } else {
-        resetEntry(entry);
-      }
-      document.getElementById('results').innerHTML = '';
-    }
-  });
-
-  // Define system images mapping
+  // System images mapping
   const systemImages = {
     "Dental and Oral Conditions": "512px-202402_Oral_Cavity.svg.png",
     "Hemic and Lymphatic Systems": "512px-2201_Anatomy_of_the_Lymphatic_System.jpg",
@@ -40,68 +27,68 @@ document.addEventListener('DOMContentLoaded', () => {
     "Sense Organs": "Sense-Organ.png"
   };
 
+  addEntryButton.addEventListener('click', addSymptomEntry);
+
+  symptomEntriesContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-entry-button')) {
+      const entry = e.target.closest('.symptom-entry');
+      if (symptomEntriesContainer.children.length > 1) {
+        entry.remove();
+        // Clear symptoms if last entry removed?
+        dynamicSymptomsList.innerHTML = '';
+      } else {
+        resetEntry(entry);
+      }
+      document.getElementById('results').innerHTML = '';
+    }
+  });
+
+  // Handle system and sub-system selects and image display
   symptomEntriesContainer.addEventListener('change', async e => {
     if (e.target.classList.contains('system-select')) {
       const system = e.target.value;
       const entry = e.target.closest('.symptom-entry');
-      const subSystemSelect = entry.querySelector('.sub-system-select');
-      const symptomList = entry.querySelector('.symptom-list');
       const img = entry.querySelector('.system-image');
+      const subSystemSelect = entry.querySelector('.sub-system-select');
 
-      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
-      symptomList.innerHTML = '';
-
-      if (system) {
-        // Show system image if available
-        if (systemImages[system]) {
-          img.src = `/images/${systemImages[system]}`;
-          img.style.display = 'block';
-        } else {
-          img.src = '';
-          img.style.display = 'none';
-        }
-
-        try {
-          const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-          const subSystems = await res.json();
-
-          subSystems.forEach(sub => {
-            const option = document.createElement('option');
-            option.value = sub;
-            option.textContent = sub;
-            subSystemSelect.appendChild(option);
-          });
-        } catch (error) {
-          console.error('Failed to load sub-systems:', error);
-        }
+      // Update image
+      if (systemImages[system]) {
+        img.src = `/images/${systemImages[system]}`;
+        img.style.display = 'block';
       } else {
         img.src = '';
         img.style.display = 'none';
       }
+
+      // Reset sub-system options and symptoms list when system changes
+      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+      dynamicSymptomsList.innerHTML = '';
     }
 
     if (e.target.classList.contains('sub-system-select')) {
       const subSystem = e.target.value;
-      const entry = e.target.closest('.symptom-entry');
-      const symptomList = entry.querySelector('.symptom-list');
 
-      symptomList.innerHTML = '';
-
-      if (!subSystem) return;
+      if (!subSystem) {
+        dynamicSymptomsList.innerHTML = '';
+        return;
+      }
 
       try {
         // Fetch symptoms for selected sub-system
         const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
         const symptoms = await res.json();
 
-        // Render each symptom as a checkbox
+        dynamicSymptomsList.innerHTML = ''; // Clear old
+
         symptoms.forEach(symptom => {
           const label = document.createElement('label');
+          label.style.display = 'block';
           label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
-          symptomList.appendChild(label);
+          dynamicSymptomsList.appendChild(label);
         });
       } catch (error) {
         console.error('Failed to load symptoms:', error);
+        dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
       }
     }
   });
@@ -111,21 +98,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const csrfToken = document.getElementById('csrfToken').value;
     const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+
+    // Get symptoms checked in standalone container
+    const checkedSymptoms = Array.from(dynamicSymptomsList.querySelectorAll('input[type=checkbox]:checked'))
+      .map(cb => cb.value);
+
+    if (checkedSymptoms.length === 0) {
+      alert('Please select at least one symptom.');
+      return;
+    }
+
     const symptomsData = [];
 
     entries.forEach(entry => {
       const system = entry.querySelector('.system-select').value.trim();
       const subSystem = entry.querySelector('.sub-system-select').value.trim();
-      const checked = entry.querySelectorAll('.symptom-list input[type=checkbox]:checked');
-      const symptoms = Array.from(checked).map(cb => cb.value);
 
-      if (system && subSystem && symptoms.length > 0) {
-        symptomsData.push({ system, subSystem, symptoms });
+      if (system && subSystem) {
+        symptomsData.push({ system, subSystem, symptoms: checkedSymptoms });
       }
     });
 
     if (symptomsData.length === 0) {
-      alert('Please select system, sub-system, and at least one symptom in each entry.');
+      alert('Please select system and sub-system in each entry.');
       return;
     }
 
@@ -150,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Add new symptom-entry div
   function addSymptomEntry() {
     const entryDiv = document.createElement('div');
     entryDiv.className = 'symptom-entry';
@@ -184,10 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
     selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
     labelSubSystem.appendChild(selectSubSystem);
 
-    // Symptom list container
-    const symptomListDiv = document.createElement('div');
-    symptomListDiv.className = 'symptom-list';
-
     // Image
     const img = document.createElement('img');
     img.className = 'system-image';
@@ -203,68 +195,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     entryDiv.appendChild(labelSystem);
     entryDiv.appendChild(labelSubSystem);
-    entryDiv.appendChild(symptomListDiv);
     entryDiv.appendChild(img);
     entryDiv.appendChild(removeBtn);
 
     symptomEntriesContainer.appendChild(entryDiv);
   }
 
+  // Reset one entry to blank state
   function resetEntry(entry) {
     entry.querySelector('.system-select').value = '';
     entry.querySelector('.sub-system-select').innerHTML = `<option value="">Select a sub-system</option>`;
-    entry.querySelector('.symptom-list').innerHTML = '';
     const img = entry.querySelector('.system-image');
     img.src = '';
     img.style.display = 'none';
+
+    dynamicSymptomsList.innerHTML = '';
   }
 
+  // Display results (your existing function)
   function displayResults(data) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
 
-    if (!data || data.length === 0) {
-      resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
-      return;
-    }
-
-    data.forEach(entry => {
-      const section = document.createElement('div');
-      section.classList.add('result-section');
-
-      let htmlContent = `<h3>${entry.system} → ${entry.subSystem}</h3>`;
-
-      if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
-        htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
-      } else {
-        htmlContent += `<div class="conditions-container">`;
-
-        entry.possibleConditions.forEach(condition => {
-          const hasDetails =
-            condition.presumptive_raw ||
-            condition.qualifying_circumstance ||
-            condition.evidence_basis;
-
-          htmlContent += `
-            <div class="condition-block">
-              <div class="condition-title">
-                ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
-              </div>
-              ${hasDetails ? `
-              <div class="condition-details">
-                ${condition.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>` : ''}
-                ${condition.qualifying_circumstance ? `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>` : ''}
-                ${condition.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>` : ''}
-              </div>` : ''}
-            </div>
-          `;
-        });
-
-        htmlContent += `</div>`;
-      }
-
-      section.innerHTML = htmlContent;
-      resultsContainer.appendChild(section);
-    });
-  }
-});
+    if
