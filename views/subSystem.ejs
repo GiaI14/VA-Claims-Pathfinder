@@ -1,151 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
-  <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-
+  <head>
+    <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
+    <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
+  </head>
   <body>
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
 
       <div class="container">
-        <h1>Symptoms Analysis</h1>
+        <h1>Symptom Analysis</h1>
         <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-        
-        <!-- Symptoms Section -->
+
         <form id="symptom-form">
-          <h2>New Symptoms</h2>
           <div id="symptomEntriesContainer">
-            <!-- One initial symptom-entry -->
             <div class="symptom-entry">
-              <div class="input-group">
-                <label>
-  System Affected:
-  <select class="system-select" required>
-    <option value="">Select a system</option>
-    <% systemsFromServer.forEach(system => { %>
-      <option value="<%= system %>"><%= system %></option>
-    <% }); %>
-  </select>
-</label>
+              <label>
+                System Affected:
+                <select class="system-select" required>
+                  <option value="">Select a system</option>
+                  <% systemsFromServer.forEach(system => { %>
+                    <option value="<%= system %>"><%= system %></option>
+                  <% }) %>
+                </select>
+              </label>
 
-<label>
-  Sub-System:
-  <select class="sub-system-select" required>
-    <option value="">Select a sub-system</option>
-  </select>
-</label>
+              <label>
+                Sub-System:
+                <select class="sub-system-select" required>
+                  <option value="">Select a sub-system</option>
+                </select>
+              </label>
 
-<div class="symptoms-container">
-  <p>Select symptoms:</p>
-  <div class="symptom-list"></div>
-</div>
+              <div class="symptom-list"></div>
 
-              </div>
-
-              <!-- Image insert (hidden initially) -->
-              <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
-
+              <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
 
-          <div class="button-row">
-            <button type="button" id="addEntryButton">Add Another Entry</button>
-          </div>
-
-          <div class="analyze-section">
-            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
-          </div>
-
-          <input type="text" name="honeypot" style="display: none;">
+          <button type="button" id="addEntryButton">Add Another Entry</button>
+          <button id="analyzeButton" type="submit">Analyze Symptoms</button>
+          <input type="text" name="honeypot" style="display:none" />
         </form>
 
-        <!-- Results Display -->
         <div id="results"></div>
-      </div>
-
-      <!-- Lightbox Overlay -->
-      <div id="lightbox" class="lightbox" style="display: none;">
-        <span class="close" aria-label="Close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View" />
       </div>
 
       <%- include('includes/footer') %>
     </div>
 
-    <!-- Your existing scripts -->
-    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-
-    <!-- Image/lightbox handler -->
     <script nonce="<%= nonce %>">
       const systems = <%- JSON.stringify(systemsFromServer) %>;
 
-      document.addEventListener('DOMContentLoaded', function() {
-        const systemImages = {
-          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-          'Endocrine system': '512px-Endocrine_English.svg.png',
-          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-          'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
-          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-          'Nervous System': '512px-TE-Nervous_system_diagram.svg.png',
-          'Ear': 'Auditory_System.jpg',
-          'Sense Organs': 'Sense-Organ.png',
-        };
-
+      document.addEventListener('DOMContentLoaded', () => {
         const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
+        const addEntryButton = document.getElementById('addEntryButton');
+        const analyzeButton = document.getElementById('analyzeButton');
 
-        // Show/hide image when system is selected or cleared
-        symptomEntriesContainer.addEventListener('change', function(e) {
-          if (e.target.classList.contains('body-part')) {
-            const selectedSystem = e.target.value;
-            const entryDiv = e.target.closest('.symptom-entry');
-            const imgEl = entryDiv.querySelector('.system-image');
+        // Add entry function (same as you have in your script)
+        function addSymptomEntry() {
+          const entryDiv = document.createElement('div');
+          entryDiv.className = 'symptom-entry';
 
-            if (selectedSystem && systemImages[selectedSystem]) {
-              imgEl.src = '/images/' + systemImages[selectedSystem];
-              imgEl.style.display = 'block';
-              imgEl.style.cursor = 'pointer';
+          const labelSystem = document.createElement('label');
+          labelSystem.textContent = 'System Affected: ';
+          const selectSystem = document.createElement('select');
+          selectSystem.className = 'system-select';
+          selectSystem.required = true;
+
+          const defaultOptionSys = document.createElement('option');
+          defaultOptionSys.value = '';
+          defaultOptionSys.textContent = 'Select a system';
+          selectSystem.appendChild(defaultOptionSys);
+
+          systems.forEach(sys => {
+            const option = document.createElement('option');
+            option.value = sys;
+            option.textContent = sys;
+            selectSystem.appendChild(option);
+          });
+          labelSystem.appendChild(selectSystem);
+
+          const labelSubSystem = document.createElement('label');
+          labelSubSystem.textContent = ' Sub-System: ';
+          const selectSubSystem = document.createElement('select');
+          selectSubSystem.className = 'sub-system-select';
+          selectSubSystem.required = true;
+          selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
+          labelSubSystem.appendChild(selectSubSystem);
+
+          const symptomListDiv = document.createElement('div');
+          symptomListDiv.className = 'symptom-list';
+
+          const img = document.createElement('img');
+          img.className = 'system-image';
+          img.alt = 'System Image';
+          img.style.display = 'none';
+          img.style.cursor = 'pointer';
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'remove-entry-button';
+          removeBtn.textContent = 'Remove Entry';
+
+          entryDiv.appendChild(labelSystem);
+          entryDiv.appendChild(labelSubSystem);
+          entryDiv.appendChild(symptomListDiv);
+          entryDiv.appendChild(img);
+          entryDiv.appendChild(removeBtn);
+
+          symptomEntriesContainer.appendChild(entryDiv);
+        }
+
+        // Add initial entry
+        addSymptomEntry();
+
+        // Add new entry
+        addEntryButton.addEventListener('click', addSymptomEntry);
+
+        // Remove entry
+        symptomEntriesContainer.addEventListener('click', (e) => {
+          if (e.target.classList.contains('remove-entry-button')) {
+            const entry = e.target.closest('.symptom-entry');
+            if (symptomEntriesContainer.children.length > 1) {
+              entry.remove();
             } else {
-              imgEl.src = '';
-              imgEl.style.display = 'none';
+              entry.querySelector('.system-select').value = '';
+              entry.querySelector('.sub-system-select').innerHTML = `<option value="">Select a sub-system</option>`;
+              entry.querySelector('.symptom-list').innerHTML = '';
+              const img = entry.querySelector('.system-image');
+              img.src = '';
+              img.style.display = 'none';
+            }
+            document.getElementById('results').innerHTML = '';
+          }
+        });
+
+        // Handle system change: load sub-systems and update image
+        symptomEntriesContainer.addEventListener('change', async (e) => {
+          if (e.target.classList.contains('system-select')) {
+            const system = e.target.value;
+            const entry = e.target.closest('.symptom-entry');
+
+            const subSystemSelect = entry.querySelector('.sub-system-select');
+            subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+            entry.querySelector('.symptom-list').innerHTML = '';
+
+            const img = entry.querySelector('.system-image');
+            if (system) {
+              img.src = `/images/systems/${encodeURIComponent(system)}.jpg`;
+              img.style.display = 'block';
+            } else {
+              img.src = '';
+              img.style.display = 'none';
+            }
+
+            if (!system) return;
+
+            try {
+              const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+              const subSystems = await res.json();
+              subSystems.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.textContent = sub;
+                subSystemSelect.appendChild(opt);
+              });
+            } catch {
+              // handle errors
+            }
+          }
+
+          // Handle sub-system change: load symptoms
+          if (e.target.classList.contains('sub-system-select')) {
+            const subSystem = e.target.value;
+            const entry = e.target.closest('.symptom-entry');
+            const symptomList = entry.querySelector('.symptom-list');
+            symptomList.innerHTML = '';
+
+            if (!subSystem) return;
+
+            try {
+              const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
+              const symptoms = await res.json();
+
+              symptoms.forEach(symptom => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+                symptomList.appendChild(label);
+              });
+            } catch {
+              // handle errors
             }
           }
         });
 
-        // Open lightbox when image clicked
-        symptomEntriesContainer.addEventListener('click', function(e) {
-          if (e.target.classList.contains('system-image') && e.target.src) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            lightboxImg.src = e.target.src;
-            lightbox.style.display = 'flex';
+        // Analyze symptoms
+        analyzeButton.addEventListener('click', async (event) => {
+          event.preventDefault();
+          const csrfToken = document.getElementById('csrfToken').value;
+          const entries = document.querySelectorAll('.symptom-entry');
+          const symptomsData = [];
+
+          entries.forEach(entry => {
+            const system = entry.querySelector('.system-select').value.trim();
+            const subSystem = entry.querySelector('.sub-system-select').value.trim();
+            const checkedSymptoms = entry.querySelectorAll('.symptom-list input[type=checkbox]:checked');
+            const symptoms = Array.from(checkedSymptoms).map(cb => cb.value);
+
+            if (system && subSystem && symptoms.length > 0) {
+              symptomsData.push({ system, subSystem, symptoms });
+            }
+          });
+
+          if (symptomsData.length === 0) {
+            alert('Please fill out all fields and select at least one symptom per entry.');
+            return;
+          }
+
+          try {
+            const res = await fetch('/api/analyze-symptoms', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+              },
+              body: JSON.stringify(symptomsData),
+              credentials: 'include',
+            });
+
+            if (!res.ok) throw new Error('Failed to analyze symptoms');
+
+            const results = await res.json();
+            displayResults(results);
+          } catch (err) {
+            console.error('Error analyzing symptoms:', err);
+            document.getElementById('results').innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
           }
         });
 
-        // Close lightbox logic
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const closeBtn = lightbox.querySelector('.close');
+        function displayResults(data) {
+          const container = document.getElementById('results');
+          container.innerHTML = '';
+          if (!data.length) {
+            container.innerHTML = '<p>No matching conditions found.</p>';
+            return;
+          }
 
-        function closeLightbox() {
-          lightbox.style.display = 'none';
-          lightboxImg.src = '';
+          data.forEach(entry => {
+            const section = document.createElement('section');
+            section.innerHTML = `<h3>${entry.system} → ${entry.subSystem}</h3>`;
+
+            if (entry.possibleConditions.length === 0) {
+              section.innerHTML += `<p>No conditions matched.</p>`;
+            } else {
+              entry.possibleConditions.forEach(cond => {
+                section.innerHTML += `
+                  <div class="condition-block">
+                    <strong>${cond.condition_name} (${cond.medical_code})</strong>
+                    <p>Presumptive: ${cond.presumptive_raw || 'N/A'}</p>
+                    <p>Qualifying Circumstances: ${cond.qualifying_circumstance || 'N/A'}</p>
+                    <p>Evidence Basis: ${cond.evidence_basis || 'N/A'}</p>
+                  </div>
+                `;
+              });
+            }
+
+            container.appendChild(section);
+          });
         }
-
-        lightbox.addEventListener('click', e => {
-          if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
-        });
-        closeBtn.addEventListener('click', closeLightbox);
-
-        // **Removed remove entry logic here**
-
       });
     </script>
   </body>
