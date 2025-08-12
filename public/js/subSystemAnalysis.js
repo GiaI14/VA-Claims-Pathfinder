@@ -22,63 +22,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  symptomEntriesContainer.addEventListener('change', async e => {
-    if (e.target.classList.contains('system-select')) {
-      const system = e.target.value;
-      const entry = e.target.closest('.symptom-entry');
-      const subSystemSelect = entry.querySelector('.sub-system-select');
-      const symptomList = entry.querySelector('.symptom-list');
-      const img = entry.querySelector('.system-image');
+  // Define this mapping somewhere above this event listener (or at top of your script)
+const systemImages = {
+  "Dental and Oral Conditions": "512px-202402_Oral_Cavity.svg.png",
+  "Hemic and Lymphatic Systems": "512px-2201_Anatomy_of_the_Lymphatic_System.jpg",
+  "Cardiovascular system": "512px-Circulatory_System_en_edited.svg.png",
+  "Skin": "512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png",
+  "Digestive System": "512px-Digestive_system_diagram_en.svg.png",
+  "Endocrine system": "512px-Endocrine_English.svg.png",
+  "Gynecological conditions and disprders of the breast": "512px-Female_genital_system_-_Sagittal_view.svg.png",
+  "Eye": "512px-Lateral_orbit_nerves_chngd.jpg",
+  "Genitourinary system": "512px-Male_and_female_genital_organs.svg.png",
+  "Musculoskeletal system": "512px-Skeleton_and_muscles.png",
+  "Respiratory system": "512px-Respiratory_system_complete_fr_simplified.svg.png",
+  "Nervous System": "512px-TE-Nervous_system_diagram.svg.png",
+  "Ear": "Auditory_System.jpg",
+  "Sense Organs": "Sense-Organ.png"
+};
 
-      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
-      symptomList.innerHTML = '';
+symptomEntriesContainer.addEventListener('change', async e => {
+  if (e.target.classList.contains('system-select')) {
+    const system = e.target.value;
+    const entry = e.target.closest('.symptom-entry');
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    const symptomList = entry.querySelector('.symptom-list');
+    const img = entry.querySelector('.system-image');
 
-      if (system) {
-        img.src = `/images/${encodeURIComponent(system)}.jpg`;
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+    symptomList.innerHTML = '';
+
+    if (system) {
+      // Use the mapping here:
+      if (systemImages[system]) {
+        img.src = `/images/${systemImages[system]}`;
         img.style.display = 'block';
-
-        try {
-          const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-          const subSystems = await res.json();
-
-          subSystems.forEach(sub => {
-            const option = document.createElement('option');
-            option.value = sub;
-            option.textContent = sub;
-            subSystemSelect.appendChild(option);
-          });
-        } catch (error) {
-          console.error('Failed to load sub-systems:', error);
-        }
       } else {
         img.src = '';
         img.style.display = 'none';
       }
-    }
-
-    if (e.target.classList.contains('sub-system-select')) {
-      const subSystem = e.target.value;
-      const entry = e.target.closest('.symptom-entry');
-      const symptomList = entry.querySelector('.symptom-list');
-
-      symptomList.innerHTML = '';
-
-      if (!subSystem) return;
 
       try {
-        const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
-        const symptoms = await res.json();
+        const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+        const subSystems = await res.json();
 
-        symptoms.forEach(symptom => {
-          const label = document.createElement('label');
-          label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
-          symptomList.appendChild(label);
+        subSystems.forEach(sub => {
+          const option = document.createElement('option');
+          option.value = sub;
+          option.textContent = sub;
+          subSystemSelect.appendChild(option);
         });
       } catch (error) {
-        console.error('Failed to load symptoms:', error);
+        console.error('Failed to load sub-systems:', error);
       }
+    } else {
+      img.src = '';
+      img.style.display = 'none';
     }
-  });
+  }
+
+  if (e.target.classList.contains('sub-system-select')) {
+    const subSystem = e.target.value;
+    const entry = e.target.closest('.symptom-entry');
+    const symptomList = entry.querySelector('.symptom-list');
+
+    symptomList.innerHTML = '';
+
+    if (!subSystem) return;
+
+    try {
+      const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
+      const symptoms = await res.json();
+
+      symptoms.forEach(symptom => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+        symptomList.appendChild(label);
+      });
+    } catch (error) {
+      console.error('Failed to load symptoms:', error);
+    }
+  }
+});
 
   analyzeButton.addEventListener('click', async event => {
     event.preventDefault();
