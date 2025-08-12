@@ -254,7 +254,7 @@ symptomEntriesContainer.addEventListener('change', async (e) => {
       const section = document.createElement('div');
       section.classList.add('result-section');
 
-      let htmlContent = `<h3>${entry.system} → ${entry.subSystem}</h3>`;
+      let htmlContent = `<h3>${entry.system} </h3>`;
 
       if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
         htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
