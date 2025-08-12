@@ -149,9 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
     }
   });
-  function addSymptomEntry() {
+  
+ function addSymptomEntry() {
   const entryDiv = document.createElement('div');
   entryDiv.className = 'symptom-entry';
+
+  // Row container for system, sub-system, and image
+  const topRow = document.createElement('div');
+  topRow.className = 'top-row';
 
   // System select
   const labelSystem = document.createElement('label');
@@ -190,7 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
   img.style.display = 'none';
   img.style.cursor = 'pointer';
 
-  // Symptoms container wrapper for better layout
+  // Append system, sub-system, and image to topRow
+  topRow.appendChild(labelSystem);
+  topRow.appendChild(labelSubSystem);
+  topRow.appendChild(img);
+
+  // Symptoms grid container (below topRow)
   const symptomsWrapper = document.createElement('div');
   symptomsWrapper.className = 'symptoms-wrapper';
 
@@ -206,9 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
   removeBtn.className = 'remove-entry-button';
   removeBtn.textContent = 'Remove Entry';
 
-  entryDiv.appendChild(labelSystem);
-  entryDiv.appendChild(labelSubSystem);
-  entryDiv.appendChild(img);
+  entryDiv.appendChild(topRow);
   entryDiv.appendChild(symptomsWrapper);
   entryDiv.appendChild(removeBtn);
 
