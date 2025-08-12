@@ -82,7 +82,7 @@ router.post('/api/analyze-symptoms', async (req, res) => {
 
     for (const entry of entries) {
       if (!entry.subSystem || !entry.symptoms?.length) {
-        results.push({ system: entry.system, subSystem: entry.subSystem, possibleConditions: [] });
+        results.push({ system: entry.system, possibleConditions: [] });
         continue;
       }
 
@@ -91,17 +91,45 @@ router.post('/api/analyze-symptoms', async (req, res) => {
       params.unshift(entry.subSystem);
 
       const query = `
-        SELECT condition_name, medical_code, presumptive_raw, qualifying_circumstance, evidence_basis
+        SELECT condition_name, medical_code, presumptive_raw, qualifying_circumstance, evidence_basis, symptoms
         FROM va_disabilities
         WHERE sub_systems = ? AND (${placeholders})
       `;
 
       const [conditions] = await db.execute(query, params);
 
+      // Calculate match %
+      const conditionsWithMatch = conditions.map(cond => {
+        let storedSymptoms = [];
+        if (typeof cond.symptoms === 'string') {
+          storedSymptoms = cond.symptoms
+            .split(',')
+            .map(s => s.trim().toLowerCase())
+            .filter(s => s.length > 0);
+        }
+
+        const matchedSymptoms = storedSymptoms.filter(sym =>
+          entry.symptoms.map(s => s.toLowerCase()).includes(sym)
+        );
+
+        const matchPercent =
+          storedSymptoms.length > 0
+            ? Math.round((matchedSymptoms.length / storedSymptoms.length) * 100)
+            : 0;
+
+        return {
+          condition_name: cond.condition_name,
+          medical_code: cond.medical_code,
+          presumptive_raw: cond.presumptive_raw,
+          qualifying_circumstance: cond.qualifying_circumstance,
+          evidence_basis: cond.evidence_basis,
+          matchPercent
+        };
+      });
+
       results.push({
         system: entry.system,
-        subSystem: entry.subSystem,
-        possibleConditions: conditions,
+        possibleConditions: conditionsWithMatch
       });
     }
 
@@ -111,5 +139,6 @@ router.post('/api/analyze-symptoms', async (req, res) => {
     res.status(500).json({ error: 'Analysis failed' });
   }
 });
+
 
 module.exports = router;
