@@ -87,56 +87,59 @@ symptomEntriesContainer.addEventListener('change', async e => {
   }
 });
 
-  analyzeButton.addEventListener('click', async event => {
-    event.preventDefault();
+ analyzeButton.addEventListener('click', async event => {
+  event.preventDefault();
 
-    const csrfToken = document.getElementById('csrfToken').value;
-    const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+  const csrfToken = document.getElementById('csrfToken').value;
 
-    const checkedSymptoms = Array.from(dynamicSymptomsList.querySelectorAll('input[type=checkbox]:checked'))
-      .map(cb => cb.value);
+  if (!currentActiveEntry) {
+    alert('Please select a sub-system and symptoms to analyze.');
+    return;
+  }
 
-    if (checkedSymptoms.length === 0) {
-      alert('Please select at least one symptom.');
-      return;
-    }
+  const system = currentActiveEntry.querySelector('.system-select').value.trim();
+  const subSystem = currentActiveEntry.querySelector('.sub-system-select').value.trim();
 
-    const symptomsData = [];
+  if (!system || !subSystem) {
+    alert('Please select system and sub-system.');
+    return;
+  }
 
-    entries.forEach(entry => {
-      const system = entry.querySelector('.system-select').value.trim();
-      const subSystem = entry.querySelector('.sub-system-select').value.trim();
+  const checkedSymptoms = Array.from(dynamicSymptomsList.querySelectorAll('input[type=checkbox]:checked'))
+    .map(cb => cb.value);
 
-      if (system && subSystem) {
-        symptomsData.push({ system, subSystem, symptoms: checkedSymptoms });
-      }
+  if (checkedSymptoms.length === 0) {
+    alert('Please select at least one symptom.');
+    return;
+  }
+
+  const symptomsData = [{
+    system,
+    subSystem,
+    symptoms: checkedSymptoms
+  }];
+
+  try {
+    const res = await fetch('/api/analyze-symptoms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken,
+      },
+      body: JSON.stringify(symptomsData),
+      credentials: 'include',
     });
 
-    if (symptomsData.length === 0) {
-      alert('Please select system and sub-system in each entry.');
-      return;
-    }
+    if (!res.ok) throw new Error('Failed to analyze symptoms');
 
-    try {
-      const res = await fetch('/api/analyze-symptoms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
-        },
-        body: JSON.stringify(symptomsData),
-        credentials: 'include',
-      });
+    const results = await res.json();
+    displayResults(results);
+  } catch (err) {
+    console.error('Error analyzing symptoms:', err);
+    document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
+  }
+});
 
-      if (!res.ok) throw new Error('Failed to analyze symptoms');
-
-      const results = await res.json();
-      displayResults(results);
-    } catch (err) {
-      console.error('Error analyzing symptoms:', err);
-      document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
-    }
-  });
 
   
   function addSymptomEntry() {
