@@ -149,81 +149,74 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
     }
   });
-  
- function addSymptomEntry() {
-  const entryDiv = document.createElement('div');
-  entryDiv.className = 'symptom-entry';
 
-  // Row container for system, sub-system, and image
-  const topRow = document.createElement('div');
-  topRow.className = 'top-row';
+  function addSymptomEntry() {
+    const entryDiv = document.createElement('div');
+    entryDiv.className = 'symptom-entry';
 
-  // System select
-  const labelSystem = document.createElement('label');
-  labelSystem.textContent = 'System Affected: ';
-  const selectSystem = document.createElement('select');
-  selectSystem.className = 'system-select';
-  selectSystem.required = true;
+    // Create top row container for system, sub-system, image
+    const topRow = document.createElement('div');
+    topRow.className = 'top-row';
 
-  const defaultOptionSys = document.createElement('option');
-  defaultOptionSys.value = '';
-  defaultOptionSys.textContent = 'Select a system';
-  selectSystem.appendChild(defaultOptionSys);
+    // System select
+    const labelSystem = document.createElement('label');
+    labelSystem.textContent = 'System Affected: ';
+    const selectSystem = document.createElement('select');
+    selectSystem.className = 'system-select';
+    selectSystem.required = true;
 
-  systems.forEach(sys => {
-    const option = document.createElement('option');
-    option.value = sys;
-    option.textContent = sys;
-    selectSystem.appendChild(option);
-  });
+    const defaultOptionSys = document.createElement('option');
+    defaultOptionSys.value = '';
+    defaultOptionSys.textContent = 'Select a system';
+    selectSystem.appendChild(defaultOptionSys);
 
-  labelSystem.appendChild(selectSystem);
+    systems.forEach(sys => {
+      const option = document.createElement('option');
+      option.value = sys;
+      option.textContent = sys;
+      selectSystem.appendChild(option);
+    });
 
-  // Sub-system select
-  const labelSubSystem = document.createElement('label');
-  labelSubSystem.textContent = ' Sub-System: ';
-  const selectSubSystem = document.createElement('select');
-  selectSubSystem.className = 'sub-system-select';
-  selectSubSystem.required = true;
-  selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
-  labelSubSystem.appendChild(selectSubSystem);
+    labelSystem.appendChild(selectSystem);
 
-  // Image
-  const img = document.createElement('img');
-  img.className = 'system-image';
-  img.alt = 'System Image';
-  img.style.display = 'none';
-  img.style.cursor = 'pointer';
+    // Sub-system select
+    const labelSubSystem = document.createElement('label');
+    labelSubSystem.textContent = ' Sub-System: ';
+    const selectSubSystem = document.createElement('select');
+    selectSubSystem.className = 'sub-system-select';
+    selectSubSystem.required = true;
+    selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
+    labelSubSystem.appendChild(selectSubSystem);
 
-  // Append system, sub-system, and image to topRow
-  topRow.appendChild(labelSystem);
-  topRow.appendChild(labelSubSystem);
-  topRow.appendChild(img);
+    // Image element
+    const img = document.createElement('img');
+    img.className = 'system-image';
+    img.alt = 'System Image';
+    img.style.display = 'none';
+    img.style.cursor = 'pointer';
 
-  // Symptoms grid container (below topRow)
-  const symptomsWrapper = document.createElement('div');
-  symptomsWrapper.className = 'symptoms-wrapper';
+    // Append system, sub-system, image to topRow
+    topRow.appendChild(labelSystem);
+    topRow.appendChild(labelSubSystem);
+    topRow.appendChild(img);
 
-  // Symptom list container
-  const symptomListDiv = document.createElement('div');
-  symptomListDiv.className = 'symptom-list';
+    // Symptoms list container below topRow
+    const symptomListDiv = document.createElement('div');
+    symptomListDiv.className = 'symptom-list';
 
-  symptomsWrapper.appendChild(symptomListDiv);
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'remove-entry-button';
+    removeBtn.textContent = 'Remove Entry';
 
-  // Remove button
-  const removeBtn = document.createElement('button');
-  removeBtn.type = 'button';
-  removeBtn.className = 'remove-entry-button';
-  removeBtn.textContent = 'Remove Entry';
+    // Append all to entryDiv
+    entryDiv.appendChild(topRow);
+    entryDiv.appendChild(symptomListDiv);
+    entryDiv.appendChild(removeBtn);
 
-  entryDiv.appendChild(topRow);
-  entryDiv.appendChild(symptomsWrapper);
-  entryDiv.appendChild(removeBtn);
-
-  symptomEntriesContainer.appendChild(entryDiv);
-}
-
-
+    symptomEntriesContainer.appendChild(entryDiv);
+  }
 
   function resetEntry(entry) {
     entry.querySelector('.system-select').value = '';
@@ -282,4 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsContainer.appendChild(section);
     });
   }
+
+  // Initialize with one entry
+  addSymptomEntry();
 });
