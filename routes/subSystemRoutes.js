@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Example DB functions (replace with your DB queries)
-const db = require('../db');
+const { getDb } = require('../data/database');
 
 // Get sub-systems for a given system
 router.get('/api/sub-systems/:system', async (req, res) => {
