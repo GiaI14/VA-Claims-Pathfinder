@@ -251,7 +251,7 @@ app.get("/possibleDisabilities", async (req, res) => {
   }
 });
 
-app.get('/sub-system', async (req, res) => {
+app.get('/subSystem', async (req, res) => {
   try {
     const db = getDb(); 
     
