@@ -79,7 +79,7 @@
 
     <!-- Image/lightbox handler -->
     <script nonce="<%= nonce %>">
-      const systems = <%- JSON.stringify(systems) %>;
+      const systems = <%- JSON.stringify(systemsFromServer) %>;
 
       document.addEventListener('DOMContentLoaded', function() {
         const systemImages = {
