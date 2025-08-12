@@ -20,15 +20,18 @@ router.get('/sub-system', async (req, res) => {
   }
 });
 
-// API: get sub-systems for a system
 router.get('/api/sub-systems/:system', async (req, res) => {
   try {
     const db = getDb();
     const system = req.params.system;
+
+    // Query sub_systems where systems = selected system
     const [rows] = await db.execute(
       'SELECT DISTINCT sub_systems FROM va_disabilities WHERE systems = ?',
       [system]
     );
+
+    // Map to array of sub_system strings
     const subSystems = rows.map(row => row.sub_systems);
     res.json(subSystems);
   } catch (err) {
@@ -37,20 +40,23 @@ router.get('/api/sub-systems/:system', async (req, res) => {
   }
 });
 
-// API: get symptoms for a sub-system
-router.get('/api/symptoms/:subSystem', async (req, res) => {
+router.get('/api/sub-systems/:system', async (req, res) => {
   try {
     const db = getDb();
-    const subSystem = req.params.subSystem;
+    const system = req.params.system;
+
+    // Query sub_systems where systems = selected system
     const [rows] = await db.execute(
-      'SELECT DISTINCT symptoms FROM va_disabilities WHERE sub_systems = ?',
-      [subSystem]
+      'SELECT DISTINCT sub_systems FROM va_disabilities WHERE systems = ?',
+      [system]
     );
-    const symptoms = rows.map(row => row.symptoms);
-    res.json(symptoms);
+
+    // Map to array of sub_system strings
+    const subSystems = rows.map(row => row.sub_systems);
+    res.json(subSystems);
   } catch (err) {
-    console.error('Error fetching symptoms:', err);
-    res.status(500).json({ error: 'Failed to fetch symptoms' });
+    console.error('Error fetching sub-systems:', err);
+    res.status(500).json({ error: 'Failed to fetch sub-systems' });
   }
 });
 
