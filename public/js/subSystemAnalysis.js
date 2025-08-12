@@ -241,52 +241,37 @@ symptomEntriesContainer.addEventListener('change', async (e) => {
     dynamicSymptomsList.innerHTML = '';
   }
 
-  function displayResults(data) {
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '';
+  function displayResults(results) {
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
 
-    if (!data || data.length === 0) {
-      resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
+  results.forEach(entry => {
+    const systemHeader = document.createElement('h3');
+    systemHeader.textContent = entry.system; // No subSystem, just system
+    resultsContainer.appendChild(systemHeader);
+
+    if (entry.possibleConditions.length === 0) {
+      const noMatch = document.createElement('p');
+      noMatch.textContent = 'No matching conditions found.';
+      resultsContainer.appendChild(noMatch);
       return;
     }
 
-    data.forEach(entry => {
-      const section = document.createElement('div');
-      section.classList.add('result-section');
-
-      let htmlContent = `<h3>${entry.system} </h3>`;
-
-      if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
-        htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
-      } else {
-        htmlContent += `<div class="conditions-container">`;
-
-        entry.possibleConditions.forEach(condition => {
-          const hasDetails =
-            condition.presumptive_raw ||
-            condition.qualifying_circumstance ||
-            condition.evidence_basis;
-
-          htmlContent += `
-            <div class="condition-block">
-              <div class="condition-title">
-                ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
-              </div>
-              ${hasDetails ? `
-              <div class="condition-details">
-                ${condition.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>` : ''}
-                ${condition.qualifying_circumstance ? `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>` : ''}
-                ${condition.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>` : ''}
-              </div>` : ''}
-            </div>
-          `;
-        });
-
-        htmlContent += `</div>`;
-      }
-
-      section.innerHTML = htmlContent;
-      resultsContainer.appendChild(section);
+    const ul = document.createElement('ul');
+    entry.possibleConditions.forEach(cond => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${cond.condition_name}</strong> 
+        (${cond.matchPercent || 0}% match)
+        <br>Code: ${cond.medical_code || 'N/A'}
+        <br>Presumptive: ${cond.presumptive_raw || 'N/A'}
+        <br>Qualifying Circumstance: ${cond.qualifying_circumstance || 'N/A'}
+        <br>Evidence Basis: ${cond.evidence_basis || 'N/A'}
+      `;
+      ul.appendChild(li);
     });
-  }
-});
+
+    resultsContainer.appendChild(ul);
+  });
+}
+
