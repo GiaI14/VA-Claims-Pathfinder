@@ -262,91 +262,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Results: show only system header; include % match from backend
   function displayResults(data) {
-  const resultsContainer = document.getElementById('results');
-  resultsContainer.innerHTML = '';
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = '';
 
-  if (!data || data.length === 0) {
-    resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
-    return;
+    if (!data || data.length === 0) {
+      resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
+      return;
+    }
+
+    data.forEach(entry => {
+      const section = document.createElement('div');
+      section.classList.add('result-section');
+
+      let htmlContent = `<h3>${entry.system}</h3>`;
+
+      if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
+        htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
+      } else {
+        // sort by matchPercent desc if present
+        const sorted = [...entry.possibleConditions].sort((a, b) => (b.matchPercent || 0) - (a.matchPercent || 0));
+
+        htmlContent += `<div class="conditions-container">`;
+
+        sorted.forEach(condition => {
+          const hasDetails =
+            condition.presumptive_raw ||
+            condition.qualifying_circumstance ||
+            condition.evidence_basis;
+
+          htmlContent += `
+            <div class="condition-block">
+              <div class="condition-title">
+                ${condition.condition_name}
+                ${condition.medical_code ? `<span class="medical-code">(${condition.medical_code})</span>` : ''}
+                <span style="float:right; font-weight:bold;">${(condition.matchPercent ?? 0)}% match</span>
+              </div>
+              ${hasDetails ? `
+              <div class="condition-details">
+                ${condition.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>` : ''}
+                ${condition.qualifying_circumstance ? `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>` : ''}
+                ${condition.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>` : ''}
+              </div>` : ''}
+            </div>
+          `;
+        });
+
+        htmlContent += `</div>`;
+      }
+
+      section.innerHTML = htmlContent;
+      resultsContainer.appendChild(section);
+    });
   }
-
-  data.forEach(entry => {
-    const section = document.createElement('div');
-    section.classList.add('result-section');
-
-    // Show system and sub-system
-    const heading = document.createElement('h3');
-    heading.textContent = entry.subSystem ? `${entry.system} → ${entry.subSystem}` : entry.system;
-    section.appendChild(heading);
-
-    // Show system image if available
-    if (entry.system && systemImages[entry.system]) {
-      const img = document.createElement('img');
-      img.src = `/images/${systemImages[entry.system]}`;
-      img.alt = entry.system;
-      img.className = 'result-system-image';
-      section.appendChild(img);
-    }
-
-    if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
-      const noCondMsg = document.createElement('p');
-      noCondMsg.textContent = 'No specific conditions matched. Please provide more detailed symptoms.';
-      section.appendChild(noCondMsg);
-    } else {
-      const conditionsContainer = document.createElement('div');
-      conditionsContainer.classList.add('conditions-container');
-
-      entry.possibleConditions.forEach(condition => {
-        const conditionBlock = document.createElement('div');
-        conditionBlock.classList.add('condition-block');
-
-        // Condition title + medical code + match %
-        const title = document.createElement('div');
-        title.className = 'condition-title';
-        title.innerHTML = `
-          ${condition.condition_name} 
-          <span class="medical-code">(${condition.medical_code})</span> 
-          <span class="match-percent"> - Match: ${condition.match_percentage || 0}%</span>
-        `;
-        conditionBlock.appendChild(title);
-
-        // Matched symptoms list
-        if (condition.matched_symptoms && condition.matched_symptoms.length > 0) {
-          const matchedSympDiv = document.createElement('div');
-          matchedSympDiv.className = 'matched-symptoms';
-          matchedSympDiv.textContent = 'Matched Symptoms: ' + condition.matched_symptoms.join(', ');
-          conditionBlock.appendChild(matchedSympDiv);
-        }
-
-        // Additional details
-        const hasDetails =
-          condition.presumptive_raw ||
-          condition.qualifying_circumstance ||
-          condition.evidence_basis;
-
-        if (hasDetails) {
-          const detailsDiv = document.createElement('div');
-          detailsDiv.className = 'condition-details';
-
-          if (condition.presumptive_raw) {
-            detailsDiv.innerHTML += `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>`;
-          }
-          if (condition.qualifying_circumstance) {
-            detailsDiv.innerHTML += `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>`;
-          }
-          if (condition.evidence_basis) {
-            detailsDiv.innerHTML += `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>`;
-          }
-          conditionBlock.appendChild(detailsDiv);
-        }
-
-        conditionsContainer.appendChild(conditionBlock);
-      });
-
-      section.appendChild(conditionsContainer);
-    }
-
-    resultsContainer.appendChild(section);
-  });
-}
-
+});
