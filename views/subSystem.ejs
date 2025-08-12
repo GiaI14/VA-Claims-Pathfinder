@@ -22,7 +22,7 @@
   System Affected:
   <select class="system-select" required>
     <option value="">Select a system</option>
-    <% systems.forEach(system => { %>
+    <% systemsFromServer.forEach(system => { %>
       <option value="<%= system %>"><%= system %></option>
     <% }); %>
   </select>
