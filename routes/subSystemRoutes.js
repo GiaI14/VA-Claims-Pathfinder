@@ -74,65 +74,101 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
 
 
 // Analyze symptoms
-router.post('/api/analyze-symptoms', async (req, res) => {
-  try {
-    const db = getDb();
-    const entries = req.body; // [{ system, subSystem, symptoms: [] }]
-    const results = [];
+router.post("/api/analyze-symptoms", (req, res, next) => {
+    console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
+    next();
+}, async (req, res) => {
+    console.log("Received symptom data:", req.body);
+    const symptomsData = req.body;
 
-    for (const entry of entries) {
-      if (!entry.subSystem || !entry.symptoms?.length) {
-        results.push({ 
-          system: entry.system, 
-          subSystem: entry.subSystem, 
-          possibleConditions: [] 
-        });
-        continue;
-      }
-
-      const placeholders = entry.symptoms.map(() => 'symptoms LIKE ?').join(' OR ');
-      const params = entry.symptoms.map(symptom => `%${symptom}%`);
-      params.unshift(entry.subSystem);
-
-      const query = `
-        SELECT condition_name, medical_code, presumptive_raw, 
-               qualifying_circumstance, evidence_basis, symptoms
-        FROM va_disabilities
-        WHERE sub_systems = ? AND (${placeholders})
-      `;
-
-      const [conditions] = await db.execute(query, params);
-
-      // Calculate % match for each condition
-      const conditionsWithMatch = conditions.map(cond => {
-        const conditionSymptoms = (cond.symptoms || '')
-          .split(',')
-          .map(s => s.trim().toLowerCase())
-          .filter(Boolean);
-
-        const selectedSymptoms = entry.symptoms.map(s => s.trim().toLowerCase());
-
-        const matchCount = selectedSymptoms.filter(sym => conditionSymptoms.includes(sym)).length;
-        const matchPercent = Math.round((matchCount / selectedSymptoms.length) * 100);
-
-        return { ...cond, matchPercent };
-      });
-
-      // Sort by best match first
-      conditionsWithMatch.sort((a, b) => b.matchPercent - a.matchPercent);
-
-      results.push({
-        system: entry.system,
-        subSystem: entry.subSystem,
-        possibleConditions: conditionsWithMatch,
-      });
+    if (!Array.isArray(symptomsData) || symptomsData.length === 0) {
+        return res.status(400).json({ error: "Invalid input data. Please provide an array of symptoms." });
     }
 
-    res.json(results);
-  } catch (err) {
-    console.error('Analysis failed:', err);
-    res.status(500).json({ error: 'Analysis failed' });
-  }
+    try {
+        const pool = getDb();
+        const results = [];
+
+        for (const entry of symptomsData) {
+            const { system, subSystem, symptoms } = entry;
+            console.log("Processing entry:", entry);
+
+            if (!system || !subSystem || !Array.isArray(symptoms) || symptoms.length === 0) {
+                console.warn(`Skipping invalid entry: ${JSON.stringify(entry)}`);
+                continue;
+            }
+
+            const [rows] = await pool.execute(
+                `SELECT 
+                    id, systems, sub_systems, condition_name, medical_code, 
+                    symptoms, secondary_conditions, presumptive_conditions,
+                    qualifying_circumstance, evidence_basis
+                FROM va_disabilities 
+                WHERE sub_systems = ?`,
+                [subSystem]
+            );
+
+            let possibleConditions = [];
+
+            for (const row of rows) {
+                if (!row.symptoms || typeof row.symptoms !== 'string') {
+                    console.warn("Skipping row with invalid symptoms:", row);
+                    continue;
+                }
+
+                let matchPercentage;
+                try {
+                    matchPercentage = calculateMatchPercentage(symptoms, row.symptoms);
+                } catch (err) {
+                    console.error("Error in calculateMatchPercentage:", err, { symptoms, rowSymptoms: row.symptoms });
+                    continue;
+                }
+
+                if (matchPercentage > 25) {
+                    possibleConditions.push({
+                        condition_name: row.condition_name,
+                        medical_code: row.medical_code,
+                        match_percentage: Number(matchPercentage.toFixed(2)),
+                        matched_symptoms: symptoms.filter(symptom => 
+                            row.symptoms.toLowerCase().includes(symptom.toLowerCase())
+                        ),
+                        total_condition_symptoms: row.symptoms.split(',').length,
+                        is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== 'no',
+                        presumptive_raw: row.presumptive_conditions,
+                        secondary_conditions: row.secondary_conditions,
+                        qualifying_circumstance: row.qualifying_circumstance || null, 
+                        evidence_basis: row.evidence_basis || null
+                    });
+                }
+            }
+
+            if (possibleConditions.length === 0) {
+                results.push({
+                    system,
+                    subSystem,
+                    message: `No matching conditions found for ${system} → ${subSystem}. Please add more symptoms for better accuracy.`
+                });
+            } else {
+                possibleConditions.sort((a, b) => b.match_percentage - a.match_percentage);
+                const topConditions = possibleConditions.slice(0, 3);
+
+                results.push({
+                    system,
+                    subSystem,
+                    symptoms,
+                    possibleConditions: topConditions
+                });
+            }
+        }
+        
+        console.log("Analysis results:", JSON.stringify(results, null, 2));
+        res.json(results);
+    } catch (error) {
+        console.error("Error querying database:", error);
+        res.status(500).json({ error: "An error occurred while analyzing symptoms.", details: error.message });
+    }
 });
 
 
