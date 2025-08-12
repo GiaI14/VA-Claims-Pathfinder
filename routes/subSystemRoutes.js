@@ -20,18 +20,17 @@ router.get('/sub-system', async (req, res) => {
   }
 });
 
+// Get sub-systems for a given system
 router.get('/api/sub-systems/:system', async (req, res) => {
   try {
     const db = getDb();
     const system = req.params.system;
 
-    // Query sub_systems where systems = selected system
     const [rows] = await db.execute(
       'SELECT DISTINCT sub_systems FROM va_disabilities WHERE systems = ?',
       [system]
     );
 
-    // Map to array of sub_system strings
     const subSystems = rows.map(row => row.sub_systems);
     res.json(subSystems);
   } catch (err) {
@@ -40,27 +39,26 @@ router.get('/api/sub-systems/:system', async (req, res) => {
   }
 });
 
-router.get('/api/sub-systems/:system', async (req, res) => {
+// Get symptoms for a given sub-system
+router.get('/api/symptoms/:subSystem', async (req, res) => {
   try {
     const db = getDb();
-    const system = req.params.system;
+    const subSystem = req.params.subSystem;
 
-    // Query sub_systems where systems = selected system
     const [rows] = await db.execute(
-      'SELECT DISTINCT sub_systems FROM va_disabilities WHERE systems = ?',
-      [system]
+      'SELECT DISTINCT symptoms FROM va_disabilities WHERE sub_systems = ?',
+      [subSystem]
     );
 
-    // Map to array of sub_system strings
-    const subSystems = rows.map(row => row.sub_systems);
-    res.json(subSystems);
+    const symptoms = rows.map(row => row.symptoms);
+    res.json(symptoms);
   } catch (err) {
-    console.error('Error fetching sub-systems:', err);
-    res.status(500).json({ error: 'Failed to fetch sub-systems' });
+    console.error('Error fetching symptoms:', err);
+    res.status(500).json({ error: 'Failed to fetch symptoms' });
   }
 });
 
-// API: analyze symptoms
+// Analyze symptoms
 router.post('/api/analyze-symptoms', async (req, res) => {
   try {
     const db = getDb();
@@ -73,14 +71,16 @@ router.post('/api/analyze-symptoms', async (req, res) => {
         continue;
       }
 
-      // Use placeholders for symptom matching
-      const placeholders = entry.symptoms.map(() => '?').join(',');
+      const placeholders = entry.symptoms.map(() => 'symptoms LIKE ?').join(' OR ');
+      const params = entry.symptoms.map(symptom => `%${symptom}%`);
+      params.unshift(entry.subSystem);
+
       const query = `
         SELECT condition_name, medical_code, presumptive_raw, qualifying_circumstance, evidence_basis
         FROM va_disabilities
-        WHERE sub_systems = ? AND symptoms IN (${placeholders})
+        WHERE sub_systems = ? AND (${placeholders})
       `;
-      const params = [entry.subSystem, ...entry.symptoms];
+
       const [conditions] = await db.execute(query, params);
 
       results.push({
