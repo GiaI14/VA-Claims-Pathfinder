@@ -82,7 +82,11 @@ router.post('/api/analyze-symptoms', async (req, res) => {
 
     for (const entry of entries) {
       if (!entry.subSystem || !entry.symptoms?.length) {
-        results.push({ system: entry.system, possibleConditions: [] });
+        results.push({ 
+          system: entry.system, 
+          subSystem: entry.subSystem, 
+          possibleConditions: [] 
+        });
         continue;
       }
 
@@ -91,45 +95,36 @@ router.post('/api/analyze-symptoms', async (req, res) => {
       params.unshift(entry.subSystem);
 
       const query = `
-        SELECT condition_name, medical_code, presumptive_raw, qualifying_circumstance, evidence_basis, symptoms
+        SELECT condition_name, medical_code, presumptive_raw, 
+               qualifying_circumstance, evidence_basis, symptoms
         FROM va_disabilities
         WHERE sub_systems = ? AND (${placeholders})
       `;
 
       const [conditions] = await db.execute(query, params);
 
-      // Calculate match %
+      // Calculate % match for each condition
       const conditionsWithMatch = conditions.map(cond => {
-        let storedSymptoms = [];
-        if (typeof cond.symptoms === 'string') {
-          storedSymptoms = cond.symptoms
-            .split(',')
-            .map(s => s.trim().toLowerCase())
-            .filter(s => s.length > 0);
-        }
+        const conditionSymptoms = (cond.symptoms || '')
+          .split(',')
+          .map(s => s.trim().toLowerCase())
+          .filter(Boolean);
 
-        const matchedSymptoms = storedSymptoms.filter(sym =>
-          entry.symptoms.map(s => s.toLowerCase()).includes(sym)
-        );
+        const selectedSymptoms = entry.symptoms.map(s => s.trim().toLowerCase());
 
-        const matchPercent =
-          storedSymptoms.length > 0
-            ? Math.round((matchedSymptoms.length / storedSymptoms.length) * 100)
-            : 0;
+        const matchCount = selectedSymptoms.filter(sym => conditionSymptoms.includes(sym)).length;
+        const matchPercent = Math.round((matchCount / selectedSymptoms.length) * 100);
 
-        return {
-          condition_name: cond.condition_name,
-          medical_code: cond.medical_code,
-          presumptive_raw: cond.presumptive_raw,
-          qualifying_circumstance: cond.qualifying_circumstance,
-          evidence_basis: cond.evidence_basis,
-          matchPercent
-        };
+        return { ...cond, matchPercent };
       });
+
+      // Sort by best match first
+      conditionsWithMatch.sort((a, b) => b.matchPercent - a.matchPercent);
 
       results.push({
         system: entry.system,
-        possibleConditions: conditionsWithMatch
+        subSystem: entry.subSystem,
+        possibleConditions: conditionsWithMatch,
       });
     }
 
@@ -139,6 +134,7 @@ router.post('/api/analyze-symptoms', async (req, res) => {
     res.status(500).json({ error: 'Analysis failed' });
   }
 });
+
 
 
 module.exports = router;
