@@ -17,7 +17,7 @@
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
               
-              <!-- CHANGED: wrap selects and image in top-row flex container -->
+              <!-- selects and image stay inside symptom-entry -->
               <div class="top-row">
                 <label>
                   System Affected:
@@ -39,13 +39,13 @@
                 <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
               </div>
 
-              <!-- CHANGED: wrap symptom-list in a container below top-row -->
-              <div class="symptoms-wrapper">
-                <div class="symptom-list"></div>
-              </div>
-
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
+          </div>
+
+          <!-- CHANGED: symptoms-wrapper outside symptomEntriesContainer -->
+          <div class="symptoms-wrapper">
+            <div class="symptom-list"></div>
           </div>
 
           <button type="button" id="addEntryButton">Add Another Entry</button>
