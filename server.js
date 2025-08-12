@@ -251,6 +251,23 @@ app.get("/possibleDisabilities", async (req, res) => {
   }
 });
 
+app.get('/sub-system', async (req, res) => {
+  try {
+    const db = getDb(); 
+    
+    const [systemsFromServer] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
+    
+    res.render('subSystem', {
+      csrfToken: req.csrfToken(),
+      nonce: res.locals.nonce,
+      systemsFromServer: systemsFromServer.map(row => row.systems),
+    });
+  } catch (err) {
+    console.error('Error fetching systems for sub-system page:', err);
+    res.status(500).send('Error fetching systems');
+  }
+});
+
 app.get('/terms', (req, res) => {
   res.render('terms', {
     nonce: res.locals.nonce || '',
@@ -265,13 +282,6 @@ app.get('/policy', (req, res) => {
   });
 });
 
-app.get('/sub-system', async (req, res) => {
-  const systemsFromServer = await db.getSystems();
-  res.render('subSystem', {
-    csrfToken: req.csrfToken(),
-    systemsFromServer
-  });
-}); 
 
 // Generic error handler
 app.use((err, req, res, next) => {
