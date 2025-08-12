@@ -149,66 +149,72 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('results').innerHTML = `<p>Error: ${err.message}</p>`;
     }
   });
-
   function addSymptomEntry() {
-    const entryDiv = document.createElement('div');
-    entryDiv.className = 'symptom-entry';
+  const entryDiv = document.createElement('div');
+  entryDiv.className = 'symptom-entry';
 
-    // System select
-    const labelSystem = document.createElement('label');
-    labelSystem.textContent = 'System Affected: ';
-    const selectSystem = document.createElement('select');
-    selectSystem.className = 'system-select';
-    selectSystem.required = true;
+  // System select
+  const labelSystem = document.createElement('label');
+  labelSystem.textContent = 'System Affected: ';
+  const selectSystem = document.createElement('select');
+  selectSystem.className = 'system-select';
+  selectSystem.required = true;
 
-    const defaultOptionSys = document.createElement('option');
-    defaultOptionSys.value = '';
-    defaultOptionSys.textContent = 'Select a system';
-    selectSystem.appendChild(defaultOptionSys);
+  const defaultOptionSys = document.createElement('option');
+  defaultOptionSys.value = '';
+  defaultOptionSys.textContent = 'Select a system';
+  selectSystem.appendChild(defaultOptionSys);
 
-    systems.forEach(sys => {
-      const option = document.createElement('option');
-      option.value = sys;
-      option.textContent = sys;
-      selectSystem.appendChild(option);
-    });
+  systems.forEach(sys => {
+    const option = document.createElement('option');
+    option.value = sys;
+    option.textContent = sys;
+    selectSystem.appendChild(option);
+  });
 
-    labelSystem.appendChild(selectSystem);
+  labelSystem.appendChild(selectSystem);
 
-    // Sub-system select
-    const labelSubSystem = document.createElement('label');
-    labelSubSystem.textContent = ' Sub-System: ';
-    const selectSubSystem = document.createElement('select');
-    selectSubSystem.className = 'sub-system-select';
-    selectSubSystem.required = true;
-    selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
-    labelSubSystem.appendChild(selectSubSystem);
+  // Sub-system select
+  const labelSubSystem = document.createElement('label');
+  labelSubSystem.textContent = ' Sub-System: ';
+  const selectSubSystem = document.createElement('select');
+  selectSubSystem.className = 'sub-system-select';
+  selectSubSystem.required = true;
+  selectSubSystem.innerHTML = `<option value="">Select a sub-system</option>`;
+  labelSubSystem.appendChild(selectSubSystem);
 
-    // Symptom list container
-    const symptomListDiv = document.createElement('div');
-    symptomListDiv.className = 'symptom-list';
+  // Image
+  const img = document.createElement('img');
+  img.className = 'system-image';
+  img.alt = 'System Image';
+  img.style.display = 'none';
+  img.style.cursor = 'pointer';
 
-    // Image
-    const img = document.createElement('img');
-    img.className = 'system-image';
-    img.alt = 'System Image';
-    img.style.display = 'none';
-    img.style.cursor = 'pointer';
+  // Symptoms container wrapper for better layout
+  const symptomsWrapper = document.createElement('div');
+  symptomsWrapper.className = 'symptoms-wrapper';
 
-    // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'remove-entry-button';
-    removeBtn.textContent = 'Remove Entry';
+  // Symptom list container
+  const symptomListDiv = document.createElement('div');
+  symptomListDiv.className = 'symptom-list';
 
-    entryDiv.appendChild(labelSystem);
-    entryDiv.appendChild(labelSubSystem);
-    entryDiv.appendChild(symptomListDiv);
-    entryDiv.appendChild(img);
-    entryDiv.appendChild(removeBtn);
+  symptomsWrapper.appendChild(symptomListDiv);
 
-    symptomEntriesContainer.appendChild(entryDiv);
-  }
+  // Remove button
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'remove-entry-button';
+  removeBtn.textContent = 'Remove Entry';
+
+  entryDiv.appendChild(labelSystem);
+  entryDiv.appendChild(labelSubSystem);
+  entryDiv.appendChild(img);
+  entryDiv.appendChild(symptomsWrapper);
+  entryDiv.appendChild(removeBtn);
+
+  symptomEntriesContainer.appendChild(entryDiv);
+}
+
 
   function resetEntry(entry) {
     entry.querySelector('.system-select').value = '';
