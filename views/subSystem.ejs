@@ -33,14 +33,19 @@
                 </select>
               </label>
 
-              <div class="symptom-list"></div>
-
               <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
 
           <button type="button" id="addEntryButton">Add Another Entry</button>
+
+          <!-- Standalone symptoms container -->
+          <div id="dynamicSymptomsContainer" style="margin-top: 20px;">
+            <h2>Symptoms for Selected Sub-System</h2>
+            <div id="dynamicSymptomsList"></div>
+          </div>
+
           <button id="analyzeButton" type="submit">Analyze Symptoms</button>
 
           <input type="text" name="honeypot" style="display:none" />
@@ -54,4 +59,4 @@
 
     <script src="/js/subSystemAnalysis.js" nonce="<%= nonce %>" defer></script>
   </body>
-</html> 
+</html>
