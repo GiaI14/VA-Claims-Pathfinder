@@ -20,7 +20,7 @@ const registrationRoutes = require('./routes/registration');
 const symptomRoutes = require('./routes/symptomRoutes');
 const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
-//const contactRoutes = require('./routes/contact');
+const subSystemRoutes = require('./routes/subSystemRoutes');
 
 dotenv.config();
 
@@ -191,7 +191,7 @@ app.set('view engine', 'ejs');
 app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/auth', authRoutes);
-//app.use('/', contactRoutes);
+app.use(subSystemRoutes);
 
 
 app.get('/', (req, res) => {
@@ -264,6 +264,14 @@ app.get('/policy', (req, res) => {
     csrfToken: req.csrfToken()
   });
 });
+
+app.get('/sub-system', async (req, res) => {
+  const systemsFromServer = await db.getSystems();
+  res.render('subSystem', {
+    csrfToken: req.csrfToken(),
+    systemsFromServer
+  });
+}); 
 
 // Generic error handler
 app.use((err, req, res, next) => {
