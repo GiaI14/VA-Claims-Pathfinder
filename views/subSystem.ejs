@@ -16,26 +16,34 @@
         <form id="symptom-form">
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
-              <label>
-                System Affected:
-                <select class="system-select" required>
-                  <option value="">Select a system</option>
-                  <% systemsFromServer.forEach(system => { %>
-                    <option value="<%= system %>"><%= system %></option>
-                  <% }) %>
-                </select>
-              </label>
+              
+              <!-- CHANGED: wrap selects and image in top-row flex container -->
+              <div class="top-row">
+                <label>
+                  System Affected:
+                  <select class="system-select" required>
+                    <option value="">Select a system</option>
+                    <% systemsFromServer.forEach(system => { %>
+                      <option value="<%= system %>"><%= system %></option>
+                    <% }) %>
+                  </select>
+                </label>
 
-              <label>
-                Sub-System:
-                <select class="sub-system-select" required>
-                  <option value="">Select a sub-system</option>
-                </select>
-              </label>
+                <label>
+                  Sub-System:
+                  <select class="sub-system-select" required>
+                    <option value="">Select a sub-system</option>
+                  </select>
+                </label>
 
-              <div class="symptom-list"></div>
+                <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
+              </div>
 
-              <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
+              <!-- CHANGED: wrap symptom-list in a container below top-row -->
+              <div class="symptoms-wrapper">
+                <div class="symptom-list"></div>
+              </div>
+
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
