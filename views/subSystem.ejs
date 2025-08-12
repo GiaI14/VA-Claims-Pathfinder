@@ -16,36 +16,28 @@
         <form id="symptom-form">
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
-              
-              <!-- selects and image stay inside symptom-entry -->
-              <div class="top-row">
-                <label>
-                  System Affected:
-                  <select class="system-select" required>
-                    <option value="">Select a system</option>
-                    <% systemsFromServer.forEach(system => { %>
-                      <option value="<%= system %>"><%= system %></option>
-                    <% }) %>
-                  </select>
-                </label>
+              <label>
+                System Affected:
+                <select class="system-select" required>
+                  <option value="">Select a system</option>
+                  <% systemsFromServer.forEach(system => { %>
+                    <option value="<%= system %>"><%= system %></option>
+                  <% }) %>
+                </select>
+              </label>
 
-                <label>
-                  Sub-System:
-                  <select class="sub-system-select" required>
-                    <option value="">Select a sub-system</option>
-                  </select>
-                </label>
+              <label>
+                Sub-System:
+                <select class="sub-system-select" required>
+                  <option value="">Select a sub-system</option>
+                </select>
+              </label>
 
-                <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
-              </div>
+              <div class="symptom-list"></div>
 
+              <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
-          </div>
-
-          <!-- CHANGED: symptoms-wrapper outside symptomEntriesContainer -->
-          <div class="symptoms-wrapper">
-            <div class="symptom-list"></div>
           </div>
 
           <button type="button" id="addEntryButton">Add Another Entry</button>
@@ -62,4 +54,4 @@
 
     <script src="/js/subSystemAnalysis.js" nonce="<%= nonce %>" defer></script>
   </body>
-</html>
+</html> 
