@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
       symptomList.innerHTML = '';
 
       if (system) {
-        img.src = `/images/systems/${encodeURIComponent(system)}.jpg`;
+        img.src = `/images/${encodeURIComponent(system)}.jpg`;
         img.style.display = 'block';
 
         try {
