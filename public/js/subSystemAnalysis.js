@@ -45,34 +45,68 @@ document.addEventListener('DOMContentLoaded', () => {
   // When system or sub-system changes
  let currentActiveEntry = null;  // add this near top of your script
 
-symptomEntriesContainer.addEventListener('change', async e => {
+symptomEntriesContainer.addEventListener('change', async (e) => {
   const entry = e.target.closest('.symptom-entry');
 
   if (e.target.classList.contains('system-select')) {
-    // existing code unchanged...
+    const system = e.target.value;
+    const img = entry.querySelector('.system-image');
+    const subSystemSelect = entry.querySelector('.sub-system-select');
 
-    // When system changes, reset active entry because symptoms will be cleared
-    currentActiveEntry = null;
+    // Clear sub-system select and symptoms list
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+    dynamicSymptomsList.innerHTML = '';
+
+    // Show system image if available
+    if (systemImages[system]) {
+      img.src = `/images/${systemImages[system]}`;
+      img.style.display = 'block';
+    } else {
+      img.src = '';
+      img.style.display = 'none';
+    }
+
+    if (!system) {
+      // No system selected — clear and exit
+      return;
+    }
+
+    // Fetch sub-systems for selected system
+    try {
+      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+      if (!res.ok) throw new Error('Failed to fetch sub-systems');
+      const subSystems = await res.json();
+
+      // Populate sub-system select dropdown
+      subSystems.forEach(sub => {
+        const option = document.createElement('option');
+        option.value = sub;
+        option.textContent = sub;
+        subSystemSelect.appendChild(option);
+      });
+    } catch (err) {
+      console.error(err);
+      alert('Error loading sub-systems');
+    }
   }
 
   if (e.target.classList.contains('sub-system-select')) {
     const subSystem = e.target.value;
+    dynamicSymptomsList.innerHTML = '';
 
     if (!subSystem) {
-      dynamicSymptomsList.innerHTML = '';
-      currentActiveEntry = null;
-      return;
+      return; // no sub-system selected, clear symptoms and exit
     }
 
-    currentActiveEntry = entry;  // <-- set this here
+    // Track current active entry globally
+    currentActiveEntry = entry;
 
     try {
       const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
       if (!res.ok) throw new Error('Failed to fetch symptoms');
       const symptoms = await res.json();
 
-      dynamicSymptomsList.innerHTML = '';
-
+      // Populate symptoms checkboxes
       symptoms.forEach(symptom => {
         const label = document.createElement('label');
         label.style.display = 'block';
@@ -82,10 +116,10 @@ symptomEntriesContainer.addEventListener('change', async e => {
     } catch (err) {
       console.error(err);
       dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
-      currentActiveEntry = null;
     }
   }
 });
+
 
  analyzeButton.addEventListener('click', async event => {
   event.preventDefault();
