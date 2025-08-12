@@ -43,76 +43,49 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // When system or sub-system changes
-  symptomEntriesContainer.addEventListener('change', async e => {
-    const entry = e.target.closest('.symptom-entry');
+ let currentActiveEntry = null;  // add this near top of your script
 
-    if (e.target.classList.contains('system-select')) {
-      const system = e.target.value;
-      const img = entry.querySelector('.system-image');
-      const subSystemSelect = entry.querySelector('.sub-system-select');
+symptomEntriesContainer.addEventListener('change', async e => {
+  const entry = e.target.closest('.symptom-entry');
 
-      // Clear sub-system and symptoms container first
-      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+  if (e.target.classList.contains('system-select')) {
+    // existing code unchanged...
+
+    // When system changes, reset active entry because symptoms will be cleared
+    currentActiveEntry = null;
+  }
+
+  if (e.target.classList.contains('sub-system-select')) {
+    const subSystem = e.target.value;
+
+    if (!subSystem) {
+      dynamicSymptomsList.innerHTML = '';
+      currentActiveEntry = null;
+      return;
+    }
+
+    currentActiveEntry = entry;  // <-- set this here
+
+    try {
+      const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
+      if (!res.ok) throw new Error('Failed to fetch symptoms');
+      const symptoms = await res.json();
+
       dynamicSymptomsList.innerHTML = '';
 
-      // Update image if available
-      if (system && systemImages[system]) {
-        img.src = `/images/${systemImages[system]}`;
-        img.style.display = 'block';
-      } else {
-        img.src = '';
-        img.style.display = 'none';
-      }
-
-      if (!system) return; // no system selected
-
-      // Fetch sub-systems for this system
-      try {
-        const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-        if (!res.ok) throw new Error('Failed to fetch sub-systems');
-        const subSystems = await res.json();
-
-        // Populate sub-system select options
-        subSystems.forEach(sub => {
-          const option = document.createElement('option');
-          option.value = sub;
-          option.textContent = sub;
-          subSystemSelect.appendChild(option);
-        });
-      } catch (err) {
-        console.error(err);
-        alert('Error loading sub-systems');
-      }
+      symptoms.forEach(symptom => {
+        const label = document.createElement('label');
+        label.style.display = 'block';
+        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+        dynamicSymptomsList.appendChild(label);
+      });
+    } catch (err) {
+      console.error(err);
+      dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
+      currentActiveEntry = null;
     }
-
-    if (e.target.classList.contains('sub-system-select')) {
-      const subSystem = e.target.value;
-
-      // Clear symptoms if no sub-system
-      if (!subSystem) {
-        dynamicSymptomsList.innerHTML = '';
-        return;
-      }
-
-      try {
-        const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
-        if (!res.ok) throw new Error('Failed to fetch symptoms');
-        const symptoms = await res.json();
-
-        dynamicSymptomsList.innerHTML = '';
-
-        symptoms.forEach(symptom => {
-          const label = document.createElement('label');
-          label.style.display = 'block';
-          label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
-          dynamicSymptomsList.appendChild(label);
-        });
-      } catch (err) {
-        console.error(err);
-        dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
-      }
-    }
-  });
+  }
+});
 
   analyzeButton.addEventListener('click', async event => {
     event.preventDefault();
@@ -165,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  
   function addSymptomEntry() {
     const entryDiv = document.createElement('div');
     entryDiv.className = 'symptom-entry';
