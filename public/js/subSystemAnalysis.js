@@ -31,15 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
-    subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
-    if (system && systemImages[system]) {
-      systemImage.src = /images/${systemImages[system]};
-      systemImage.style.display = 'inline-block';
-    } else {
-      systemImage.src = '';
-      systemImage.style.display = 'none';
-    }
+if (system && systemImages[system]) {
+  systemImage.src = `/images/${systemImages[system]}`;
+  systemImage.style.display = 'inline-block';
+} else {
+  systemImage.src = '';
+  systemImage.style.display = 'none';
+}
 
     if (!system) return;
 
