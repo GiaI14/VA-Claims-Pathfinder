@@ -10,6 +10,10 @@ h1, h2 {
   font-size: 25px;
 }
 
+h1 {
+  text-align: center;
+}
+
 .page-wrapper {
   padding: 20px;
 }
