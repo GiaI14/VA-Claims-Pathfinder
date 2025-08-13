@@ -124,24 +124,7 @@ h1 {
 button {
   cursor: pointer;
 }
-#results ul {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  gap: 15px; /* space between items */
-  list-style: none;
-  padding: 0;
-}
 
-#results li {
-  background-color: #f2f2f2; /* light gray background */
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 14px;
-  color: #333; /* text color */
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
-  word-wrap: break-word;
-}
 /* Responsive layout */
 @media (max-width: 1024px) {
   .top-row {
