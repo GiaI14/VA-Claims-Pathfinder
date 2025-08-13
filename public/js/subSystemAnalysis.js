@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const res = await fetch('/api/analyze-symptoms', {
+      const res = await fetch('/analyze-symptoms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
