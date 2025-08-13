@@ -68,10 +68,10 @@ button {
   flex-direction: column;
 }
 
-/* System image styling */
-.system-image {
-  max-width: 100%;
-  max-height: 80px;
+.top-row .system-image {
+  flex: 1.2 1 0; /* image slightly larger than selects */
+  max-width: 200px; /* increase max width */
+  max-height: 120px; /* increase max height */
   object-fit: contain;
   border: 1px solid #ddd;
   border-radius: 4px;
