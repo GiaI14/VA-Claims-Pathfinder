@@ -46,10 +46,6 @@ button {
   margin-top: 10px;
 }
 
-button:hover {
-  background-color: #005bb5;
-}
-
 .symptom-entry {
   margin-bottom: 1.5rem;
   border: 1px solid #ccc;
@@ -65,12 +61,7 @@ button:hover {
   margin-bottom: 1rem;
 }
 
-.top-row label {
-  flex: 1 1 200px;
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
-}
+
 
 /* System image styling */
 .system-image {
@@ -82,21 +73,6 @@ button:hover {
   border-radius: 4px;
 }
 
-/* Symptoms list container using grid */
-.symptom-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.5rem 1rem;
-  max-height: 200px;
-  overflow-y: auto;
-  border-top: 1px solid #ddd;
-  padding-top: 0.5rem;
-}
-
-.symptom-list label {
-  cursor: pointer;
-  font-weight: normal;
-}
 
 /* Dynamic symptoms container using columns */
 #dynamicSymptomsList {
