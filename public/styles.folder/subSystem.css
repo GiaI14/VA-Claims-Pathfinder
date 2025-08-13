@@ -51,10 +51,10 @@ h1 {
 }
 
 .system-image {
-  max-width: 350px;
-  max-height: 220px;
+  width: 100%;
+  max-width: 250px;
+  height: auto;
   object-fit: contain;
-  flex-shrink: 0;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
