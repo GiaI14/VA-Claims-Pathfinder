@@ -70,27 +70,31 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
 });
 
 // API: analyze symptoms
-router.post('/api/analyze-symptoms', async (req, res) => {
-  console.log('Request body:', req.body);
-  try {
-    const { subSystem, chosenSymptoms } = req.body;
-    console.log('subSystem:', subSystem, 'chosenSymptoms:', chosenSymptoms);
-    
-    if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
-      return res.status(400).json({ error: 'Missing required data' });
-    }
+// POST /api/analyze-symptoms
+router.post("/api/analyze-symptoms", (req, res, next) => {
+  console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
+  next();
+}, async (req, res) => {
+  console.log("Received symptom data:", req.body);
+  const { subSystem, chosenSymptoms } = req.body;
 
+  if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
+    return res.status(400).json({ error: "Missing required data" });
+  }
+
+  try {
     const db = getDb();
     const [rows] = await db.execute(
-      'SELECT condition_name, medical_code, symptoms FROM va_disabilities WHERE sub_systems = ?',
+      'SELECT id, sub_systems, condition_name, medical_code, symptoms, secondary_conditions, presumptive_conditions, qualifying_circumstance, evidence_basis FROM va_disabilities WHERE sub_systems = ?',
       [subSystem]
     );
 
-    const results = rows.map(row => {
-      const conditionSymptoms = row.symptoms
-        ? row.symptoms.split(',').map(s => s.trim().toLowerCase())
-        : [];
+    const possibleConditions = [];
 
+    for (const row of rows) {
+      if (!row.symptoms || typeof row.symptoms !== "string") continue;
+
+      const conditionSymptoms = row.symptoms.split(',').map(s => s.trim().toLowerCase());
       const matchedCount = chosenSymptoms.reduce((count, symptom) => {
         return conditionSymptoms.includes(symptom.toLowerCase()) ? count + 1 : count;
       }, 0);
@@ -99,20 +103,47 @@ router.post('/api/analyze-symptoms', async (req, res) => {
         ? (matchedCount / conditionSymptoms.length) * 100
         : 0;
 
-      return {
-        condition_name: row.condition_name,
-        medical_code: row.medical_code,
-        matchPercent: parseFloat(matchPercent.toFixed(2))
-      };
-    });
+      if (matchPercent > 25) { // minimum threshold
+        possibleConditions.push({
+          condition_name: row.condition_name,
+          medical_code: row.medical_code,
+          match_percentage: Number(matchPercent.toFixed(2)),
+          matched_symptoms: chosenSymptoms.filter(symptom =>
+            conditionSymptoms.includes(symptom.toLowerCase())
+          ),
+          total_condition_symptoms: conditionSymptoms.length,
+          is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== 'no',
+          presumptive_raw: row.presumptive_conditions,
+          secondary_conditions: row.secondary_conditions,
+          qualifying_circumstance: row.qualifying_circumstance || null,
+          evidence_basis: row.evidence_basis || null
+        });
+      }
+    }
 
-    results.sort((a, b) => b.matchPercent - a.matchPercent);
+    let results;
+    if (possibleConditions.length === 0) {
+      results = [{
+        subSystem,
+        message: `No matching conditions found for ${subSystem}. Please add more symptoms for better accuracy.`
+      }];
+    } else {
+      possibleConditions.sort((a, b) => b.match_percentage - a.match_percentage);
+      results = [{
+        subSystem,
+        chosenSymptoms,
+        possibleConditions: possibleConditions.slice(0, 3)
+      }];
+    }
 
+    console.log("Analysis results:", JSON.stringify(results, null, 2));
     res.json(results);
+
   } catch (err) {
-    console.error('Error analyzing symptoms:', err);
-    res.status(500).json({ error: 'Failed to analyze symptoms' });
+    console.error("Error analyzing symptoms:", err);
+    res.status(500).json({ error: "Failed to analyze symptoms", details: err.message });
   }
 });
+
 
 module.exports = router;
