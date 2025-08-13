@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-  // --- SYSTEM SELECT: fetch sub-systems + show image ---
+  // --- SYSTEM SELECT: fetch sub-systems + show system image ---
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('system-select')) return;
 
@@ -30,10 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
-    // Reset sub-systems dropdown
     subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
-    // Show system image
     if (system && systemImages[system]) {
       systemImage.src = `/images/${systemImages[system]}`;
       systemImage.style.display = 'inline-block';
@@ -44,13 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!system) return;
 
-    // Fetch sub-systems
     try {
       const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
 
       const subSystems = await res.json();
-
       subSystems.forEach(sub => {
         const option = document.createElement('option');
         option.value = sub;
@@ -77,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!res.ok) throw new Error('Failed to fetch symptoms');
 
       const symptoms = await res.json();
-
       const frag = document.createDocumentFragment();
       symptoms.forEach(symptom => {
         const label = document.createElement('label');
@@ -85,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
         frag.appendChild(label);
       });
-
       dynamicSymptomsList.appendChild(frag);
     } catch (err) {
       console.error('Failed to load symptoms:', err);
