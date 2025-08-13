@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': document.getElementById('csrfToken').value
+          'CSRF-Token': csrfToken
         },
         body: JSON.stringify({ subSystem, chosenSymptoms }),
         credentials: 'same-origin'
