@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
+  const resultsContainer = document.getElementById('results');
+  const symptomForm = document.getElementById('symptom-form');
 
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
@@ -107,4 +109,58 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear dynamic symptoms list (only if you want global clear)
     dynamicSymptomsList.innerHTML = '';
   });
+
+  // --- ANALYZE SYMPTOMS FORM SUBMIT ---
+  symptomForm.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const checkedBoxes = document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked');
+    const chosenSymptoms = Array.from(checkedBoxes).map(cb => cb.value);
+
+    const subSystemSelect = document.querySelector('.sub-system-select');
+    const subSystem = subSystemSelect.value;
+
+    if (!subSystem || chosenSymptoms.length === 0) {
+      alert('Please select a sub-system and at least one symptom.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/analyze-symptoms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'CSRF-Token': document.getElementById('csrfToken').value
+        },
+        body: JSON.stringify({ subSystem, chosenSymptoms })
+      });
+
+      if (!res.ok) throw new Error('Failed to analyze symptoms');
+
+      const data = await res.json();
+      displayResults(data);
+    } catch (err) {
+      console.error(err);
+      resultsContainer.innerHTML = '<p>Error analyzing symptoms</p>';
+    }
+  });
+
+  // --- DISPLAY RESULTS ---
+  function displayResults(data) {
+    resultsContainer.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      resultsContainer.innerHTML = '<p>No matching conditions found.</p>';
+      return;
+    }
+
+    const list = document.createElement('ul');
+    data.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.condition_name} (Code: ${item.medical_code}) — Match: ${item.matchPercent}%`;
+      list.appendChild(li);
+    });
+
+    resultsContainer.appendChild(list);
+  }
 });
