@@ -74,8 +74,8 @@ button:hover {
 
 /* System image styling */
 .system-image {
-  max-width: 150px;
-  max-height: 100px;
+  max-width: 250px;
+  max-height: 180px;
   object-fit: contain;
   flex-shrink: 0;
   border: 1px solid #ddd;
