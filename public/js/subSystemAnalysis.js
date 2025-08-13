@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-  // --- SYSTEM SELECT: fetch sub-systems + show system image ---
+  // --- SYSTEM SELECT: fetch sub-systems + show image ---
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('system-select')) return;
 
@@ -85,5 +85,26 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to load symptoms:', err);
       dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
     }
+  });
+
+  // --- REMOVE ENTRY BUTTON: reset the entry ---
+  symptomEntriesContainer.addEventListener('click', e => {
+    if (!e.target.classList.contains('remove-entry-button')) return;
+
+    const entry = e.target.closest('.symptom-entry');
+    if (!entry) return;
+
+    // Reset selects
+    const systemSelect = entry.querySelector('.system-select');
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    const systemImage = entry.querySelector('.system-image');
+
+    systemSelect.value = '';
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+    systemImage.src = '';
+    systemImage.style.display = 'none';
+
+    // Clear dynamic symptoms list (only if you want global clear)
+    dynamicSymptomsList.innerHTML = '';
   });
 });
