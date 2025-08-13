@@ -56,11 +56,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const frag = document.createDocumentFragment();
       symptoms.forEach(symptom => {
-        const label = document.createElement('label');
-        label.className = 'symptom-item';
-        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
-        frag.appendChild(label);
-      });
+  // Create a safe filename for the image (replace spaces with underscores, lowercase)
+  const imgFileName = symptom
+    .toLowerCase()
+    .replace(/\s+/g, '_')      // spaces to underscores
+    .replace(/[^a-z0-9_]/g, ''); // remove special chars
+
+  const imgSrc = `/images/${imgFileName}.jpg`; // or .png depending on your files
+
+  const label = document.createElement('label');
+  label.className = 'symptom-item';
+  label.innerHTML = `
+    <input type="checkbox" value="${symptom}">
+    <img src="${imgSrc}" alt="${symptom}" class="symptom-icon" onerror="this.style.display='none'">
+    ${symptom}
+  `;
+  frag.appendChild(label);
+});
 
       dynamicSymptomsList.appendChild(frag);
     } catch (err) {
