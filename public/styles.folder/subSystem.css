@@ -58,15 +58,7 @@ button:hover {
   background-color: #005bb5;
 }
 
-.symptom-entry {
-  display: flex;
-  flex-direction: column; /* stack top row and button vertically */
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
-}
+
 
 .top-row {
   display: flex;
