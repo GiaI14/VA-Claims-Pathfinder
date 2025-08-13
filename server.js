@@ -78,6 +78,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(flash()); //added 
 
+// CSRF protection setup
+const csrfProtection = csrf();
+app.use(csrfProtection); 
+
 app.use('/api', calculatorRoutes);
 app.use('/api', secondaryConditionRoutes);
 
@@ -85,9 +89,6 @@ app.use('/api', secondaryConditionRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'images')));
 
-// CSRF protection setup
-const csrfProtection = csrf();
-app.use(csrfProtection);
 
 app.use((req, res, next) => {
   res.locals.successMessage = req.flash('success');
