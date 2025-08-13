@@ -58,18 +58,20 @@ button {
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .top-row label,
 .top-row .system-image {
-  flex: 1 1 0;
+  flex: 1 1 0; /* equally share space */
+  display: flex;
+  flex-direction: column;
 }
 
 /* System image styling */
 .system-image {
   max-width: 100%;
-  height: auto;
+  max-height: 80px;
   object-fit: contain;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -78,10 +80,23 @@ button {
 /* Bottom row for remove button */
 .bottom-row {
   display: flex;
-  justify-content: flex-start; /* left-aligned */
-  margin-top: 10px;
+  justify-content: flex-start; /* align left */
+  margin-top: 5px;
 }
 
+/* Remove button compact */
+.remove-entry-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  background-color: #e60000;
+  color: white;
+  border-radius: 4px;
+  border: none;
+}
+
+.remove-entry-button:hover {
+  background-color: #990000;
+}
 /* Dynamic symptoms container using columns */
 #dynamicSymptomsList {
   column-count: 4;
