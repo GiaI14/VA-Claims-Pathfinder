@@ -1,4 +1,4 @@
-{
+body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   margin: 0;
@@ -7,7 +7,7 @@
 
 h1, h2 {
   color: #333;
-  font-size: 25px
+  font-size: 25px;
 }
 
 .page-wrapper {
@@ -23,41 +23,7 @@ h1, h2 {
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Symptoms list container */
-#dynamicSymptomsContainer {
-  margin-top: 20px;
-}
-
-.symptom-item {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-}
-
-/* Buttons */
-button {
-  cursor: pointer;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #0073e6;
-  color: white;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-button:hover {
-  background-color: #005bb5;
-}
-
-.symptom-entry {
-  margin-bottom: 1.5rem;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
-}
-
-/* Top row with System + Sub-System selects and image */
+/* Top row: System, Sub-System, Image */
 .top-row {
   display: flex;
   gap: 1rem;
@@ -66,56 +32,33 @@ button:hover {
 }
 
 .top-row label {
-  flex: 1 1 200px;
+  flex: 1 1 1;
   display: flex;
   flex-direction: column;
   font-weight: bold;
+  font-size: 16px;
 }
 
-/* System image styling */
+.system-select,
+.sub-system-select {
+  font-size: 16px;
+  padding: 4px 6px;
+}
+
 .system-image {
-  max-width: 250px;
-  max-height: 180px;
+  max-width: 300px;
+  max-height: 200px;
   object-fit: contain;
   flex-shrink: 0;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-/* Symptoms list container using grid */
-.symptom-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.5rem 1rem;
-  max-height: 200px;
-  overflow-y: auto;
-  border-top: 1px solid #ddd;
-  padding-top: 0.5rem;
+/* Remove entry button bottom-left */
+.bottom-row {
+  margin-top: 0;
 }
 
-.symptom-list label {
-  cursor: pointer;
-  font-weight: normal;
-}
- .system-select,
-.sub-system-select {
-  font-size: 16px; /* slightly bigger than default */
-  padding: 4px 6px; /* optional: makes it more comfortable to click */
-} 
-
-/* Dynamic symptoms container using columns */
-#dynamicSymptomsList {
-  column-count: 4;
-  column-gap: 1rem;
-}
-
-#dynamicSymptomsList label {
-  display: block;
-  break-inside: avoid;
-  margin-bottom: 0.5rem;
-}
-
-/* Remove entry button */
 .remove-entry-button {
   background-color: #e60000;
   color: white;
@@ -127,6 +70,23 @@ button:hover {
 
 .remove-entry-button:hover {
   background-color: #990000;
+}
+
+/* Dynamic symptoms container */
+#dynamicSymptomsContainer {
+  margin-top: 20px;
+}
+
+#dynamicSymptomsList {
+  column-count: 4;
+  column-gap: 1rem;
+}
+
+#dynamicSymptomsList label {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 0.5rem;
+  font-size: 16px;
 }
 
 /* Submit button */
@@ -152,4 +112,41 @@ button:hover {
   border: 1px solid #ddd;
   border-radius: 6px;
   background-color: #f5f5f5;
+}
+
+/* Buttons general styling */
+button {
+  cursor: pointer;
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .top-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #dynamicSymptomsList {
+    column-count: 2;
+  }
+
+  .system-image {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-row label {
+    font-size: 14px;
+  }
+
+  .system-select,
+  .sub-system-select {
+    font-size: 14px;
+  }
+
+  #dynamicSymptomsList {
+    column-count: 1;
+  }
 }
