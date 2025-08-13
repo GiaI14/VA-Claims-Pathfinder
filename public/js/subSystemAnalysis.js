@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
+  const resultsDiv = document.getElementById('results');
 
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
@@ -30,20 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
-    subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
     if (system && systemImages[system]) {
-      systemImage.src = /images/${systemImages[system]};
+      systemImage.src = `/images/${systemImages[system]}`;
       systemImage.style.display = 'inline-block';
     } else {
-      systemImage.style.display = 'none';
       systemImage.src = '';
+      systemImage.style.display = 'none';
     }
 
     if (!system) return;
 
     try {
-      const res = await fetch(/api/sub-systems/${encodeURIComponent(system)});
+      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
 
       const subSystems = await res.json();
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!subSystem) return;
 
     try {
-      const res = await fetch(/api/symptoms/${encodeURIComponent(subSystem)});
+      const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
       if (!res.ok) throw new Error('Failed to fetch symptoms');
 
       const symptoms = await res.json();
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       symptoms.forEach(symptom => {
         const label = document.createElement('label');
         label.className = 'symptom-item';
-        label.innerHTML = <input type="checkbox" value="${symptom}"> ${symptom};
+        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
         frag.appendChild(label);
       });
       dynamicSymptomsList.appendChild(frag);
@@ -94,17 +95,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const entry = e.target.closest('.symptom-entry');
     if (!entry) return;
 
-    // Reset selects
     const systemSelect = entry.querySelector('.system-select');
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
     systemSelect.value = '';
-    subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
     systemImage.src = '';
     systemImage.style.display = 'none';
 
-    // Clear dynamic symptoms list (only if you want global clear)
     dynamicSymptomsList.innerHTML = '';
   });
-}); 
+
+  // --- ANALYZE SYMPTOMS ---
+  document.getElementById('symptom-form').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const subSystemSelect = document.querySelector('.sub-system-select');
+    const subSystem = subSystemSelect ? subSystemSelect.value : '';
+    const chosenSymptoms = Array.from(document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked'))
+      .map(cb => cb.value);
+
+    if (!subSystem || chosenSymptoms.length === 0) {
+      alert('Please select a sub-system and at least one symptom.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/analyze-symptoms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'CSRF-Token': document.getElementById('csrfToken').value
+        },
+        body: JSON.stringify({ subSystem, chosenSymptoms })
+      });
+
+      if (!res.ok) throw new Error('Failed to analyze symptoms');
+
+      const data = await res.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
+        return;
+      }
+
+      let html = '<h2>Possible Conditions</h2><table><thead><tr><th>Condition Name</th><th>Medical Code</th><th>Match %</th></tr></thead><tbody>';
+      data.forEach(row => {
+        html += `<tr>
+          <td>${row.condition_name}</td>
+          <td>${row.medical_code}</td>
+          <td>${row.matchPercent}%</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      resultsDiv.innerHTML = html;
+    } catch (err) {
+      console.error('Error analyzing symptoms:', err);
+      resultsDiv.innerHTML = '<p>Error analyzing symptoms.</p>';
+    }
+  });
+});
