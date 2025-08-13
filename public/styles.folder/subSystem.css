@@ -97,6 +97,11 @@ button:hover {
   cursor: pointer;
   font-weight: normal;
 }
+ .system-select,
+.sub-system-select {
+  font-size: 16px; /* slightly bigger than default */
+  padding: 4px 6px; /* optional: makes it more comfortable to click */
+} 
 
 /* Dynamic symptoms container using columns */
 #dynamicSymptomsList {
