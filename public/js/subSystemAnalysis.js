@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
-    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+    subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
 
     if (system && systemImages[system]) {
-      systemImage.src = `/images/${systemImages[system]}`;
+      systemImage.src = /images/${systemImages[system]};
       systemImage.style.display = 'inline-block';
     } else {
       systemImage.src = '';
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!system) return;
 
     try {
-      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+      const res = await fetch(/api/sub-systems/${encodeURIComponent(system)});
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
       const subSystems = await res.json();
       subSystems.forEach(sub => {
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!subSystem) return;
 
     try {
-      const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
+      const res = await fetch(/api/symptoms/${encodeURIComponent(subSystem)});
       if (!res.ok) throw new Error('Failed to fetch symptoms');
 
       const symptoms = await res.json();
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       symptoms.forEach(symptom => {
         const label = document.createElement('label');
         label.className = 'symptom-item';
-        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+        label.innerHTML = <input type="checkbox" value="${symptom}"> ${symptom};
         frag.appendChild(label);
       });
       dynamicSymptomsList.appendChild(frag);
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const systemImage = entry.querySelector('.system-image');
 
     systemSelect.value = '';
-    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+    subSystemSelect.innerHTML = <option value="">Select a sub-system</option>;
     systemImage.src = '';
     systemImage.style.display = 'none';
 
@@ -107,26 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
 
-    // Get the sub-system for the first entry (can expand later for multiple entries)
     const subSystemSelect = document.querySelector('.sub-system-select');
-    const subSystem = subSystemSelect.value.trim();
+    const subSystem = subSystemSelect.value;
 
-    // Get all checked symptoms
     const chosenSymptoms = Array.from(
       document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked')
-    ).map(input => input.value.trim());
+    ).map(input => input.value);
 
-    // --- Validation before sending ---
-    if (!subSystem) {
-      alert('Please select a sub-system.');
+    if (!subSystem || chosenSymptoms.length === 0) {
+      alert('Please select a sub-system and at least one symptom.');
       return;
     }
-    if (!chosenSymptoms.length) {
-      alert('Please select at least one symptom.');
-      return;
-    }
-
-    console.log('Sending analyze request:', { subSystem, chosenSymptoms });
 
     try {
       const res = await fetch('/api/analyze-symptoms', {
@@ -136,19 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
           'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({ subSystem, chosenSymptoms }),
-        credentials: 'same-origin' // ensures CSRF cookie is sent
+        credentials: 'same-origin'
       });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || 'Failed to analyze symptoms');
-      }
+      if (!res.ok) throw new Error('Failed to analyze symptoms');
 
       const data = await res.json();
       displayResults(data);
     } catch (err) {
       console.error('Error analyzing symptoms:', err);
-      resultsContainer.innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
+      resultsContainer.innerHTML = <p>Error analyzing symptoms: ${err.message}</p>;
     }
   });
 
@@ -161,21 +149,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const table = document.createElement('table');
-    table.innerHTML = `
+    table.innerHTML = 
       <tr>
         <th>Condition Name</th>
         <th>Medical Code</th>
         <th>Match %</th>
       </tr>
-    `;
+    ;
 
     data.forEach(entry => {
       const row = document.createElement('tr');
-      row.innerHTML = `
+      row.innerHTML = 
         <td>${entry.condition_name}</td>
         <td>${entry.medical_code}</td>
         <td>${entry.matchPercent}%</td>
-      `;
+      ;
       table.appendChild(row);
     });
 
