@@ -17,7 +17,7 @@
           <div id="symptomEntriesContainer">
            <div class="symptom-entry">
   <div class="top-row">
-    <label>
+    <label class="system-label">
       System Affected:
       <select class="system-select" required>
         <option value="">Select a system</option>
@@ -27,7 +27,7 @@
       </select>
     </label>
 
-    <label>
+    <label class="subsystem-label">
       Sub-System:
       <select class="sub-system-select" required>
         <option value="">Select a sub-system</option>
@@ -37,8 +37,11 @@
     <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
   </div>
 
-  <button type="button" class="remove-entry-button">Remove Entry</button>
+  <div class="button-row">
+    <button type="button" class="remove-entry-button">Remove Entry</button>
+  </div>
 </div>
+
 
 
           <!-- Standalone symptoms container -->
