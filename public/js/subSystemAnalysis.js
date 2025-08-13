@@ -107,17 +107,26 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
 
+    // Get the sub-system for the first entry (can expand later for multiple entries)
     const subSystemSelect = document.querySelector('.sub-system-select');
-    const subSystem = subSystemSelect.value;
+    const subSystem = subSystemSelect.value.trim();
 
+    // Get all checked symptoms
     const chosenSymptoms = Array.from(
       document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked')
-    ).map(input => input.value);
+    ).map(input => input.value.trim());
 
-    if (!subSystem || chosenSymptoms.length === 0) {
-      alert('Please select a sub-system and at least one symptom.');
+    // --- Validation before sending ---
+    if (!subSystem) {
+      alert('Please select a sub-system.');
       return;
     }
+    if (!chosenSymptoms.length) {
+      alert('Please select at least one symptom.');
+      return;
+    }
+
+    console.log('Sending analyze request:', { subSystem, chosenSymptoms });
 
     try {
       const res = await fetch('/api/analyze-symptoms', {
@@ -127,10 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
           'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({ subSystem, chosenSymptoms }),
-        credentials: 'same-origin'
+        credentials: 'same-origin' // ensures CSRF cookie is sent
       });
 
-      if (!res.ok) throw new Error('Failed to analyze symptoms');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to analyze symptoms');
+      }
 
       const data = await res.json();
       displayResults(data);
