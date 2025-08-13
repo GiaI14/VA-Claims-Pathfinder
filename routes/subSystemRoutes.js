@@ -69,4 +69,48 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
   }
 });
 
+// API: analyze symptoms
+router.post('/api/analyze-symptoms', async (req, res) => {
+  try {
+    const { subSystem, chosenSymptoms } = req.body;
+
+    if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
+      return res.status(400).json({ error: 'Missing required data' });
+    }
+
+    const db = getDb();
+    const [rows] = await db.execute(
+      'SELECT condition_name, medical_code, symptoms FROM va_disabilities WHERE sub_systems = ?',
+      [subSystem]
+    );
+
+    const results = rows.map(row => {
+      const conditionSymptoms = row.symptoms
+        ? row.symptoms.split(',').map(s => s.trim().toLowerCase())
+        : [];
+
+      const matchedCount = chosenSymptoms.reduce((count, symptom) => {
+        return conditionSymptoms.includes(symptom.toLowerCase()) ? count + 1 : count;
+      }, 0);
+
+      const matchPercent = conditionSymptoms.length > 0
+        ? (matchedCount / conditionSymptoms.length) * 100
+        : 0;
+
+      return {
+        condition_name: row.condition_name,
+        medical_code: row.medical_code,
+        matchPercent: parseFloat(matchPercent.toFixed(2))
+      };
+    });
+
+    results.sort((a, b) => b.matchPercent - a.matchPercent);
+
+    res.json(results);
+  } catch (err) {
+    console.error('Error analyzing symptoms:', err);
+    res.status(500).json({ error: 'Failed to analyze symptoms' });
+  }
+});
+
 module.exports = router;
