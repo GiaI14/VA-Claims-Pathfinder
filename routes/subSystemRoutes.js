@@ -71,8 +71,11 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
 
 // API: analyze symptoms
 router.post('/api/analyze-symptoms', async (req, res) => {
+  console.log('Received body:', req.body);
   try {
     const { subSystem, chosenSymptoms } = req.body;
+    console.log('subSystem:', subSystem);
+    console.log('chosenSymptoms:', chosenSymptoms);
 
     if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
       return res.status(400).json({ error: 'Missing required data' });
