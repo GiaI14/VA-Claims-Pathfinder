@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-  // --- SYSTEM SELECT: fetch sub-systems + show image ---
+  // --- SYSTEM SELECT: load sub-systems & image
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('system-select')) return;
 
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
-
       const subSystems = await res.json();
       subSystems.forEach(sub => {
         const option = document.createElement('option');
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- SUB-SYSTEM SELECT: fetch symptoms ---
+  // --- SUB-SYSTEM SELECT: fetch symptoms
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('sub-system-select')) return;
 
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- REMOVE ENTRY BUTTON: reset the entry ---
+  // --- REMOVE ENTRY BUTTON ---
   symptomEntriesContainer.addEventListener('click', e => {
     if (!e.target.classList.contains('remove-entry-button')) return;
 
@@ -133,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!res.ok) throw new Error('Failed to analyze symptoms');
-
       const data = await res.json();
 
       if (!Array.isArray(data) || data.length === 0) {
@@ -142,15 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       let html = '<h2>Possible Conditions</h2><table><thead><tr><th>Condition Name</th><th>Medical Code</th><th>Match %</th></tr></thead><tbody>';
-      data.forEach(row => {
+      data[0].possibleConditions?.forEach(row => {
         html += `<tr>
           <td>${row.condition_name}</td>
           <td>${row.medical_code}</td>
-          <td>${row.matchPercent}%</td>
+          <td>${row.match_percentage}%</td>
         </tr>`;
       });
       html += '</tbody></table>';
       resultsDiv.innerHTML = html;
+
     } catch (err) {
       console.error('Error analyzing symptoms:', err);
       resultsDiv.innerHTML = '<p>Error analyzing symptoms.</p>';
