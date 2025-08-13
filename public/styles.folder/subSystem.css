@@ -61,18 +61,26 @@ button {
   margin-bottom: 1rem;
 }
 
-
+.top-row label,
+.top-row .system-image {
+  flex: 1 1 0;
+}
 
 /* System image styling */
 .system-image {
-  max-width: 150px;
-  max-height: 100px;
+  max-width: 100%;
+  height: auto;
   object-fit: contain;
-  flex-shrink: 0;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
+/* Bottom row for remove button */
+.bottom-row {
+  display: flex;
+  justify-content: flex-start; /* left-aligned */
+  margin-top: 10px;
+}
 
 /* Dynamic symptoms container using columns */
 #dynamicSymptomsList {
