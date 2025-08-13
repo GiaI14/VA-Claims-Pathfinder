@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { getDb } = require('../data/database');
 
-// Render main page with systems list loaded from DB
+// Render main page with systems list
 router.get('/sub-system', async (req, res) => {
   try {
     const db = getDb();
-    // Assuming `systems` column in your DB table va_disabilities
-    const [systemsRows] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
+    const [systemsRows] = await db.execute(
+      'SELECT DISTINCT systems FROM va_disabilities'
+    );
     const systemsFromServer = systemsRows.map(row => row.systems);
 
     res.render('subSystem', {
@@ -21,7 +22,7 @@ router.get('/sub-system', async (req, res) => {
   }
 });
 
-// API route: get sub-systems by system name
+// API: get sub-systems by system
 router.get('/api/sub-systems/:system', async (req, res) => {
   try {
     const db = getDb();
@@ -40,7 +41,7 @@ router.get('/api/sub-systems/:system', async (req, res) => {
   }
 });
 
-// API route: get symptoms by sub-system name
+// API: get symptoms by sub-system
 router.get('/api/symptoms/:subSystem', async (req, res) => {
   try {
     const db = getDb();
@@ -60,9 +61,7 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
       }
     });
 
-    // Remove duplicates
     const uniqueSymptoms = [...new Set(allSymptoms)];
-
     res.json(uniqueSymptoms);
   } catch (err) {
     console.error('Error fetching symptoms:', err);
