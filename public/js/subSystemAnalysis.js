@@ -126,9 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': document.getElementById('csrfToken').value
+          'X-CSRF-Token': document.getElementById('csrfToken').value
         },
-        body: JSON.stringify({ subSystem, chosenSymptoms })
+        body: JSON.stringify({ subSystem, chosenSymptoms }),
+        credentials: 'same-origin'
       });
 
       if (!res.ok) throw new Error('Failed to analyze symptoms');
