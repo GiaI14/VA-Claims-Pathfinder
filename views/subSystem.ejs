@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
- 
-    <link rel="stylesheet" href="styles.folder/subSystem.css" />
+    <link rel="stylesheet" href="/styles/possibleDisabilities.css" />
+    <link rel="stylesheet" href="/styles/subSystem.css" />
   </head>
   <body>
     <div class="page-wrapper">
@@ -16,45 +16,47 @@
         <form id="symptom-form">
           <div id="symptomEntriesContainer">
             <div class="symptom-entry">
-              <label>
-                System Affected:
-                <select class="system-select" required>
-                  <option value="">Select a system</option>
-                  <% systemsFromServer.forEach(system => { %>
-                    <option value="<%= system %>"><%= system %></option>
-                  <% }) %>
-                </select>
-              </label>
+              <div class="top-row">
+                <label class="system-label">
+                  System Affected:
+                  <select class="system-select" required>
+                    <option value="">Select a system</option>
+                    <% systemsFromServer.forEach(system => { %>
+                      <option value="<%= system %>"><%= system %></option>
+                    <% }) %>
+                  </select>
+                </label>
 
-              <label>
-                Sub-System:
-                <select class="sub-system-select" required>
-                  <option value="">Select a sub-system</option>
-                </select>
-              </label>
+                <label class="subsystem-label">
+                  Sub-System:
+                  <select class="sub-system-select" required>
+                    <option value="">Select a sub-system</option>
+                  </select>
+                </label>
 
-              <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
-              <button type="button" class="remove-entry-button">Remove Entry</button>
+                <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
+              </div>
+
+              <div class="button-row">
+                <button type="button" class="remove-entry-button">Remove Entry</button>
+              </div>
             </div>
           </div>
 
-
-          <!-- Standalone symptoms container -->
           <div id="dynamicSymptomsContainer" style="margin-top: 20px;">
             <h2>Symptoms for Selected Sub-System</h2>
             <div id="dynamicSymptomsList"></div>
           </div>
 
           <button id="analyzeButton" type="submit">Analyze Symptoms</button>
-
           <input type="text" name="honeypot" style="display:none" />
         </form>
 
         <div id="results"></div>
-      </div>
+      </div> <!-- container ends here -->
 
       <%- include('includes/footer') %>
-    </div>
+    </div> <!-- page-wrapper ends here -->
 
     <script src="/js/subSystemAnalysis.js" nonce="<%= nonce %>" defer></script>
   </body>
