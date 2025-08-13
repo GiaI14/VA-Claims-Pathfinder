@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
   const resultsDiv = document.getElementById('results');
-
+  const csrfToken = document.querySelector('input[name="_csrf"]').value;
+  
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
     'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
