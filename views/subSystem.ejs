@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
-    <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-    <link rel="stylesheet" href="styles.folder/subSystem.css" />
+    <link rel="stylesheet" href="/styles/possibleDisabilities.css" />
+    <link rel="stylesheet" href="/styles/subSystem.css" />
   </head>
   <body>
     <div class="page-wrapper">
@@ -38,15 +38,12 @@
             </div>
           </div>
 
-
-          <!-- Standalone symptoms container -->
           <div id="dynamicSymptomsContainer" style="margin-top: 20px;">
             <h2>Symptoms for Selected Sub-System</h2>
             <div id="dynamicSymptomsList"></div>
           </div>
 
           <button id="analyzeButton" type="submit">Analyze Symptoms</button>
-
           <input type="text" name="honeypot" style="display:none" />
         </form>
 
