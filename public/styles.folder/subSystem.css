@@ -17,11 +17,14 @@ h1 {
 
 .page-wrapper {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 60px auto;
   background-color: #fff;
   padding: 30px;
   border-radius: 10px;
