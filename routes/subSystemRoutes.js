@@ -73,6 +73,7 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
 router.post('/api/analyze-symptoms', async (req, res) => {
   try {
     const { subSystem, chosenSymptoms } = req.body;
+
     if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
       return res.status(400).json({ error: 'Missing required data' });
     }
@@ -103,7 +104,6 @@ router.post('/api/analyze-symptoms', async (req, res) => {
       };
     });
 
-    // Sort by match percentage (descending)
     results.sort((a, b) => b.matchPercent - a.matchPercent);
 
     res.json(results);
@@ -112,6 +112,7 @@ router.post('/api/analyze-symptoms', async (req, res) => {
     res.status(500).json({ error: 'Failed to analyze symptoms' });
   }
 });
+
 
 
 module.exports = router;
