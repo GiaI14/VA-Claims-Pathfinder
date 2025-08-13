@@ -37,7 +37,7 @@ h1, h2 {
 h1 {
     text-align: center;
     width: 100%;
-    margin: 30px auto 20px;
+    margin: 30px auto 10px;
     color: #202c2c; /* Optional: keeps your existing color */
     font-size: 2em; /* Optional: adjust size as needed */
 }
