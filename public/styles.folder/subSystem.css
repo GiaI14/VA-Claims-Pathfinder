@@ -59,6 +59,15 @@ button:hover {
 }
 
 
+.symptom-entry {
+  display: flex;
+  flex-direction: column; /* stack top row and button vertically */
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
+}
 
 .top-row {
   display: flex;
@@ -68,12 +77,12 @@ button:hover {
 .system-label,
 .subsystem-label,
 .system-image {
-  flex: 1; /* equal width */
+  flex: 1; /* equal width for each */
 }
 
 .system-label select,
 .subsystem-label select {
-  width: 100%; /* make select fill label width */
+  width: 100%;
 }
 
 .system-image {
@@ -86,8 +95,9 @@ button:hover {
 
 .button-row {
   display: flex;
-  justify-content: flex-start; /* align button to left */
+  justify-content: flex-start; /* align remove button left */
 }
+
 
 
 /* Symptoms list container using grid */
