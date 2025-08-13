@@ -70,8 +70,8 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
 });
 
 // API: analyze symptoms
-// POST /api/analyze-symptoms
-router.post("/api/analyze-symptoms", (req, res, next) => {
+
+router.post("/analyze-symptoms", (req, res, next) => {
   console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
   next();
 }, async (req, res) => {
