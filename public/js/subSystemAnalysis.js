@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // When sub-system changes, fetch symptoms for that sub-system (before any analyze)
-  symptomEntriesContainer.addEventListener('change', async e => {
+   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('sub-system-select')) return;
 
     const subSystem = e.target.value;
