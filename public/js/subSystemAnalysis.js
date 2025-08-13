@@ -262,56 +262,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Results: show only system header; include % match from backend
   function displayResults(data) {
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '';
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
 
-    if (!data || data.length === 0) {
-      resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
-      return;
+  if (!data || data.length === 0) {
+    resultsContainer.innerHTML = '<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>';
+    return;
+  }
+
+  data.forEach(entry => {
+    const section = document.createElement('div');
+    section.classList.add('result-section');
+
+    // Show system → subSystem (only if subSystem present)
+    const heading = document.createElement('h3');
+    heading.textContent = entry.subSystem ? `${entry.system} → ${entry.subSystem}` : entry.system;
+    section.appendChild(heading);
+
+    // Show image for the system if available
+    const key = (entry.system || '').toLowerCase().trim();
+    const imageFile = normalizedImageMap[key];
+    if (imageFile) {
+      const img = document.createElement('img');
+      img.src = `/images/${imageFile}`;
+      img.alt = entry.system;
+      img.className = 'result-system-image';
+      section.appendChild(img);
     }
 
-    data.forEach(entry => {
-      const section = document.createElement('div');
-      section.classList.add('result-section');
+    if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
+      const noCondMsg = document.createElement('p');
+      noCondMsg.textContent = entry.message || 'No specific conditions matched. Please provide more detailed symptoms.';
+      section.appendChild(noCondMsg);
+    } else {
+      const conditionsContainer = document.createElement('div');
+      conditionsContainer.classList.add('conditions-container');
 
-      let htmlContent = `<h3>${entry.system}</h3>`;
+      entry.possibleConditions.forEach(condition => {
+        const conditionBlock = document.createElement('div');
+        conditionBlock.classList.add('condition-block');
 
-      if (!entry.possibleConditions || entry.possibleConditions.length === 0) {
-        htmlContent += `<p>No specific conditions matched. Please provide more detailed symptoms.</p>`;
-      } else {
-        // sort by matchPercent desc if present
-        const sorted = [...entry.possibleConditions].sort((a, b) => (b.matchPercent || 0) - (a.matchPercent || 0));
+        // Condition title + medical code + match percentage
+        const title = document.createElement('div');
+        title.className = 'condition-title';
+        title.innerHTML = `
+          ${condition.condition_name} 
+          ${condition.medical_code ? `<span class="medical-code">(${condition.medical_code})</span>` : ''}
+          <span class="match-percent" style="float:right; font-weight:bold;">
+            ${(condition.match_percentage ?? condition.matchPercent ?? 0)}% match
+          </span>
+        `;
+        conditionBlock.appendChild(title);
 
-        htmlContent += `<div class="conditions-container">`;
+        // Matched symptoms list (if available)
+        if (condition.matched_symptoms && condition.matched_symptoms.length > 0) {
+          const matchedSympDiv = document.createElement('div');
+          matchedSympDiv.className = 'matched-symptoms';
+          matchedSympDiv.textContent = 'Matched Symptoms: ' + condition.matched_symptoms.join(', ');
+          conditionBlock.appendChild(matchedSympDiv);
+        }
 
-        sorted.forEach(condition => {
-          const hasDetails =
-            condition.presumptive_raw ||
-            condition.qualifying_circumstance ||
-            condition.evidence_basis;
+        // Additional details block
+        const hasDetails =
+          condition.presumptive_raw ||
+          condition.qualifying_circumstance ||
+          condition.evidence_basis;
 
-          htmlContent += `
-            <div class="condition-block">
-              <div class="condition-title">
-                ${condition.condition_name}
-                ${condition.medical_code ? `<span class="medical-code">(${condition.medical_code})</span>` : ''}
-                <span style="float:right; font-weight:bold;">${(condition.matchPercent ?? 0)}% match</span>
-              </div>
-              ${hasDetails ? `
-              <div class="condition-details">
-                ${condition.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>` : ''}
-                ${condition.qualifying_circumstance ? `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>` : ''}
-                ${condition.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>` : ''}
-              </div>` : ''}
-            </div>
-          `;
-        });
+        if (hasDetails) {
+          const detailsDiv = document.createElement('div');
+          detailsDiv.className = 'condition-details';
 
-        htmlContent += `</div>`;
-      }
+          if (condition.presumptive_raw) {
+            detailsDiv.innerHTML += `<div><strong>Presumptive Type:</strong> ${condition.presumptive_raw}</div>`;
+          }
+          if (condition.qualifying_circumstance) {
+            detailsDiv.innerHTML += `<div><strong>Qualifying Circumstance:</strong> ${condition.qualifying_circumstance}</div>`;
+          }
+          if (condition.evidence_basis) {
+            detailsDiv.innerHTML += `<div><strong>Evidence Basis:</strong> ${condition.evidence_basis}</div>`;
+          }
+          conditionBlock.appendChild(detailsDiv);
+        }
 
-      section.innerHTML = htmlContent;
-      resultsContainer.appendChild(section);
-    });
-  }
-});
+        conditionsContainer.appendChild(conditionBlock);
+      });
+
+      section.appendChild(conditionsContainer);
+    }
+
+    resultsContainer.appendChild(section);
+  });
+}
+
