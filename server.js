@@ -101,6 +101,7 @@ app.use((req, res, next) => {
   console.log('Generated Nonce:', res.locals.nonce);
   console.log('Incoming X-CSRF-Token:', req.headers['x-csrf-token']);
   console.log('Session cookie:', req.headers.cookie);
+  console.log('Current CSRF token in session:', req.csrfToken());
   next();
 });
 
