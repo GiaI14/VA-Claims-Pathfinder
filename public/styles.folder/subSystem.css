@@ -1,4 +1,4 @@
-body {
+5body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   margin: 0;
@@ -46,8 +46,8 @@ h1, h2 {
 }
 
 .system-image {
-  max-width: 300px;
-  max-height: 200px;
+  max-width: 350px;
+  max-height: 220px;
   object-fit: contain;
   flex-shrink: 0;
   border: 1px solid #ddd;
