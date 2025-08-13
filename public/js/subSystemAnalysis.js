@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
-  const resultsDiv = document.getElementById('results');
+  const analyzeButton = document.getElementById('analyzeButton');
+  const resultsContainer = document.getElementById('results');
+  const csrfToken = document.getElementById('csrfToken').value;
 
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
@@ -25,8 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!e.target.classList.contains('system-select')) return;
 
     const entry = e.target.closest('.symptom-entry');
-    if (!entry) return;
-
     const system = e.target.value;
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
-
       const subSystems = await res.json();
       subSystems.forEach(sub => {
         const option = document.createElement('option');
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const subSystem = e.target.value;
     dynamicSymptomsList.innerHTML = '';
-
     if (!subSystem) return;
 
     try {
@@ -88,13 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- REMOVE ENTRY BUTTON: reset the entry ---
+  // --- REMOVE ENTRY BUTTON ---
   symptomEntriesContainer.addEventListener('click', e => {
     if (!e.target.classList.contains('remove-entry-button')) return;
 
     const entry = e.target.closest('.symptom-entry');
-    if (!entry) return;
-
     const systemSelect = entry.querySelector('.system-select');
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
@@ -108,13 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- ANALYZE SYMPTOMS ---
-  document.getElementById('symptom-form').addEventListener('submit', async e => {
+  analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
 
     const subSystemSelect = document.querySelector('.sub-system-select');
-    const subSystem = subSystemSelect ? subSystemSelect.value : '';
-    const chosenSymptoms = Array.from(document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked'))
-      .map(cb => cb.value);
+    const subSystem = subSystemSelect.value;
+
+    const chosenSymptoms = Array.from(
+      document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked')
+    ).map(input => input.value);
 
     if (!subSystem || chosenSymptoms.length === 0) {
       alert('Please select a sub-system and at least one symptom.');
@@ -126,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': document.getElementById('csrfToken').value
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({ subSystem, chosenSymptoms })
       });
@@ -134,25 +132,40 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!res.ok) throw new Error('Failed to analyze symptoms');
 
       const data = await res.json();
-
-      if (!Array.isArray(data) || data.length === 0) {
-        resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
-        return;
-      }
-
-      let html = '<h2>Possible Conditions</h2><table><thead><tr><th>Condition Name</th><th>Medical Code</th><th>Match %</th></tr></thead><tbody>';
-      data.forEach(row => {
-        html += `<tr>
-          <td>${row.condition_name}</td>
-          <td>${row.medical_code}</td>
-          <td>${row.matchPercent}%</td>
-        </tr>`;
-      });
-      html += '</tbody></table>';
-      resultsDiv.innerHTML = html;
+      displayResults(data);
     } catch (err) {
       console.error('Error analyzing symptoms:', err);
-      resultsDiv.innerHTML = '<p>Error analyzing symptoms.</p>';
+      resultsContainer.innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
     }
   });
+
+  function displayResults(data) {
+    resultsContainer.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      resultsContainer.innerHTML = "<p>No matching conditions found. Please select more symptoms!</p>";
+      return;
+    }
+
+    const table = document.createElement('table');
+    table.innerHTML = `
+      <tr>
+        <th>Condition Name</th>
+        <th>Medical Code</th>
+        <th>Match %</th>
+      </tr>
+    `;
+
+    data.forEach(entry => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${entry.condition_name}</td>
+        <td>${entry.medical_code}</td>
+        <td>${entry.matchPercent}%</td>
+      `;
+      table.appendChild(row);
+    });
+
+    resultsContainer.appendChild(table);
+  }
 });
