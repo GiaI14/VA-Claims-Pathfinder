@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
   const resultsDiv = document.getElementById('results');
-  const csrfToken = document.querySelector('input[name="_csrf"]').value;
   
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
@@ -110,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- ANALYZE SYMPTOMS ---
   document.getElementById('symptom-form').addEventListener('submit', async e => {
     e.preventDefault();
-
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
     const subSystemSelect = document.querySelector('.sub-system-select');
     const subSystem = subSystemSelect ? subSystemSelect.value : '';
     const chosenSymptoms = Array.from(document.querySelectorAll('#dynamicSymptomsList input[type="checkbox"]:checked'))
