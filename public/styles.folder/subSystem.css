@@ -53,7 +53,7 @@ h1 {
 .system-image { 
   width: 100%; 
   max-width: 250px; 
-  max-height: 200px; 
+  max-height: 250px; 
   height: auto; 
   object-fit: contain; 
   border: 1px solid #ddd; 
