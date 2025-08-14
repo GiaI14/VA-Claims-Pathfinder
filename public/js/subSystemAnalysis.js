@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     systemImage.style.display = 'none';
 
     dynamicSymptomsList.innerHTML = '';
+    resultsDiv.innerHTML = '<p>No analysis yet.</p>';
   });
 
   // --- ANALYZE SYMPTOMS ---
