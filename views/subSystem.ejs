@@ -20,7 +20,7 @@
               <label>
                 System Affected:
                 <select class="system-select" required>
-                  <option value="">Select a system</option>
+                  <option value="" disabled selected>Select a system</option>
                   <% systemsFromServer.forEach(system => { %>
                     <option value="<%= system %>"><%= system %></option>
                   <% }) %>
@@ -30,7 +30,7 @@
               <label>
                 Sub-System:
                 <select class="sub-system-select" required>
-                  <option value="">Select a sub-system</option>
+                  <option value="" disabled selected>Select a sub-system</option>
                 </select>
               </label>
 
