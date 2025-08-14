@@ -32,13 +32,16 @@ h1 {
 .top-row {
   display: flex;
   gap: 1rem;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
 .top-row label {
-  flex: 1;
-  min-width: 150px;
+  flex: 1 1 1;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .system-select,
