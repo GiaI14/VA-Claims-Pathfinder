@@ -178,9 +178,11 @@ button.remove-entry-button:hover {
       align-items: flex-start;
       gap: 1rem;
     }
+
     .input-group {
       flex-grow: 1;
     }
+
     .system-image {
       max-width: 250px;
       max-height: 250px;
