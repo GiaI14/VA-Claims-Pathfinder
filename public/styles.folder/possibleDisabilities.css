@@ -188,7 +188,7 @@ button.remove-entry-button:hover {
       max-height: 250px;
       border: 1px solid #ddd;
       display: none;
-      cursor: zoom-in;
+      cursor: zoom-in !important;
     }
 
     /* Lightbox overlay */
