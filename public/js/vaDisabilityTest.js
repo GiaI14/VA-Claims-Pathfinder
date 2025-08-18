@@ -1,16 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const systemSelect = document.querySelector('.system-select');
-  const subSystemSelect = document.querySelector('.sub-system-select');
-  const systemImage = document.querySelector('.system-image');
-  const dynamicSymptomsList = document.getElementById('dynamicSymptomsList');
-  const analyzeButton = document.getElementById('analyzeButton');
-  const resultsDiv = document.getElementById('results');
-  const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-  const inputMethodContainer = document.getElementById('inputMethodContainer');
-  const typingInputContainer = document.getElementById('typingInputContainer');
-  const dynamicSymptomsContainer = document.getElementById('dynamicSymptomsContainer');
-  const typedSymptomsInput = document.getElementById('typedSymptoms');
+  const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
 
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
@@ -28,85 +17,108 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png'
   };
 
-  // --- Load sub-systems on system change ---
-  systemSelect.addEventListener('change', async () => {
-    const system = systemSelect.value;
-    subSystemSelect.innerHTML = `<option value="" disabled selected hidden>Select a sub-system</option>`;
-    dynamicSymptomsList.innerHTML = '';
-    resultsDiv.innerHTML = '';
-    inputMethodContainer.style.display = 'none';
-    typingInputContainer.style.display = 'none';
-    dynamicSymptomsContainer.style.display = 'none';
-    typedSymptomsInput.value = '';
+  symptomEntriesContainer.addEventListener('change', async e => {
+    const entry = e.target.closest('.symptom-entry');
+    if (!entry) return;
 
-    if (systemImages[system]) {
-      systemImage.src = `/images/${systemImages[system]}`;
-      systemImage.style.display = 'inline-block';
-    } else {
-      systemImage.src = '';
-      systemImage.style.display = 'none';
-    }
+    const systemSelect = entry.querySelector('.system-select');
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    const systemImage = entry.querySelector('.system-image');
+    const dynamicSymptomsList = entry.querySelector('#dynamicSymptomsList');
+    const inputMethodContainer = entry.querySelector('#inputMethodContainer');
+    const typingInputContainer = entry.querySelector('#typingInputContainer');
+    const dynamicSymptomsContainer = entry.querySelector('#dynamicSymptomsContainer');
+    const typedSymptomsInput = entry.querySelector('#typedSymptoms');
+    const resultsDiv = document.getElementById('results');
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-    try {
-      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-      const subSystems = await res.json();
-      subSystems.forEach(sub => {
-        const option = document.createElement('option');
-        option.value = sub;
-        option.textContent = sub;
-        subSystemSelect.appendChild(option);
-      });
-    } catch (err) {
-      console.error(err);
-      alert('Failed to load sub-systems');
-    }
-  });
-
-  // --- Load symptoms on sub-system change ---
-  subSystemSelect.addEventListener('change', async () => {
-    dynamicSymptomsList.innerHTML = '';
-    typingInputContainer.style.display = 'none';
-    dynamicSymptomsContainer.style.display = 'none';
-    inputMethodContainer.style.display = 'block';
-    typedSymptomsInput.value = '';
-    resultsDiv.innerHTML = '';
-
-    if (!subSystemSelect.value) return;
-
-    try {
-      const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystemSelect.value)}`);
-      const symptoms = await res.json();
+    // --- SYSTEM SELECT ---
+    if (e.target.classList.contains('system-select')) {
+      const system = systemSelect.value;
+      subSystemSelect.innerHTML = `<option value="" disabled selected hidden>Select a sub-system</option>`;
       dynamicSymptomsList.innerHTML = '';
-      symptoms.forEach(symptom => {
-        const label = document.createElement('label');
-        label.className = 'symptom-item';
-        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
-        dynamicSymptomsList.appendChild(label);
-      });
-    } catch (err) {
-      console.error(err);
-      dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
-    }
-  });
-
-  // --- Show input method based on radio selection ---
-  inputMethodContainer.addEventListener('change', e => {
-    if (!e.target.name || e.target.name !== 'symptomInputMethod') return;
-
-    if (e.target.value === 'typing') {
-      typingInputContainer.style.display = 'block';
-      dynamicSymptomsContainer.style.display = 'none';
-    } else if (e.target.value === 'selecting') {
+      inputMethodContainer.style.display = 'none';
       typingInputContainer.style.display = 'none';
-      dynamicSymptomsContainer.style.display = 'block';
+      dynamicSymptomsContainer.style.display = 'none';
+      typedSymptomsInput.value = '';
+      resultsDiv.innerHTML = '';
+
+      // show image
+      if (systemImages[system]) {
+        systemImage.src = `/images/${systemImages[system]}`;
+        systemImage.style.display = 'inline-block';
+      } else {
+        systemImage.src = '';
+        systemImage.style.display = 'none';
+      }
+
+      try {
+        const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+        const subSystems = await res.json();
+        subSystems.forEach(sub => {
+          const option = document.createElement('option');
+          option.value = sub;
+          option.textContent = sub;
+          subSystemSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error(err);
+        alert('Failed to load sub-systems');
+      }
+    }
+
+    // --- SUB-SYSTEM SELECT ---
+    if (e.target.classList.contains('sub-system-select')) {
+      dynamicSymptomsList.innerHTML = '';
+      typingInputContainer.style.display = 'none';
+      dynamicSymptomsContainer.style.display = 'none';
+      inputMethodContainer.style.display = 'block'; // SHOW radio buttons
+      typedSymptomsInput.value = '';
+      resultsDiv.innerHTML = '';
+
+      if (!subSystemSelect.value) return;
+
+      try {
+        const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystemSelect.value)}`);
+        const symptoms = await res.json();
+        dynamicSymptomsList.innerHTML = '';
+        symptoms.forEach(symptom => {
+          const label = document.createElement('label');
+          label.className = 'symptom-item';
+          label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+          dynamicSymptomsList.appendChild(label);
+        });
+      } catch (err) {
+        console.error(err);
+        dynamicSymptomsList.innerHTML = '<p>Failed to load symptoms</p>';
+      }
+    }
+
+    // --- RADIO BUTTONS ---
+    if (e.target.name === 'symptomInputMethod') {
+      if (e.target.value === 'typing') {
+        typingInputContainer.style.display = 'block';
+        dynamicSymptomsContainer.style.display = 'none';
+      } else if (e.target.value === 'selecting') {
+        typingInputContainer.style.display = 'none';
+        dynamicSymptomsContainer.style.display = 'block';
+      }
     }
   });
 
-  // --- Analyze symptoms ---
+  // --- ANALYZE SYMPTOMS ---
+  const analyzeButton = document.getElementById('analyzeButton');
   analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
 
-    const selectedMethod = document.querySelector('input[name="symptomInputMethod"]:checked')?.value;
+    const entry = document.querySelector('.symptom-entry'); // single entry for now
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    const typedSymptomsInput = entry.querySelector('#typedSymptoms');
+    const dynamicSymptomsList = entry.querySelector('#dynamicSymptomsList');
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
+    const resultsDiv = document.getElementById('results');
+
+    const selectedMethod = entry.querySelector('input[name="symptomInputMethod"]:checked')?.value;
     let chosenSymptoms = [];
 
     if (selectedMethod === 'typing') {
@@ -131,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ subSystem: subSystemSelect.value, chosenSymptoms }),
       });
       const data = await res.json();
+
       if (!data || data.length === 0) {
         resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
         return;
