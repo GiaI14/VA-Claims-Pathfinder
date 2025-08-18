@@ -271,11 +271,21 @@ app.get('/subSystem', async (req, res) => {
   }
 });
 
-app.get('/vaDisabilityTest', (req, res) => {
-  res.render('vaDisabilityTest', { 
-    csrfToken: req.csrfToken(),
-    nonce: res.locals.nonce, 
-  });
+app.get('/vaDisabilityTest', async (req, res) => {
+  try {
+    const db = getDb();
+    const [rows] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
+    const systemsFromServer = rows.map(row => row.systems);
+
+    res.render('vaDisabilityTest', { 
+      csrfToken: req.csrfToken(),
+      nonce: res.locals.nonce,
+      systemsFromServer
+    });
+  } catch (err) {
+    console.error('Error fetching systems:', err);
+    res.status(500).send('Failed to load page');
+  }
 });
 
 
