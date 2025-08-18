@@ -1,145 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Subsystem Analysis</title>
-  <link rel="stylesheet" href="/styles.css">
-  <style>
-    .hidden {
-      display: none;
-    }
-    .choice-buttons {
-      margin-top: 15px;
-    }
-    .choice-buttons button {
-      margin-right: 10px;
-    }
-  </style>
+  <%- include('includes/head', { title: 'Symptoms Analysis', nonce: nonce }) %>
+  <link rel="stylesheet" href="styles.folder/subSystem.css" />
+  <link rel="stylesheet" href="/styles.folder/shared.css">
 </head>
 <body>
-  <h1>Subsystem Analysis</h1>
+  <div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
 
-  <div id="subSystemContainer">
-    <!-- System Selection -->
-    <div class="form-group">
-      <label for="systemSelect">Choose System:</label>
-      <select id="systemSelect" name="system">
-        <option value="">-- Select a System --</option>
-        <% systems.forEach(system => { %>
-          <option value="<%= system %>"><%= system %></option>
-        <% }); %>
-      </select>
+    <div class="container">
+      <h1>Symptom Analysis</h1>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <form id="symptom-form">
+        <div id="symptomEntriesContainer">
+          <div class="symptom-entry">
+            <div class="top-row">
+              <label>
+                System Affected:
+                <select class="system-select" required>
+                  <option value="" disabled selected hidden>Select a system</option>
+                  <% systemsFromServer.forEach(system => { %>
+                    <option value="<%= system %>"><%= system %></option>
+                  <% }) %>
+                </select>
+              </label>
+
+              <label>
+                Sub-System:
+                <select class="sub-system-select" required>
+                  <option value="" disabled selected hidden>Select a sub-system</option>
+                </select>
+              </label>
+             
+              <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
+              </div>
+           
+
+            <div class="bottom-row">
+              <button type="button" class="remove-entry-button">Remove Entry</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamicSymptomsContainer" style="margin-top: 20px;">
+          <h2>Symptoms for Selected Sub-System</h2>
+          <div id="dynamicSymptomsList"></div>
+        </div>
+
+        <button id="analyzeButton" type="submit">Analyze Symptoms</button>
+        <input type="text" name="honeypot" style="display:none" />
+      </form>
+
+      <div id="results"></div>
     </div>
 
-    <!-- Subsystem Selection -->
-    <div class="form-group">
-      <label for="subSystemSelect">Choose Sub-System:</label>
-      <select id="subSystemSelect" name="subsystem">
-        <option value="">-- Select a Sub-System --</option>
-      </select>
-    </div>
-
-    <!-- Image Display -->
-    <div id="systemImageContainer" class="hidden">
-      <h3>System Image</h3>
-      <img id="systemImage" src="" alt="System" style="max-width: 400px;">
-    </div>
-
-    <!-- Input Method Choice -->
-    <div id="inputChoice" class="choice-buttons hidden">
-      <p>How would you like to provide symptoms?</p>
-      <button type="button" id="typeSymptomsBtn">Type Symptoms</button>
-      <button type="button" id="chooseSymptomsBtn">Choose from List</button>
-    </div>
-
-    <!-- Type Symptoms Input -->
-    <div id="typeSymptomsContainer" class="hidden">
-      <label for="typedSymptoms">Enter Symptoms:</label>
-      <textarea id="typedSymptoms" rows="4" cols="50" placeholder="Type symptoms here..."></textarea>
-      <button type="button" id="analyzeTypedSymptoms">Analyze</button>
-    </div>
-
-    <!-- Choose Symptoms List -->
-    <div id="chooseSymptomsContainer" class="hidden">
-      <h3>Available Symptoms</h3>
-      <div id="symptomsList"></div>
-      <button type="button" id="analyzeChosenSymptoms">Analyze</button>
-    </div>
-
-    <!-- Results -->
-    <div id="results" class="hidden">
-      <h2>Analysis Results</h2>
-      <div id="resultsContent"></div>
-    </div>
+    <div class="spacer"></div>
+    <%- include('includes/footer') %>
   </div>
 
-  <script>
-    const systemSelect = document.getElementById("systemSelect");
-    const subSystemSelect = document.getElementById("subSystemSelect");
-    const systemImageContainer = document.getElementById("systemImageContainer");
-    const systemImage = document.getElementById("systemImage");
-
-    const inputChoice = document.getElementById("inputChoice");
-    const typeSymptomsBtn = document.getElementById("typeSymptomsBtn");
-    const chooseSymptomsBtn = document.getElementById("chooseSymptomsBtn");
-
-    const typeSymptomsContainer = document.getElementById("typeSymptomsContainer");
-    const chooseSymptomsContainer = document.getElementById("chooseSymptomsContainer");
-
-    // When subsystem is chosen, show image + input choice, but NOT symptoms yet
-    subSystemSelect.addEventListener("change", () => {
-      const selectedSubSystem = subSystemSelect.value;
-      if (selectedSubSystem) {
-        // Show system image
-        systemImage.src = `/images/${selectedSubSystem}.png`;
-        systemImageContainer.classList.remove("hidden");
-
-        // Show input method choice
-        inputChoice.classList.remove("hidden");
-
-        // Hide inputs until user chooses
-        typeSymptomsContainer.classList.add("hidden");
-        chooseSymptomsContainer.classList.add("hidden");
-      }
-    });
-
-    // If "Type Symptoms" is chosen
-    typeSymptomsBtn.addEventListener("click", () => {
-      typeSymptomsContainer.classList.remove("hidden");
-      chooseSymptomsContainer.classList.add("hidden");
-    });
-
-    // If "Choose Symptoms" is chosen
-    chooseSymptomsBtn.addEventListener("click", () => {
-      chooseSymptomsContainer.classList.remove("hidden");
-      typeSymptomsContainer.classList.add("hidden");
-
-      // Example: dynamically load symptoms
-      const selectedSystem = systemSelect.value;
-      const selectedSubSystem = subSystemSelect.value;
-
-      fetch(`/get-symptoms?system=${selectedSystem}&subsystem=${selectedSubSystem}`)
-        .then(res => res.json())
-        .then(symptoms => {
-          const symptomsList = document.getElementById("symptomsList");
-          symptomsList.innerHTML = "";
-          symptoms.forEach(symptom => {
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.value = symptom;
-            checkbox.id = `symptom-${symptom}`;
-            
-            const label = document.createElement("label");
-            label.htmlFor = checkbox.id;
-            label.textContent = symptom;
-
-            const div = document.createElement("div");
-            div.appendChild(checkbox);
-            div.appendChild(label);
-            symptomsList.appendChild(div);
-          });
-        });
-    });
-  </script>
+  <script src="/js/subSystemAnalysis.js" nonce="<%= nonce %>" defer></script>
 </body>
 </html>
