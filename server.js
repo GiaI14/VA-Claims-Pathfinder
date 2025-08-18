@@ -270,6 +270,14 @@ app.get('/subSystem', async (req, res) => {
   }
 });
 
+app.get('/VaDisabilityTest', (req, res) => {
+  res.render('VaDisabilityTest', { 
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce, 
+  });
+});
+
+
 app.get('/terms', (req, res) => {
   res.render('terms', {
     nonce: res.locals.nonce || '',
