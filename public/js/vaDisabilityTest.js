@@ -20,20 +20,32 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-  // ------------------- HELPER: toggle input sections -------------------
-  function toggleSymptomInput(entry, selectedValue) {
+  // ------------------- RADIO BUTTON TOGGLE LOGIC -------------------
+  function toggleSymptomInput(entry, value) {
     const typingInput = entry.querySelector('.typed-symptoms');
     const dynamicList = entry.querySelector('.dynamic-symptoms-list');
     if (!typingInput || !dynamicList) return;
 
-    if (selectedValue === 'typing') {
+    if (value === 'typing') {
       typingInput.style.display = 'inline-block';
       dynamicList.style.display = 'none';
-    } else if (selectedValue === 'selecting') {
+    } else if (value === 'selecting') {
       typingInput.style.display = 'none';
       dynamicList.style.display = 'block';
     }
   }
+
+  function bindRadios(entry) {
+    const radios = entry.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        toggleSymptomInput(entry, radio.value);
+      });
+    });
+  }
+
+  // Bind radios for all existing entries rendered by EJS
+  document.querySelectorAll('.symptom-entry').forEach(bindRadios);
 
   // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
@@ -74,12 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
     typingInput.type = 'text';
     typingInput.className = 'typed-symptoms';
     typingInput.placeholder = 'Enter symptoms separated by commas';
-    typingInput.style.display = 'none'; // hidden initially
+    typingInput.style.display = 'none';
 
     // List container
     const dynamicList = document.createElement('div');
     dynamicList.className = 'dynamic-symptoms-list';
-    dynamicList.style.display = 'none'; // hidden initially
+    dynamicList.style.display = 'none';
 
     // Remove button
     const removeBtn = document.createElement('button');
@@ -97,13 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
     entry.appendChild(removeBtn);
     symptomEntriesContainer.appendChild(entry);
 
-    // Radio button toggle logic
-    const radios = inputMethodDiv.querySelectorAll(`input[name="${radioName}"]`);
-    radios.forEach(radio => {
-      radio.addEventListener('change', () => {
-        toggleSymptomInput(entry, radio.value);
-      });
-    });
+    // Bind radio buttons for this new entry
+    bindRadios(entry);
   }
 
   // ------------------- REMOVE ENTRY -------------------
@@ -212,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     entries.forEach(entry => {
       const system = entry.querySelector('.system-select').value;
       const subSystem = entry.querySelector('.sub-system-select').value;
+
       const inputMethod = entry.querySelector('input[type="radio"]:checked');
       let chosenSymptoms = [];
 
@@ -263,38 +271,4 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    data.forEach(entry => {
-      const section = document.createElement('div');
-      section.className = 'result-section';
-
-      let html = `<h3>${entry.system}</h3>`;
-
-      if (entry.message) {
-        html += `<p>${entry.message}</p>`;
-      } else if (entry.possibleConditions?.length > 0) {
-        html += `<div class="conditions-container">`;
-        entry.possibleConditions.forEach(cond => {
-          html += `
-            <div class="condition-block">
-              <div class="condition-title">${cond.condition_name} (${cond.medical_code}) - ${cond.match_percentage.toFixed(2)}% match</div>
-              ${cond.presumptive_raw || cond.qualifying_circumstance || cond.evidence_basis ? `
-              <div class="condition-details">
-                ${cond.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${cond.presumptive_raw}</div>` : ''}
-                ${cond.qualifying_circumstance ? `<div><strong>Qualifying Circumstances:</strong> ${cond.qualifying_circumstance}</div>` : ''}
-                ${cond.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${cond.evidence_basis}</div>` : ''}
-              </div>` : ''}
-            </div>`;
-        });
-        html += `</div>`;
-      } else {
-        html += '<p>No conditions matched.</p>';
-      }
-
-      section.innerHTML = html;
-      resultsDiv.appendChild(section);
-    });
-
-    resultsDiv.scrollIntoView({ behavior: 'smooth' });
-  }
-
-});
+    data.forEach(entry =>
