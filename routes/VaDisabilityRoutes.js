@@ -1,20 +1,56 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../data/database');
+const natural = require('natural');
+const stringSimilarity = require('string-similarity');
+const tokenizer = new natural.WordTokenizer();
 
-// Render main page with systems list
-router.get('/sub-system', async (req, res) => {
+// ------------------ Utility Functions ------------------
+
+function tokenizeAndNormalize(symptoms) {
+  if (typeof symptoms !== 'string') return [];
+
+  return symptoms
+    .split(",")
+    .flatMap(symptom => {
+      const tokens = tokenizer.tokenize(symptom);
+      return tokens.map(token =>
+        token.toLowerCase().replace(/[^\w\s]/g, '')
+      );
+    })
+    .filter(token => token.length > 1);
+}
+
+function calculateMatchPercentage(inputSymptoms, databaseSymptoms) {
+  const inputTokens = tokenizeAndNormalize(inputSymptoms.join(", "));
+  const databaseTokens = tokenizeAndNormalize(databaseSymptoms);
+
+  const matchedTokens = inputTokens.filter(inputToken => {
+    const matches = databaseTokens.map(dbToken =>
+      stringSimilarity.compareTwoStrings(inputToken, dbToken)
+    );
+    return matches.some(match => match >= 0.5);
+  });
+
+  if (databaseTokens.length === 0) return 0;
+  return Math.min((matchedTokens.length / databaseTokens.length) * 100, 100);
+}
+
+// ------------------ Routes ------------------
+
+// Render test page
+router.get('/VaDisabilityTest', async (req, res) => {
   try {
     const db = getDb();
     const [systemsRows] = await db.execute(
       'SELECT DISTINCT systems FROM va_disabilities'
     );
-    const systemsFromServer = systemsRows.map(row => row.systems);
+    const systems = systemsRows.map(row => row.systems);
 
-    res.render('subSystem', {
+    res.render('VaDisabilityTest', {
       csrfToken: req.csrfToken(),
-      systemsFromServer,
       nonce: res.locals.nonce,
+      systems
     });
   } catch (err) {
     console.error('Error fetching systems:', err);
@@ -22,7 +58,7 @@ router.get('/sub-system', async (req, res) => {
   }
 });
 
-// API: get sub-systems by system
+// API: Get sub-systems for a system
 router.get('/api/sub-systems/:system', async (req, res) => {
   try {
     const db = getDb();
@@ -41,7 +77,7 @@ router.get('/api/sub-systems/:system', async (req, res) => {
   }
 });
 
-// API: get symptoms by sub-system
+// API: Get symptoms for a sub-system
 router.get('/api/symptoms/:subSystem', async (req, res) => {
   try {
     const db = getDb();
@@ -69,13 +105,8 @@ router.get('/api/symptoms/:subSystem', async (req, res) => {
   }
 });
 
-// API: analyze symptoms
-
-router.post("/analyze-symptoms", (req, res, next) => {
-  console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
-  next();
-}, async (req, res) => {
-  console.log("Received symptom data:", req.body);
+// API: Analyze symptoms
+router.post('/api/analyze-symptoms', async (req, res) => {
   const { subSystem, chosenSymptoms } = req.body;
 
   if (!subSystem || !Array.isArray(chosenSymptoms) || chosenSymptoms.length === 0) {
@@ -85,7 +116,7 @@ router.post("/analyze-symptoms", (req, res, next) => {
   try {
     const db = getDb();
     const [rows] = await db.execute(
-      'SELECT id, sub_systems, condition_name, medical_code, symptoms, secondary_conditions, presumptive_conditions, qualifying_circumstance, evidence_basis FROM va_disabilities WHERE sub_systems = ?',
+      'SELECT * FROM va_disabilities WHERE sub_systems = ?',
       [subSystem]
     );
 
@@ -94,14 +125,7 @@ router.post("/analyze-symptoms", (req, res, next) => {
     for (const row of rows) {
       if (!row.symptoms || typeof row.symptoms !== "string") continue;
 
-      const conditionSymptoms = row.symptoms.split(',').map(s => s.trim().toLowerCase());
-      const matchedCount = chosenSymptoms.reduce((count, symptom) => {
-        return conditionSymptoms.includes(symptom.toLowerCase()) ? count + 1 : count;
-      }, 0);
-
-      const matchPercent = conditionSymptoms.length > 0
-        ? (matchedCount / conditionSymptoms.length) * 100
-        : 0;
+      const matchPercent = calculateMatchPercentage(chosenSymptoms, row.symptoms);
 
       if (matchPercent > 25) { // minimum threshold
         possibleConditions.push({
@@ -109,9 +133,9 @@ router.post("/analyze-symptoms", (req, res, next) => {
           medical_code: row.medical_code,
           match_percentage: Number(matchPercent.toFixed(2)),
           matched_symptoms: chosenSymptoms.filter(symptom =>
-            conditionSymptoms.includes(symptom.toLowerCase())
+            row.symptoms.toLowerCase().includes(symptom.toLowerCase())
           ),
-          total_condition_symptoms: conditionSymptoms.length,
+          total_condition_symptoms: row.symptoms.split(',').length,
           is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== 'no',
           presumptive_raw: row.presumptive_conditions,
           secondary_conditions: row.secondary_conditions,
@@ -136,7 +160,6 @@ router.post("/analyze-symptoms", (req, res, next) => {
       }];
     }
 
-    console.log("Analysis results:", JSON.stringify(results, null, 2));
     res.json(results);
 
   } catch (err) {
@@ -144,6 +167,5 @@ router.post("/analyze-symptoms", (req, res, next) => {
     res.status(500).json({ error: "Failed to analyze symptoms", details: err.message });
   }
 });
-
 
 module.exports = router;
