@@ -20,12 +20,12 @@
     <label>
       System Affected:
       <select class="system-select" required>
-        <option value="" disabled selected hidden>Select a system</option>
-        <% systemsFromServer.forEach(system => { %>
-          <option value="<%= system %>"><%= system %></option>
-        <% }) %>
-      </select>
-    </label>
+  <option value="" disabled selected hidden>Select a system</option>
+  <% const systems = typeof systemsFromServer !== 'undefined' ? systemsFromServer : []; %>
+  <% systems.forEach(system => { %>
+    <option value="<%= system %>"><%= system %></option>
+  <% }) %>
+</select>
 
     <label>
       Sub-System:
