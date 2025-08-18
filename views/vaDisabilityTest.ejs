@@ -37,7 +37,7 @@
               <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
               </div>
 
-              <div class="middle-row" id="inputMethodContainer" style="display:none; margin-top:15px;">
+              <div class="middle-row input-method-container" style="display:none; margin-top:15px;">
   <p>Choose Symptom Input Method:</p>
   <label>
     <input type="radio" name="symptomInputMethod" value="typing"> Type Symptoms
@@ -48,18 +48,17 @@
 </div>
 
 <div class="symptom-input-section" style="display:none; margin-top:15px;">
-  <!-- Typing input -->
-  <div id="typingInputContainer" style="display:none;">
+  <div class="typing-input-container" style="display:none;">
     <label for="typedSymptoms">Enter Symptoms (comma separated):</label>
-    <input type="text" id="typedSymptoms" class="symptom-text-input" placeholder="e.g. fatigue, headache">
+    <input type="text" class="typed-symptoms" placeholder="e.g. fatigue, headache">
   </div>
 
-  <!-- Checkbox selection -->
-  <div id="dynamicSymptomsContainer" style="display:none; margin-top: 20px;">
+  <div class="dynamic-symptoms-container" style="display:none; margin-top: 20px;">
     <h2>Symptoms for Selected Sub-System</h2>
-    <div id="dynamicSymptomsList"></div>
+    <div class="dynamic-symptoms-list"></div>
   </div>
 </div>
+
 
 
             <div class="bottom-row">
