@@ -5,15 +5,9 @@
   <title>Subsystem Analysis</title>
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .hidden {
-      display: none;
-    }
-    .choice-buttons {
-      margin-top: 15px;
-    }
-    .choice-buttons button {
-      margin-right: 10px;
-    }
+    .hidden { display: none; }
+    .choice-buttons { margin-top: 15px; }
+    .choice-buttons button { margin-right: 10px; }
   </style>
 </head>
 <body>
@@ -54,14 +48,12 @@
 
     <!-- Type Symptoms Input -->
     <div id="typeSymptomsContainer" class="hidden">
-      <label for="typedSymptoms">Enter Symptoms:</label>
       <textarea id="typedSymptoms" rows="4" cols="50" placeholder="Type symptoms here..."></textarea>
       <button type="button" id="analyzeTypedSymptoms">Analyze</button>
     </div>
 
     <!-- Choose Symptoms List -->
     <div id="chooseSymptomsContainer" class="hidden">
-      <h3>Available Symptoms</h3>
       <div id="symptomsList"></div>
       <button type="button" id="analyzeChosenSymptoms">Analyze</button>
     </div>
@@ -86,60 +78,101 @@
     const typeSymptomsContainer = document.getElementById("typeSymptomsContainer");
     const chooseSymptomsContainer = document.getElementById("chooseSymptomsContainer");
 
-    // When subsystem is chosen, show image + input choice, but NOT symptoms yet
-    subSystemSelect.addEventListener("change", () => {
-      const selectedSubSystem = subSystemSelect.value;
-      if (selectedSubSystem) {
-        // Show system image
-        systemImage.src = `/images/${selectedSubSystem}.png`;
-        systemImageContainer.classList.remove("hidden");
+    const resultsDiv = document.getElementById("results");
+    const resultsContent = document.getElementById("resultsContent");
 
-        // Show input method choice
-        inputChoice.classList.remove("hidden");
+    // --- When system changes, load subsystems ---
+    systemSelect.addEventListener("change", async () => {
+      const selectedSystem = systemSelect.value;
+      subSystemSelect.innerHTML = '<option value="">-- Select a Sub-System --</option>';
 
-        // Hide inputs until user chooses
-        typeSymptomsContainer.classList.add("hidden");
-        chooseSymptomsContainer.classList.add("hidden");
+      if (!selectedSystem) return;
+
+      try {
+        const res = await fetch(`/api/subsystems?system=${encodeURIComponent(selectedSystem)}`);
+        const subsystems = await res.json();
+        subsystems.forEach(sub => {
+          const option = document.createElement("option");
+          option.value = sub;
+          option.textContent = sub;
+          subSystemSelect.appendChild(option);
+        });
+      } catch(err) {
+        console.error(err);
       }
     });
 
-    // If "Type Symptoms" is chosen
+    // --- When subsystem is chosen ---
+    subSystemSelect.addEventListener("change", () => {
+      if (!subSystemSelect.value) return;
+      systemImage.src = `/images/${subSystemSelect.value}.png`;
+      systemImageContainer.classList.remove("hidden");
+      inputChoice.classList.remove("hidden");
+      typeSymptomsContainer.classList.add("hidden");
+      chooseSymptomsContainer.classList.add("hidden");
+      resultsDiv.classList.add("hidden");
+    });
+
+    // --- Input choice buttons ---
     typeSymptomsBtn.addEventListener("click", () => {
       typeSymptomsContainer.classList.remove("hidden");
       chooseSymptomsContainer.classList.add("hidden");
+      resultsDiv.classList.add("hidden");
     });
 
-    // If "Choose Symptoms" is chosen
-    chooseSymptomsBtn.addEventListener("click", () => {
-      chooseSymptomsContainer.classList.remove("hidden");
+    chooseSymptomsBtn.addEventListener("click", async () => {
       typeSymptomsContainer.classList.add("hidden");
+      chooseSymptomsContainer.classList.remove("hidden");
+      resultsDiv.classList.add("hidden");
 
-      // Example: dynamically load symptoms
       const selectedSystem = systemSelect.value;
       const selectedSubSystem = subSystemSelect.value;
 
-      fetch(`/get-symptoms?system=${selectedSystem}&subsystem=${selectedSubSystem}`)
-        .then(res => res.json())
-        .then(symptoms => {
-          const symptomsList = document.getElementById("symptomsList");
-          symptomsList.innerHTML = "";
-          symptoms.forEach(symptom => {
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.value = symptom;
-            checkbox.id = `symptom-${symptom}`;
-            
-            const label = document.createElement("label");
-            label.htmlFor = checkbox.id;
-            label.textContent = symptom;
+      const res = await fetch(`/api/symptoms?system=${encodeURIComponent(selectedSystem)}&subsystem=${encodeURIComponent(selectedSubSystem)}`);
+      const symptoms = await res.json();
 
-            const div = document.createElement("div");
-            div.appendChild(checkbox);
-            div.appendChild(label);
-            symptomsList.appendChild(div);
-          });
-        });
+      const symptomsList = document.getElementById("symptomsList");
+      symptomsList.innerHTML = "";
+      symptoms.forEach(symptom => {
+        const div = document.createElement("div");
+        div.innerHTML = `<input type="checkbox" value="${symptom}" id="symptom-${symptom}">
+                         <label for="symptom-${symptom}">${symptom}</label>`;
+        symptomsList.appendChild(div);
+      });
     });
+
+    // --- Analyze typed symptoms ---
+    document.getElementById("analyzeTypedSymptoms").addEventListener("click", async () => {
+      const typed = document.getElementById("typedSymptoms").value.trim();
+      if (!typed) return alert("Enter symptoms");
+
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symptoms: typed.split(',').map(s => s.trim()) })
+      });
+      const data = await res.json();
+      showResults(data);
+    });
+
+    // --- Analyze chosen symptoms ---
+    document.getElementById("analyzeChosenSymptoms").addEventListener("click", async () => {
+      const checked = Array.from(document.querySelectorAll("#symptomsList input:checked")).map(cb => cb.value);
+      if (checked.length === 0) return alert("Select at least one symptom");
+
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symptoms: checked })
+      });
+      const data = await res.json();
+      showResults(data);
+    });
+
+    function showResults(data) {
+      resultsDiv.classList.remove("hidden");
+      resultsContent.innerHTML = JSON.stringify(data, null, 2);
+    }
   </script>
 </body>
 </html>
