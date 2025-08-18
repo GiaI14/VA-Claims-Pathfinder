@@ -21,7 +21,7 @@ const symptomRoutes = require('./routes/symptomRoutes');
 const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
 const subSystemRoutes = require('./routes/subSystemRoutes');
-const VaDisabilityRoutes = require('./routes/VaDisabilityRoutes');
+const vaDisabilityRoutes = require('./routes/vaDisabilityRoutes');
 
 dotenv.config();
 
@@ -195,7 +195,7 @@ app.use(registrationRoutes);
 app.use('/', symptomRoutes);
 app.use('/auth', authRoutes);
 app.use(subSystemRoutes);
-app.use(VaDisabilityRoutes);
+app.use(vaDisabilityRoutes);
 
 app.get('/', (req, res) => {
   res.render('index', {
@@ -271,8 +271,8 @@ app.get('/subSystem', async (req, res) => {
   }
 });
 
-app.get('/VaDisabilityTest', (req, res) => {
-  res.render('VaDisabilityTest', { 
+app.get('/vaDisabilityTest', (req, res) => {
+  res.render('vaDisabilityTest', { 
     csrfToken: req.csrfToken(),
     nonce: res.locals.nonce, 
   });
