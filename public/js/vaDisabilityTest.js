@@ -20,6 +20,21 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
+  // ------------------- HELPER: toggle input sections -------------------
+  function toggleSymptomInput(entry, selectedValue) {
+    const typingInput = entry.querySelector('.typed-symptoms');
+    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
+    if (!typingInput || !dynamicList) return;
+
+    if (selectedValue === 'typing') {
+      typingInput.style.display = 'inline-block';
+      dynamicList.style.display = 'none';
+    } else if (selectedValue === 'selecting') {
+      typingInput.style.display = 'none';
+      dynamicList.style.display = 'block';
+    }
+  }
+
   // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
 
@@ -59,10 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     typingInput.type = 'text';
     typingInput.className = 'typed-symptoms';
     typingInput.placeholder = 'Enter symptoms separated by commas';
+    typingInput.style.display = 'none'; // hidden initially
 
     // List container
     const dynamicList = document.createElement('div');
     dynamicList.className = 'dynamic-symptoms-list';
+    dynamicList.style.display = 'none'; // hidden initially
 
     // Remove button
     const removeBtn = document.createElement('button');
@@ -80,21 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
     entry.appendChild(removeBtn);
     symptomEntriesContainer.appendChild(entry);
 
-    // Hide inputs initially until radio is selected
-    typingInput.style.display = 'none';
-    dynamicList.style.display = 'none';
-
     // Radio button toggle logic
     const radios = inputMethodDiv.querySelectorAll(`input[name="${radioName}"]`);
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
-        if (radio.value === 'typing' && radio.checked) {
-          typingInput.style.display = 'inline-block';
-          dynamicList.style.display = 'none';
-        } else if (radio.value === 'selecting' && radio.checked) {
-          typingInput.style.display = 'none';
-          dynamicList.style.display = 'block';
-        }
+        toggleSymptomInput(entry, radio.value);
       });
     });
   }
@@ -205,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
     entries.forEach(entry => {
       const system = entry.querySelector('.system-select').value;
       const subSystem = entry.querySelector('.sub-system-select').value;
-
       const inputMethod = entry.querySelector('input[type="radio"]:checked');
       let chosenSymptoms = [];
 
@@ -290,4 +296,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultsDiv.scrollIntoView({ behavior: 'smooth' });
   }
+
 });
