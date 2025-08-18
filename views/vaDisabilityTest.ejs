@@ -22,7 +22,7 @@
       <select class="system-select" required>
   <option value="" disabled selected hidden>Select a system</option>
   <% const systems = typeof systemsFromServer !== 'undefined' ? systemsFromServer : []; %>
-  <% systems.forEach(system => { %>
+  <% systemsFromServer.forEach(system => { %>
     <option value="<%= system %>"><%= system %></option>
   <% }) %>
 </select>
