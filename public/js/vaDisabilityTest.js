@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const addEntryButton = document.getElementById('addEntryButton');
+  const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
 
   const systemImages = {
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
+  // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
 
   function addSymptomEntry() {
@@ -46,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Input method radio (always visible)
     const inputMethodDiv = document.createElement('div');
+    const radioName = `inputMethod${Date.now()}`;
     inputMethodDiv.innerHTML = `
-      <label><input type="radio" name="inputMethod${Date.now()}" value="typing"> Type Symptoms</label>
-      <label><input type="radio" name="inputMethod${Date.now()}" value="selecting"> Select from List</label>
+      <label><input type="radio" name="${radioName}" value="typing"> Type Symptoms</label>
+      <label><input type="radio" name="${radioName}" value="selecting"> Select from List</label>
     `;
 
     // Text input
@@ -76,144 +79,215 @@ document.addEventListener('DOMContentLoaded', () => {
     entry.appendChild(dynamicList);
     entry.appendChild(removeBtn);
     symptomEntriesContainer.appendChild(entry);
+
+    // Hide inputs initially until radio is selected
+    typingInput.style.display = 'none';
+    dynamicList.style.display = 'none';
+
+    // Radio button toggle logic
+    const radios = inputMethodDiv.querySelectorAll(`input[name="${radioName}"]`);
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'typing' && radio.checked) {
+          typingInput.style.display = 'inline-block';
+          dynamicList.style.display = 'none';
+        } else if (radio.value === 'selecting' && radio.checked) {
+          typingInput.style.display = 'none';
+          dynamicList.style.display = 'block';
+        }
+      });
+    });
   }
 
-  // Event delegation
-  symptomEntriesContainer.addEventListener('change', async (e) => {
+  // ------------------- REMOVE ENTRY -------------------
+  symptomEntriesContainer.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('remove-entry-button')) return;
+    removeSymptomEntry(e.target);
+  });
+
+  function removeSymptomEntry(button) {
+    const entry = button.closest('.symptom-entry');
+    const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
+
+    if (allEntries.length > 1) {
+      entry.remove();
+    } else {
+      entry.querySelector('.typed-symptoms').value = '';
+      entry.querySelector('.system-select').selectedIndex = 0;
+      entry.querySelector('.sub-system-select').selectedIndex = 0;
+      const img = entry.querySelector('.system-image');
+      img.src = '';
+      img.style.display = 'none';
+      const list = entry.querySelector('.dynamic-symptoms-list');
+      list.innerHTML = '';
+    }
+
+    resultsDiv.innerHTML = '';
+  }
+
+  // ------------------- SYSTEM SELECT: fetch sub-systems -------------------
+  symptomEntriesContainer.addEventListener('change', async e => {
+    if (!e.target.classList.contains('system-select')) return;
+
     const entry = e.target.closest('.symptom-entry');
     if (!entry) return;
 
-    const systemSelect = entry.querySelector('.system-select');
+    const system = e.target.value;
     const subSystemSelect = entry.querySelector('.sub-system-select');
-    const systemImg = entry.querySelector('.system-image');
-    const typingInput = entry.querySelector('.typed-symptoms');
-    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
+    const systemImage = entry.querySelector('.system-image');
 
-    // System select → load image + sub-systems
-    if (e.target.classList.contains('system-select')) {
-      const system = e.target.value;
-      systemImg.style.display = systemImages[system] ? 'inline-block' : 'none';
-      systemImg.src = systemImages[system] ? `/images/${systemImages[system]}` : '';
-      subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
-      dynamicList.innerHTML = '';
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
-      if (!system) return;
-
-      try {
-        const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-        const subs = await res.json();
-        subs.forEach(sub => {
-          const option = document.createElement('option');
-          option.value = sub;
-          option.textContent = sub;
-          subSystemSelect.appendChild(option);
-        });
-      } catch (err) {
-        console.error(err);
-      }
+    if (system && systemImages[system]) {
+      systemImage.src = `/images/${systemImages[system]}`;
+      systemImage.style.display = 'inline-block';
+    } else {
+      systemImage.src = '';
+      systemImage.style.display = 'none';
     }
 
-    // Sub-system select → load symptoms list if input method = selecting
-    if (e.target.classList.contains('sub-system-select')) {
-      const method = entry.querySelector('input[type="radio"]:checked')?.value;
-      if (method === 'selecting') await loadSymptomsList(entry);
-    }
+    if (!system) return;
 
-    // Input method change
-    if (e.target.type === 'radio') {
-      if (e.target.value === 'typing') {
-        typingInput.style.display = 'inline-block';
-        dynamicList.style.display = 'none';
-      } else {
-        typingInput.style.display = 'none';
-        dynamicList.style.display = 'block';
-        await loadSymptomsList(entry);
-      }
+    try {
+      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+      if (!res.ok) throw new Error('Failed to fetch sub-systems');
+      const subSystems = await res.json();
+      subSystems.forEach(sub => {
+        const option = document.createElement('option');
+        option.value = sub;
+        option.textContent = sub;
+        subSystemSelect.appendChild(option);
+      });
+    } catch (err) {
+      console.error('Error loading sub-systems:', err);
+      alert('Error loading sub-systems');
     }
   });
 
-  async function loadSymptomsList(entry) {
-    const subSystem = entry.querySelector('.sub-system-select').value;
+  // ------------------- SUB-SYSTEM SELECT: fetch symptoms -------------------
+  symptomEntriesContainer.addEventListener('change', async e => {
+    if (!e.target.classList.contains('sub-system-select')) return;
+
+    const entry = e.target.closest('.symptom-entry');
+    const subSystem = e.target.value;
     const dynamicList = entry.querySelector('.dynamic-symptoms-list');
     dynamicList.innerHTML = '';
+
     if (!subSystem) return;
 
     try {
       const res = await fetch(`/api/symptoms/${encodeURIComponent(subSystem)}`);
+      if (!res.ok) throw new Error('Failed to fetch symptoms');
       const symptoms = await res.json();
-      symptoms.forEach(s => {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" value="${s}"> ${s}`;
-        dynamicList.appendChild(label);
-      });
-    } catch (err) {
-      console.error(err);
-      dynamicList.innerHTML = '<p>Failed to load symptoms</p>';
-    }
-  }
 
-  // Remove entry
-  symptomEntriesContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('remove-entry-button')) {
-      e.target.closest('.symptom-entry').remove();
+      const frag = document.createDocumentFragment();
+      symptoms.forEach(symptom => {
+        const label = document.createElement('label');
+        label.className = 'symptom-item';
+        label.innerHTML = `<input type="checkbox" value="${symptom}"> ${symptom}`;
+        frag.appendChild(label);
+      });
+      dynamicList.appendChild(frag);
+    } catch (err) {
+      console.error('Failed to load symptoms:', err);
+      dynamicList.innerHTML = '<p>Failed to load symptoms</p>';
     }
   });
 
-  // Analyze symptoms
-  document.getElementById('symptom-form').addEventListener('submit', async (e) => {
+  // ------------------- ANALYZE SYMPTOMS -------------------
+  analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
-    const csrfToken = document.querySelector('input[name="_csrf"]').value;
-    const entries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
 
-    const payload = [];
-    for (const entry of entries) {
-      const system = entry.querySelector('.system-select').value.trim();
-      const subSystem = entry.querySelector('.sub-system-select').value.trim();
-      const method = entry.querySelector('input[type="radio"]:checked')?.value;
-      let symptoms = [];
+    const csrfToken = document.getElementById("csrfToken").value;
+    const entries = document.querySelectorAll('.symptom-entry');
+    const data = [];
 
-      if (method === 'typing') {
-        symptoms = entry.querySelector('.typed-symptoms').value.split(',').map(s => s.trim()).filter(Boolean);
-      } else {
-        symptoms = Array.from(entry.querySelectorAll('.dynamic-symptoms-list input[type="checkbox"]:checked')).map(cb => cb.value);
+    entries.forEach(entry => {
+      const system = entry.querySelector('.system-select').value;
+      const subSystem = entry.querySelector('.sub-system-select').value;
+
+      const inputMethod = entry.querySelector('input[type="radio"]:checked');
+      let chosenSymptoms = [];
+
+      if (!inputMethod) return;
+
+      if (inputMethod.value === 'typing') {
+        const typed = entry.querySelector('.typed-symptoms').value;
+        chosenSymptoms = typed.split(',').map(s => s.trim()).filter(s => s);
+      } else if (inputMethod.value === 'selecting') {
+        chosenSymptoms = Array.from(entry.querySelectorAll('.dynamic-symptoms-list input[type="checkbox"]:checked'))
+          .map(cb => cb.value);
       }
 
-      if (system && subSystem && symptoms.length > 0) payload.push({ system, subSystem, symptoms });
+      if (system && subSystem && chosenSymptoms.length > 0) {
+        data.push({ system, subSystem, chosenSymptoms });
+      }
+    });
+
+    if (data.length === 0) {
+      alert('Please select a system, sub-system, and symptoms.');
+      return;
     }
 
-    if (!payload.length) return alert('Please fill in all entries correctly.');
-
     try {
-      const res = await fetch('/api/analyze-symptoms', {
+      const res = await fetch('/analyze-symptoms', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-        body: JSON.stringify(payload),
-        credentials: 'include'
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify(data),
+        credentials: 'same-origin'
       });
+
+      if (!res.ok) throw new Error('Failed to analyze symptoms');
       const result = await res.json();
       displayResults(result);
     } catch (err) {
-      console.error(err);
-      resultsDiv.innerHTML = '<p>Error analyzing symptoms.</p>';
+      console.error('Error analyzing symptoms:', err);
+      resultsDiv.innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
     }
   });
 
+  // ------------------- DISPLAY RESULTS -------------------
   function displayResults(data) {
     resultsDiv.innerHTML = '';
-    if (!data.length) return resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
+    if (!data || data.length === 0) {
+      resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
+      return;
+    }
 
     data.forEach(entry => {
       const section = document.createElement('div');
       section.className = 'result-section';
-      section.innerHTML = `<h3>${entry.system} / ${entry.subSystem}</h3>`;
-      if (!entry.possibleConditions?.length) section.innerHTML += '<p>No conditions matched.</p>';
-      else {
+
+      let html = `<h3>${entry.system}</h3>`;
+
+      if (entry.message) {
+        html += `<p>${entry.message}</p>`;
+      } else if (entry.possibleConditions?.length > 0) {
+        html += `<div class="conditions-container">`;
         entry.possibleConditions.forEach(cond => {
-          section.innerHTML += `<div>${cond.condition_name} (${cond.medical_code}) - ${cond.match_percentage.toFixed(2)}%</div>`;
+          html += `
+            <div class="condition-block">
+              <div class="condition-title">${cond.condition_name} (${cond.medical_code}) - ${cond.match_percentage.toFixed(2)}% match</div>
+              ${cond.presumptive_raw || cond.qualifying_circumstance || cond.evidence_basis ? `
+              <div class="condition-details">
+                ${cond.presumptive_raw ? `<div><strong>Presumptive Type:</strong> ${cond.presumptive_raw}</div>` : ''}
+                ${cond.qualifying_circumstance ? `<div><strong>Qualifying Circumstances:</strong> ${cond.qualifying_circumstance}</div>` : ''}
+                ${cond.evidence_basis ? `<div><strong>Evidence Basis:</strong> ${cond.evidence_basis}</div>` : ''}
+              </div>` : ''}
+            </div>`;
         });
+        html += `</div>`;
+      } else {
+        html += '<p>No conditions matched.</p>';
       }
+
+      section.innerHTML = html;
       resultsDiv.appendChild(section);
     });
+
     resultsDiv.scrollIntoView({ behavior: 'smooth' });
   }
 });
