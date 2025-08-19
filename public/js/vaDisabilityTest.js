@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
-
+  const typingInput = entry.querySelector('.typed-symptoms');
+  const dynamicList = entry.querySelector('.dynamic-symptoms-list');
+  
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
     'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
