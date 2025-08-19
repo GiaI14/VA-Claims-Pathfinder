@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
-  
+
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
     'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
     'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
     'Endocrine system': '512px-Endocrine_English.svg.png',
-    'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
+    'Gynecological conditions and disorders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
     'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
     'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
     'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
@@ -20,37 +20,30 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
+  // ------------------- TOGGLE INPUT METHOD -------------------
+  function toggleSymptomInput(entry, value) {
+    const typingInput = entry.querySelector('.typed-symptoms');
+    const listInput = entry.querySelector('.dynamic-symptoms-list');
 
- // ------------------- RADIO BUTTON TOGGLE LOGIC -------------------
-function toggleSymptomInput(entry, value) {
-  const typingInput = entry.querySelector('.typing-input-container');
-  const listInput = entry.querySelector('.dynamic-symptoms-container');
-  const section = entry.querySelector('.symptom-input-section');
-
-  // Always show wrapper once a choice is made
-  section.style.display = 'block';
-
-  if (value === 'typing') {
-    typingInput.style.display = 'block';
-    listInput.style.display = 'none';
-  } else if (value === 'selecting') {
-    typingInput.style.display = 'none';
-    listInput.style.display = 'block';
+    if (value === 'typing') {
+      typingInput.style.display = 'block';
+      listInput.style.display = 'none';
+    } else if (value === 'selecting') {
+      typingInput.style.display = 'none';
+      listInput.style.display = 'block';
+    }
   }
-}
 
-// Hook up radios for each entry
-function bindRadios(entry) {
-  const radios = entry.querySelectorAll('input[type="radio"]');
-  radios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      toggleSymptomInput(entry, radio.value);
+  function bindRadios(entry) {
+    const radios = entry.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        toggleSymptomInput(entry, radio.value);
+      });
     });
-  });
-}
+  }
 
-// Bind existing entries on page load
-document.querySelectorAll('.symptom-entry').forEach(bindRadios);
+  document.querySelectorAll('.symptom-entry').forEach(bindRadios);
 
   // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
@@ -72,13 +65,13 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     subSystemSelect.className = 'sub-system-select';
     subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
-    // System image
+    // Image
     const systemImg = document.createElement('img');
     systemImg.className = 'system-image';
     systemImg.style.display = 'none';
     systemImg.style.cursor = 'pointer';
 
-    // Input method radio (always visible)
+    // Input method radio
     const inputMethodDiv = document.createElement('div');
     const radioName = `inputMethod${Date.now()}`;
     inputMethodDiv.innerHTML = `
@@ -86,7 +79,7 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
       <label><input type="radio" name="${radioName}" value="selecting"> Select from List</label>
     `;
 
-    // Text input
+    // Typed input
     const typingInput = document.createElement('input');
     typingInput.type = 'text';
     typingInput.className = 'typed-symptoms';
@@ -104,7 +97,7 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     removeBtn.textContent = 'Remove Entry';
     removeBtn.className = 'remove-entry-button';
 
-    // Append elements
+    // Append all
     entry.appendChild(systemSelect);
     entry.appendChild(subSystemSelect);
     entry.appendChild(systemImg);
@@ -114,18 +107,13 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     entry.appendChild(removeBtn);
     symptomEntriesContainer.appendChild(entry);
 
-    // Bind radio buttons for this new entry
     bindRadios(entry);
   }
 
   // ------------------- REMOVE ENTRY -------------------
-  symptomEntriesContainer.addEventListener('click', (e) => {
+  symptomEntriesContainer.addEventListener('click', e => {
     if (!e.target.classList.contains('remove-entry-button')) return;
-    removeSymptomEntry(e.target);
-  });
-
-  function removeSymptomEntry(button) {
-    const entry = button.closest('.symptom-entry');
+    const entry = e.target.closest('.symptom-entry');
     const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
 
     if (allEntries.length > 1) {
@@ -137,20 +125,16 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
       const img = entry.querySelector('.system-image');
       img.src = '';
       img.style.display = 'none';
-      const list = entry.querySelector('.dynamic-symptoms-list');
-      list.innerHTML = '';
+      entry.querySelector('.dynamic-symptoms-list').innerHTML = '';
     }
-
     resultsDiv.innerHTML = '';
-  }
+  });
 
-  // ------------------- SYSTEM SELECT: fetch sub-systems -------------------
+  // ------------------- SYSTEM SELECT -------------------
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('system-select')) return;
 
     const entry = e.target.closest('.symptom-entry');
-    if (!entry) return;
-
     const system = e.target.value;
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
@@ -183,7 +167,7 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     }
   });
 
-  // ------------------- SUB-SYSTEM SELECT: fetch symptoms -------------------
+  // ------------------- SUB-SYSTEM SELECT -------------------
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('sub-system-select')) return;
 
@@ -216,7 +200,6 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
   // ------------------- ANALYZE SYMPTOMS -------------------
   analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
-
     const csrfToken = document.getElementById("csrfToken").value;
     const entries = document.querySelectorAll('.symptom-entry');
     const data = [];
@@ -224,16 +207,14 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     entries.forEach(entry => {
       const system = entry.querySelector('.system-select').value;
       const subSystem = entry.querySelector('.sub-system-select').value;
-
       const inputMethod = entry.querySelector('input[type="radio"]:checked');
-      let chosenSymptoms = [];
-
       if (!inputMethod) return;
 
+      let chosenSymptoms = [];
       if (inputMethod.value === 'typing') {
         const typed = entry.querySelector('.typed-symptoms').value;
         chosenSymptoms = typed.split(',').map(s => s.trim()).filter(s => s);
-      } else if (inputMethod.value === 'selecting') {
+      } else {
         chosenSymptoms = Array.from(entry.querySelectorAll('.dynamic-symptoms-list input[type="checkbox"]:checked'))
           .map(cb => cb.value);
       }
@@ -277,14 +258,14 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     }
 
     data.forEach(entry => {
-    const div = document.createElement('div');
-    div.className = 'result-item';
-    div.innerHTML = `
-      <h4>${entry.condition}</h4>
-      <p>Confidence: ${entry.confidence || 'N/A'}%</p>
-      <p>Matched Symptoms: ${entry.matchedSymptoms?.join(', ') || 'None'}</p>
-    `;
-    resultsDiv.appendChild(div);
-  });
-}
+      const div = document.createElement('div');
+      div.className = 'result-item';
+      div.innerHTML = `
+        <h4>${entry.condition}</h4>
+        <p>Confidence: ${entry.confidence || 'N/A'}%</p>
+        <p>Matched Symptoms: ${entry.matchedSymptoms?.join(', ') || 'None'}</p>
+      `;
+      resultsDiv.appendChild(div);
+    });
+  }
 });
