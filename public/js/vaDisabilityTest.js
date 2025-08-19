@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
+
+   
   // ------------------- TOGGLE INPUT METHOD -------------------
   function toggleSymptomInput(entry, value) {
     const typingInput = entry.querySelector('.typed-symptoms');
@@ -44,6 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.symptom-entry').forEach(bindRadios);
 
+   // ------------------- ADD ENTRY -------------------
+  addEntryButton.addEventListener('click', addSymptomEntry);
+
+  function addSymptomEntry() {
+    const entry = document.createElement('div');
+    entry.className = 'symptom-entry';
+
+    // System select
+    const systemSelect = document.createElement('select');
+    systemSelect.className = 'system-select';
+    systemSelect.innerHTML = `<option value="">Select a system</option>`;
+    Object.keys(systemImages).forEach(sys => {
+      systemSelect.innerHTML += `<option value="${sys}">${sys}</option>`;
+    });
 
     // Sub-system select
     const subSystemSelect = document.createElement('select');
