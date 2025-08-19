@@ -289,3 +289,4 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
     resultsDiv.appendChild(div);
   });
 }
+});
