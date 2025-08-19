@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
+  const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
 
