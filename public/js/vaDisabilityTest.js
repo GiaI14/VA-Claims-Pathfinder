@@ -278,4 +278,14 @@ document.querySelectorAll('.symptom-entry').forEach(bindRadios);
       return;
     }
 
-    data.forEach(entry =>
+    data.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    div.innerHTML = `
+      <h4>${entry.condition}</h4>
+      <p>Confidence: ${entry.confidence || 'N/A'}%</p>
+      <p>Matched Symptoms: ${entry.matchedSymptoms?.join(', ') || 'None'}</p>
+    `;
+    resultsDiv.appendChild(div);
+  });
+}
