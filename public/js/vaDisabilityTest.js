@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-
-   
   // ------------------- TOGGLE INPUT METHOD -------------------
   function toggleSymptomInput(entry, value) {
     const typingInput = entry.querySelector('.typed-symptoms');
@@ -44,85 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Bind radios for the first entry
   document.querySelectorAll('.symptom-entry').forEach(bindRadios);
-
-    // System select
-    const systemSelect = document.createElement('select');
-    systemSelect.className = 'system-select';
-    systemSelect.innerHTML = `<option value="">Select a system</option>`;
-    Object.keys(systemImages).forEach(sys => {
-      systemSelect.innerHTML += `<option value="${sys}">${sys}</option>`;
-    });
-
-    // Sub-system select
-    const subSystemSelect = document.createElement('select');
-    subSystemSelect.className = 'sub-system-select';
-    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
-
-    // Image
-    const systemImg = document.createElement('img');
-    systemImg.className = 'system-image';
-    systemImg.style.display = 'none';
-    systemImg.style.cursor = 'pointer';
-
-    // Input method radio
-    const inputMethodDiv = document.createElement('div');
-    const radioName = `inputMethod${Date.now()}`;
-    inputMethodDiv.innerHTML = `
-      <label><input type="radio" name="${radioName}" value="typing"> Type Symptoms</label>
-      <label><input type="radio" name="${radioName}" value="selecting"> Select Symptoms </label>
-    `;
-
-    // Typed input
-    const typingInput = document.createElement('input');
-    typingInput.type = 'text';
-    typingInput.className = 'typed-symptoms';
-    typingInput.placeholder = 'Enter symptoms separated by commas';
-    typingInput.style.display = 'none';
-
-    // List container
-    const dynamicList = document.createElement('div');
-    dynamicList.className = 'dynamic-symptoms-list';
-    dynamicList.style.display = 'none';
-
-    // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.textContent = 'Remove Entry';
-    removeBtn.className = 'remove-entry-button';
-
-    // Append all
-    entry.appendChild(systemSelect);
-    entry.appendChild(subSystemSelect);
-    entry.appendChild(systemImg);
-    entry.appendChild(inputMethodDiv);
-    entry.appendChild(typingInput);
-    entry.appendChild(dynamicList);
-    entry.appendChild(removeBtn);
-    symptomEntriesContainer.appendChild(entry);
-
-    bindRadios(entry);
-  }
-
-  // ------------------- REMOVE ENTRY -------------------
-  symptomEntriesContainer.addEventListener('click', e => {
-    if (!e.target.classList.contains('remove-entry-button')) return;
-    const entry = e.target.closest('.symptom-entry');
-    const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
-
-    if (allEntries.length > 1) {
-      entry.remove();
-    } else {
-      entry.querySelector('.typed-symptoms').value = '';
-      entry.querySelector('.system-select').selectedIndex = 0;
-      entry.querySelector('.sub-system-select').selectedIndex = 0;
-      const img = entry.querySelector('.system-image');
-      img.src = '';
-      img.style.display = 'none';
-      entry.querySelector('.dynamic-symptoms-list').innerHTML = '';
-    }
-    resultsDiv.innerHTML = '';
-  });
 
   // ------------------- SYSTEM SELECT -------------------
   symptomEntriesContainer.addEventListener('change', async e => {
@@ -133,8 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const subSystemSelect = entry.querySelector('.sub-system-select');
     const systemImage = entry.querySelector('.system-image');
 
+    // Reset sub-system dropdown
     subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
+    // Show system image
     if (system && systemImages[system]) {
       systemImage.src = `/images/${systemImages[system]}`;
       systemImage.style.display = 'inline-block';
@@ -149,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
       if (!res.ok) throw new Error('Failed to fetch sub-systems');
       const subSystems = await res.json();
+
       subSystems.forEach(sub => {
         const option = document.createElement('option');
         option.value = sub;
