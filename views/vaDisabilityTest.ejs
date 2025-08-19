@@ -47,22 +47,23 @@
 
             <input type="text" class="typed-symptoms" placeholder="Enter symptoms separated by commas" style="display:none;">
             <div class="dynamic-symptoms-list" style="display:none;"></div>
-
+             <div id="dynamicSymptomsContainer" style="margin-top:20px;">
+          <h2>Symptoms for Selected Sub-System</h2>
+          <div id="dynamicSymptomsList"></div>
+        </div> 
             <div class="bottom-row">
               <button type="button" class="remove-entry-button">Remove Entry</button>
             </div>
           </div>
         </div>
 
+
         <div class="form-actions">
           <button type="button" id="addEntryButton">Add Entry</button>
           <button type="button" id="analyzeButton">Analyze Symptoms</button>
         </div>
 
-        <div id="dynamicSymptomsContainer" style="margin-top:20px;">
-          <h2>Symptoms for Selected Sub-System</h2>
-          <div id="dynamicSymptomsList"></div>
-        </div>
+       
 
       </form>
 
