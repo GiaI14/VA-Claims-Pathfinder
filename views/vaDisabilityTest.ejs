@@ -76,7 +76,7 @@
     <%- include('includes/footer') %>
   </div>
 
-  <script>const systems = <%- JSON.stringify(systemsFromServer) %>;</script>
+  <script nonce="<%= nonce %>">const systems = <%- JSON.stringify(systemsFromServer) %>;</script>
   <script src="/js/vaDisasilityTest.js" nonce="<%= nonce %>" defer></script>
 </body>
 </html>
