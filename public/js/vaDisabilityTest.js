@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const radioName = `inputMethod${Date.now()}`;
     inputMethodDiv.innerHTML = `
       <label><input type="radio" name="${radioName}" value="typing"> Type Symptoms</label>
-      <label><input type="radio" name="${radioName}" value="selecting"> Select from List</label>
+      <label><input type="radio" name="${radioName}" value="selecting"> Select symptoms </label>
     `;
 
     // Typed input
