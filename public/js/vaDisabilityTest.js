@@ -28,9 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const typingContainer = entry.querySelector('.typing-input-container');
   const listContainer = entry.querySelector('.dynamic-symptoms-container');
 
-  if (!section || !typingContainer || !listContainer) return;
+  console.log("Toggle called with:", value, { section, typingContainer, listContainer });
 
-  // Always show the wrapper when a method is chosen
+  if (!section || !typingContainer || !listContainer) {
+    console.warn("Could not find containers inside entry:", entry);
+    return;
+  }
+
   section.style.display = 'block';
 
   if (value === 'typing') {
@@ -41,18 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
     listContainer.style.display = 'block';
   }
 }
-  function bindRadios(entry) {
-    const radios = entry.querySelectorAll('input[type="radio"]');
-    radios.forEach(radio => {
-      radio.addEventListener('change', () => {
-        toggleSymptomInput(entry, radio.value);
-      });
+
+ function bindRadios(entry) {
+  const radios = entry.querySelectorAll('input[type="radio"]');
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      toggleSymptomInput(entry, radio.value);
     });
-  }
+  });
+}
 
-  // Bind radios for all existing entries rendered by EJS
-  document.querySelectorAll('.symptom-entry').forEach(bindRadios);
-
+// Bind radios for all existing entries rendered by EJS
+document.querySelectorAll('.symptom-entry').forEach(bindRadios);
   // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
 
