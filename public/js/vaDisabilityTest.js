@@ -115,6 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ------------------- REMOVE ENTRY (FIX ADDED) -------------------
+  symptomEntriesContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('remove-entry-button')) {
+      e.preventDefault();
+      const entry = e.target.closest('.symptom-entry');
+      if (entry) {
+        entry.remove();
+      }
+    }
+  });
+
   // ------------------- ANALYZE SYMPTOMS -------------------
   analyzeButton.addEventListener('click', async e => {
     e.preventDefault();
