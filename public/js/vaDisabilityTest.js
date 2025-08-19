@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-  const addEntryButton = document.getElementById('addEntryButton');
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
 
@@ -46,13 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.querySelectorAll('.symptom-entry').forEach(bindRadios);
-
-   // ------------------- ADD ENTRY -------------------
-  addEntryButton.addEventListener('click', addSymptomEntry);
-
-  function addSymptomEntry() {
-    const entry = document.createElement('div');
-    entry.className = 'symptom-entry';
 
     // System select
     const systemSelect = document.createElement('select');
