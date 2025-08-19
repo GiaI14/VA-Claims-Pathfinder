@@ -22,31 +22,27 @@ document.addEventListener('DOMContentLoaded', () => {
     'Sense Organs': 'Sense-Organ.png',
   };
 
-  // ------------------- RADIO BUTTON TOGGLE LOGIC -------------------
-  function toggleSymptomInput(entry, value) {
+
+ // ------------------- RADIO BUTTON TOGGLE LOGIC -------------------
+function toggleSymptomInput(entry, value) {
+  const typingInput = entry.querySelector('.typing-input-container');
+  const listInput = entry.querySelector('.dynamic-symptoms-container');
   const section = entry.querySelector('.symptom-input-section');
-  const typingContainer = entry.querySelector('.typing-input-container');
-  const listContainer = entry.querySelector('.dynamic-symptoms-container');
 
-  console.log("Toggle called with:", value, { section, typingContainer, listContainer });
-
-  if (!section || !typingContainer || !listContainer) {
-    console.warn("Could not find containers inside entry:", entry);
-    return;
-  }
-
+  // Always show wrapper once a choice is made
   section.style.display = 'block';
 
   if (value === 'typing') {
-    typingContainer.style.display = 'block';
-    listContainer.style.display = 'none';
+    typingInput.style.display = 'block';
+    listInput.style.display = 'none';
   } else if (value === 'selecting') {
-    typingContainer.style.display = 'none';
-    listContainer.style.display = 'block';
+    typingInput.style.display = 'none';
+    listInput.style.display = 'block';
   }
 }
 
- function bindRadios(entry) {
+// Hook up radios for each entry
+function bindRadios(entry) {
   const radios = entry.querySelectorAll('input[type="radio"]');
   radios.forEach(radio => {
     radio.addEventListener('change', () => {
@@ -55,8 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }
 
-// Bind radios for all existing entries rendered by EJS
+// Bind existing entries on page load
 document.querySelectorAll('.symptom-entry').forEach(bindRadios);
+
   // ------------------- ADD ENTRY -------------------
   addEntryButton.addEventListener('click', addSymptomEntry);
 
