@@ -24,19 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ------------------- RADIO BUTTON TOGGLE LOGIC -------------------
   function toggleSymptomInput(entry, value) {
-    const typingInput = entry.querySelector('.typed-symptoms');
-    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
-    if (!typingInput || !dynamicList) return;
+  const section = entry.querySelector('.symptom-input-section');
+  const typingContainer = entry.querySelector('.typing-input-container');
+  const listContainer = entry.querySelector('.dynamic-symptoms-container');
 
-    if (value === 'typing') {
-      typingInput.style.display = 'inline-block';
-      dynamicList.style.display = 'none';
-    } else if (value === 'selecting') {
-      typingInput.style.display = 'none';
-      dynamicList.style.display = 'block';
-    }
+  if (!section || !typingContainer || !listContainer) return;
+
+  // Always show the wrapper when a method is chosen
+  section.style.display = 'block';
+
+  if (value === 'typing') {
+    typingContainer.style.display = 'block';
+    listContainer.style.display = 'none';
+  } else if (value === 'selecting') {
+    typingContainer.style.display = 'none';
+    listContainer.style.display = 'block';
   }
-
+}
   function bindRadios(entry) {
     const radios = entry.querySelectorAll('input[type="radio"]');
     radios.forEach(radio => {
