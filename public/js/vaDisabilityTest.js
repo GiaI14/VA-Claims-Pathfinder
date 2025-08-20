@@ -188,12 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('<hr>');
 
       div.innerHTML = `
-        <h3>System: ${entry.system} | Sub-System: ${entry.sub_system}</h3>
+        <h3>System: ${entry.system} | Sub-System: ${entry.subSystem}</h3>
         ${conditionsHtml}
       `;
     } else {
       div.innerHTML = `
-        <h3>System: ${entry.system} | Sub-System: ${entry.sub_system}</h3>
+        <h3>System: ${entry.system} | Sub-System: ${entry.subSystem}</h3>
         <p>${entry.message || 'No matching conditions found.'}</p>
       `;
     }
