@@ -46,6 +46,7 @@
 
 .system-image {
   coursor: zoom-in ! important;
+  display: inline-block;
 }
 
 #lightbox {
