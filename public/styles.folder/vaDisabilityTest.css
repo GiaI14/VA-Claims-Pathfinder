@@ -44,15 +44,6 @@
   margin-right: 6px;
 }
 
-.system-image {
-  transition: transform 0.3s ease; /* Smooth zoom on hover */
-  cursor: zoom-in !important;
-}
-
-.system-image:hover {
-  transform: scale(1.05); /* Slight zoom on hover */
-}
-
 #lightbox {
   display: none;
   position: fixed;
@@ -64,7 +55,6 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  cursor: zoom-out !important;
 }
 
 #lightbox img {
@@ -72,12 +62,16 @@
   max-height: 90%;
   border: 3px solid white;
   border-radius: 10px;
-  transition: transform 0.3s ease;
-  transform: scale(0); /* Start small for zoom effect */
+  coursor: zoom-in !important;
 }
 
-#lightbox.show img {
-  transform: scale(1); /* Zoom in */
+#lightbox .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  cursor: zoom-out !important;
 }
 
 
