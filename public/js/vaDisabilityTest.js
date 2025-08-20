@@ -171,23 +171,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ------------------- DISPLAY RESULTS -------------------
   function displayResults(data) {
-    resultsDiv.innerHTML = '';
-    if (!data || data.length === 0) {
-      resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
-      return;
+  resultsDiv.innerHTML = '';
+  if (!data || data.length === 0) {
+    resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
+    return;
+  }
+
+  data.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+
+    if (entry.possibleConditions && entry.possibleConditions.length > 0) {
+      const conditionsHtml = entry.possibleConditions.map(cond => `
+        <h4>${cond.condition_name} (Code: ${cond.medical_code})</h4>
+        <p>Confidence: ${cond.match_percentage}%</p>
+        <p>Matched Symptoms: ${cond.matched_symptoms.join(', ') || 'None'}</p>
+      `).join('<hr>');
+
+      div.innerHTML = `
+        <h3>System: ${entry.system} | Sub-System: ${entry.subSystem}</h3>
+        ${conditionsHtml}
+      `;
+    } else {
+      div.innerHTML = `
+        <h3>System: ${entry.system} | Sub-System: ${entry.subSystem}</h3>
+        <p>${entry.message || 'No matching conditions found.'}</p>
+      `;
     }
 
-    data.forEach(entry => {
-      const div = document.createElement('div');
-      div.className = 'result-item';
-      div.innerHTML = `
-        <h4>${entry.condition}</h4>
-        <p>Confidence: ${entry.confidence || 'N/A'}%</p>
-        <p>Matched Symptoms: ${entry.matchedSymptoms?.join(', ') || 'None'}</p>
-      `;
-      resultsDiv.appendChild(div);
-    });
-  }
+    resultsDiv.appendChild(div);
+  });
+}
+
 
   // ------------------- REMOVE ENTRY (RESET + CLEAR RESULTS) -------------------
   symptomEntriesContainer.addEventListener('click', (e) => {
