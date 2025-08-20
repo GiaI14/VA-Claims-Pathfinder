@@ -186,4 +186,54 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsDiv.appendChild(div);
     });
   }
+
+  // ------------------- REMOVE ENTRY (RESET + CLEAR RESULTS) -------------------
+  symptomEntriesContainer.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('remove-entry-button')) return;
+
+    const entry = e.target.closest('.symptom-entry');
+    if (!entry) return;
+
+    // Reset system select
+    const systemSelect = entry.querySelector('.system-select');
+    if (systemSelect) {
+      systemSelect.selectedIndex = 0;
+      // Trigger change to update image & sub-systems
+      const event = new Event('change', { bubbles: true });
+      systemSelect.dispatchEvent(event);
+    }
+
+    // Reset sub-system select
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    if (subSystemSelect) {
+      subSystemSelect.innerHTML = `<option value="" disabled selected hidden>Select a sub-system</option>`;
+    }
+
+    // Hide & clear image
+    const systemImage = entry.querySelector('.system-image');
+    if (systemImage) {
+      systemImage.src = '';
+      systemImage.style.display = 'none';
+    }
+
+    // Reset input method radios
+    entry.querySelectorAll('input[type="radio"]').forEach(r => (r.checked = false));
+
+    // Hide & clear typed input
+    const typedInput = entry.querySelector('.typed-symptoms');
+    if (typedInput) {
+      typedInput.value = '';
+      typedInput.style.display = 'none';
+    }
+
+    // Hide & clear dynamic symptoms
+    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
+    if (dynamicList) {
+      dynamicList.innerHTML = '';
+      dynamicList.style.display = 'none';
+    }
+
+    // Clear overall results
+    resultsDiv.innerHTML = '';
+  });
 });
