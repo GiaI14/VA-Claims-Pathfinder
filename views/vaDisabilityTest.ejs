@@ -40,7 +40,7 @@
 
               <img class="system-image" alt="System Image" style="display:none; cursor:pointer;" />
             </div>
-            <div id="lightbox"> </div>
+        
             <div class="input-method bottom-row">
               <label><input type="radio" name="inputMethod0" value="typing"> Type your symptoms</label>
               <label><input type="radio" name="inputMethod0" value="selecting"> Select symptoms from the list</label>
@@ -75,5 +75,10 @@
   <input type="hidden" id="csrfToken" value="<%= csrfToken %>">
 
   <script src="/js/vaDisabilityTest.js" nonce="<%= nonce %>" defer></script>
+
+<div id="lightbox">
+  <span class="close">&times;</span>
+  <img id="lightbox-img" src="" alt="Enlarged System Image">
+</div>
 </body>
 </html>
