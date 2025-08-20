@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-  const labels = document.querySelectorAll(".symptom-label");
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
 
@@ -50,14 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   closeBtn?.addEventListener('click', closeLightbox);
 
 
-  function updateLabels() {
-  if (systemDropdown.value && subSystemDropdown.value) {
-    labels.forEach(label => label.classList.add("bold-label"));
-  } else {
-    labels.forEach(label => label.classList.remove("bold-label"));
-  }
-}
-  
   // ------------------- TOGGLE INPUT METHOD -------------------
   function toggleSymptomInput(entry, value) {
     const typingInput = entry.querySelector('.typed-symptoms');
