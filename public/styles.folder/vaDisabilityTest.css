@@ -45,7 +45,7 @@
 }
 
 .system-image {
-  coursor: zoom-in !important;
+  coursor: zoom-in ! important;
 }
 
 #lightbox {
@@ -74,7 +74,7 @@
   right: 30px;
   color: white;
   font-size: 40px;
-  cursor: zoom-out !important;
+  cursor: zoom-out ! important;
 }
 
 
