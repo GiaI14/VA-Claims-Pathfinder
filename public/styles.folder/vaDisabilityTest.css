@@ -44,7 +44,7 @@
   margin-right: 6px;
 }
 .symptom-label {
-  font-weight: 800;
+  font-weight: 700 !important;
 }
 
 .system-image {
