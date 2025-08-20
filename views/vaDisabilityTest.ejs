@@ -42,8 +42,8 @@
             </div>
         
             <div class="input-method bottom-row">
-              <label class="symptom-label"><input type="radio" name="inputMethod0" value="typing"> Type your symptoms</label>
-              <label class="symptom-label"><input type="radio" name="inputMethod0" value="selecting"> Select symptoms from the list</label>
+              <label class="symptom-label" <%= system && subsystem ? 'bold-label' : '' %>"><input type="radio" name="inputMethod0" value="typing"> Type your symptoms</label>
+              <label class="symptom-label" <%= system && subsystem ? 'bold-label' : '' %>"><input type="radio" name="inputMethod0" value="selecting"> Select symptoms from the list</label>
             </div>
 
             <input type="text" class="typed-symptoms" placeholder="Enter at least 5 symptoms separated by commas" style="display:none;">
