@@ -46,7 +46,6 @@
 
 .system-image {
   cursor: zoom-in !important;
-  pointer-events: auto !important;
 }
 
 #lightbox {
@@ -56,7 +55,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.4);
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -67,6 +66,7 @@
   max-height: 90%;
   border: 3px solid white;
   border-radius: 10px;
+  cursor: zoom-out !important;
 }
 
 #lightbox .close {
@@ -75,8 +75,6 @@
   right: 30px;
   color: white;
   font-size: 40px;
-  cursor: zoom-out !important;
-  pointer-events: auto !important;
 }
 
 
