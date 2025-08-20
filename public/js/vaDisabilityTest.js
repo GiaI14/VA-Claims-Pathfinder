@@ -116,56 +116,58 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ------------------- ANALYZE SYMPTOMS -------------------
-  analyzeButton.addEventListener('click', async e => {
-    e.preventDefault();
-    const csrfToken = document.getElementById("csrfToken").value;
-    const entries = document.querySelectorAll('.symptom-entry');
-    const data = [];
+ analyzeButton.addEventListener('click', async e => {
+  e.preventDefault();
+  const csrfToken = document.getElementById("csrfToken").value;
+  const entries = document.querySelectorAll('.symptom-entry');
+  const data = [];
 
-    entries.forEach(entry => {
-      const system = entry.querySelector('.system-select').value;
-      const subSystem = entry.querySelector('.sub-system-select').value;
-      const inputMethod = entry.querySelector('input[type="radio"]:checked');
-      if (!inputMethod) return;
+  entries.forEach(entry => {
+    const system = entry.querySelector('.system-select').value;
+    const subSystem = entry.querySelector('.sub-system-select').value;
+    const inputMethod = entry.querySelector('input[type="radio"]:checked')?.value;
+    if (!system || !subSystem || !inputMethod) return;
 
-      let chosenSymptoms = [];
-      if (inputMethod.value === 'typing') {
-        const typed = entry.querySelector('.typed-symptoms').value;
-        chosenSymptoms = typed.split(',').map(s => s.trim()).filter(s => s);
-      } else {
-        chosenSymptoms = Array.from(entry.querySelectorAll('.dynamic-symptoms-list input[type="checkbox"]:checked'))
-          .map(cb => cb.value);
-      }
-
-      if (system && subSystem && chosenSymptoms.length > 0) {
-        data.push({ system, subSystem, chosenSymptoms });
-      }
-    });
-
-    if (data.length === 0) {
-      alert('Please select a system, sub-system, and symptoms.');
-      return;
+    let symptoms = [];
+    if (inputMethod === 'typing') {
+      const typed = entry.querySelector('.typed-symptoms').value;
+      symptoms = typed.split(',').map(s => s.trim()).filter(s => s);
+    } else {
+      symptoms = Array.from(entry.querySelectorAll('.dynamic-symptoms-list input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
     }
 
-    try {
-      const res = await fetch('/analyze-symptoms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-        },
-        body: JSON.stringify(data),
-        credentials: 'same-origin'
-      });
-
-      if (!res.ok) throw new Error('Failed to analyze symptoms');
-      const result = await res.json();
-      displayResults(result);
-    } catch (err) {
-      console.error('Error analyzing symptoms:', err);
-      resultsDiv.innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
+    if (symptoms.length > 0) {
+      data.push({ system, subSystem, inputMethod, symptoms });
     }
   });
+
+  if (data.length === 0) {
+    alert('Please select a system, sub-system, and at least one symptom.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/analyze-symptoms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify(data),
+      credentials: 'same-origin'
+    });
+
+    if (!res.ok) throw new Error('Failed to analyze symptoms');
+
+    const result = await res.json();
+    displayResults(result);
+  } catch (err) {
+    console.error('Error analyzing symptoms:', err);
+    document.getElementById('results').innerHTML = `<p>Error analyzing symptoms: ${err.message}</p>`;
+  }
+});
+
 
   // ------------------- DISPLAY RESULTS -------------------
   function displayResults(data) {
