@@ -43,6 +43,9 @@
 .dynamic-symptoms-list input[type="checkbox"] {
   margin-right: 6px;
 }
+.symptom-label {
+  font-size: bolder;
+}
 
 .system-image {
   cursor: zoom-in !important;
