@@ -45,7 +45,7 @@
 }
 
 .system-image {
-  coursor: zoom-in !important;
+  cursor: zoom-in !important;
   pointer-events: auto !important;
 }
 
@@ -75,7 +75,7 @@
   right: 30px;
   color: white;
   font-size: 40px;
-  cursor: zoom-out ! important;
+  cursor: zoom-out !important;
   pointer-events: auto !important;
 }
 
