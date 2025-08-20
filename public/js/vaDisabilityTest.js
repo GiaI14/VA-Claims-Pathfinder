@@ -185,11 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const conditionsHtml = entry.possibleConditions.map(cond => `
         <h4>${cond.condition_name} (Code: ${cond.medical_code})</h4>
         <p>Confidence: ${cond.match_percentage}%</p>
-        <p>Matched Symptoms: ${cond.matched_symptoms.join(', ') || 'None'}</p>
       `).join('<hr>');
 
       div.innerHTML = `
-        <h3>System: ${entry.system} | Sub-System: ${entry.subSystem}</h3>
+        <h3>System: ${entry.system}</h3>
         ${conditionsHtml}
       `;
     } else {
