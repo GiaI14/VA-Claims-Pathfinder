@@ -46,7 +46,7 @@
 
 .system-image {
   transition: transform 0.3s ease; /* Smooth zoom on hover */
-  cursor: zoom-in; /* Indicate zoom capability */
+  cursor: zoom-in !important;
 }
 
 .system-image:hover {
@@ -64,7 +64,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  cursor: zoom-out; /* Indicate click to close */
+  cursor: zoom-out !important;
 }
 
 #lightbox img {
