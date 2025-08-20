@@ -109,14 +109,14 @@ router.post("/api/analyze-symptoms", async (req, res) => {
       if (possibleConditions.length === 0) {
         results.push({
           system,
-          subSystem,
+          sub_system: subSystem,
           message: `No matching conditions found for ${subSystem}. Please add more symptoms for better accuracy.`
         });
       } else {
         possibleConditions.sort((a, b) => b.match_percentage - a.match_percentage);
         results.push({
           system,
-          subSystem,
+          sub_system: subSystem,
           symptoms,
           possibleConditions: possibleConditions.slice(0, 3)
         });
