@@ -169,7 +169,8 @@ footer{
 
 @media (max-width: 768px) {
    footer {
-    font-size: 0.8rem !important;
+    font-size: 0.7rem !important;
+     padding: 10px;
   }
   
   .page-wrapper {
