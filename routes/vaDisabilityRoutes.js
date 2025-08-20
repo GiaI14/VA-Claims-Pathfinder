@@ -116,7 +116,7 @@ router.post("/api/analyze-symptoms", async (req, res) => {
         possibleConditions.sort((a, b) => b.match_percentage - a.match_percentage);
         results.push({
           system,
-          sub_system: subSystem,
+          subSystem,
           symptoms,
           possibleConditions: possibleConditions.slice(0, 3)
         });
