@@ -8,141 +8,14 @@
       <%- include('includes/header', { nonce: nonce }) %>
 
       <div class="container">
-        <h1>Symptoms Analysis</h1>
-        <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-        
-        <!-- Symptoms Section -->
-        <form id="symptom-form">
-          <h2>New Symptoms</h2>
-          <div id="symptomEntriesContainer">
-            <!-- One initial symptom-entry -->
-            <div class="symptom-entry">
-              <div class="input-group">
-                <label>
-                  System Affected:
-                  <select class="body-part" required>
-                    <option value="">Select a system</option>
-                    <% systems.forEach(function(system) { %>
-                      <option value="<%= system %>"><%= system %></option>
-                    <% }); %>
-                  </select>
-                </label>
-                <label>
-                  Symptoms:
-                  <input
-                    type="text"
-                    class="symptoms"
-                    placeholder="Enter at least 5 symptoms (comma separated)"
-                    required
-                  />
-                </label>
-              </div>
+        <div class="spacer"></div>
+      </div> <!-- closes .container -->
 
-              <!-- Image insert (hidden initially) -->
-              <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
-
-              <button type="button" class="remove-entry-button">Remove Entry</button>
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button type="button" id="addEntryButton">Add Another Entry</button>
-          </div>
-
-          <div class="analyze-section">
-            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
-          </div>
-
-          <input type="text" name="honeypot" style="display: none;">
-        </form>
-
-        <!-- Results Display -->
-        <div id="results"></div>
-      </div>
-
-      <!-- Lightbox Overlay -->
-      <div id="lightbox" class="lightbox" style="display: none;">
-        <span class="close" aria-label="Close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View" />
-      </div>
-       <div class="spacer"></div>
       <%- include('includes/footer') %>
-    </div>
+    </div> <!-- closes .page-wrapper -->
 
     <!-- Your existing scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-
-    <!-- Image/lightbox handler -->
-    <script nonce="<%= nonce %>">
-      const systems = <%- JSON.stringify(systems) %>;
-
-      document.addEventListener('DOMContentLoaded', function() {
-        const systemImages = {
-          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-          'Endocrine system': '512px-Endocrine_English.svg.png',
-          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-          'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
-          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-          'Nervous System': '512px-Nervous_system_diagram-en.svg.png',
-          'Ear': 'Auditory_System.jpg',
-          'Sense Organs': 'Sense-Organ.png',
-        };
-
-        const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-
-        // Show/hide image when system is selected or cleared
-        symptomEntriesContainer.addEventListener('change', function(e) {
-          if (e.target.classList.contains('body-part')) {
-            const selectedSystem = e.target.value;
-            const entryDiv = e.target.closest('.symptom-entry');
-            const imgEl = entryDiv.querySelector('.system-image');
-
-            if (selectedSystem && systemImages[selectedSystem]) {
-              imgEl.src = '/images/' + systemImages[selectedSystem];
-              imgEl.style.display = 'block';
-              imgEl.style.cursor = 'pointer';
-            } else {
-              imgEl.src = '';
-              imgEl.style.display = 'none';
-            }
-          }
-        });
-
-        // Open lightbox when image clicked
-        symptomEntriesContainer.addEventListener('click', function(e) {
-          if (e.target.classList.contains('system-image') && e.target.src) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            lightboxImg.src = e.target.src;
-            lightbox.style.display = 'flex';
-          }
-        });
-
-        // Close lightbox logic
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const closeBtn = lightbox.querySelector('.close');
-
-        function closeLightbox() {
-          lightbox.style.display = 'none';
-          lightboxImg.src = '';
-        }
-
-        lightbox.addEventListener('click', e => {
-          if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
-        });
-        closeBtn.addEventListener('click', closeLightbox);
-
-        // **Removed remove entry logic here**
-
-      });
-    </script>
   </body>
 </html>
