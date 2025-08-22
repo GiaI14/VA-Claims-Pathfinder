@@ -78,8 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  function renderStep(stepId) {
-  // Clear container if starting at step1
+ function renderStep(stepId) {
+  // Clear the flow container if starting from step1
   if (stepId === "step1") flowContainer.innerHTML = "";
 
   const step = flowChartData[stepId];
@@ -94,14 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
   questionP.textContent = step.question;
   stepDiv.appendChild(questionP);
 
-  // Step message (if any)
-  if (step.message) {
-    const messageP = document.createElement("p");
-    messageP.textContent = step.message;
-    messageP.style.fontWeight = "bold";
-    stepDiv.appendChild(messageP);
-  }
-
   // Answers
   step.answers.forEach(ans => {
     const btn = document.createElement("button");
@@ -109,16 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.style.margin = "5px";
 
     btn.addEventListener("click", () => {
-      // Show answer message if exists
-      if (ans.message) {
-        const ansMessageP = document.createElement("p");
-        ansMessageP.textContent = ans.message;
-        ansMessageP.style.fontStyle = "italic";
-        stepDiv.appendChild(ansMessageP);
-      }
-
-      // Render next step if it exists
-      if (ans.next) {
+      // If it's an end step, trigger the corresponding option click
+      if (["newClaim", "supplementalClaim", "higherReview"].includes(ans.next)) {
+        const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+        if (optionEl) optionEl.click();
+      } else {
         renderStep(ans.next);
       }
     });
@@ -129,8 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
   flowContainer.appendChild(stepDiv);
 }
 
-// Start the flow
+// Start the flow chart
 renderStep("step1");
+
 
 
   // Original toggle logic for main claim options
