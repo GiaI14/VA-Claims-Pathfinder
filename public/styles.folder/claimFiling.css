@@ -13,6 +13,10 @@
   transition: background 0.3s, border-color 0.3s;
 }
 
+h3 {
+  text-align: center;
+}
+
 .option .content {
   display: none;
   margin-top: 10px;
