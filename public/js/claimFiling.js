@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderFlowChart() {
     const flowChartData = {
       step1: { question: "Are you honorably discharged?", answers: [{ text: "Yes", next: "step2" }, { text: "No", next: "notEligible" }] },
-      notEligible: { question: "Sorry, unfortunately, you cannot apply for VA Disability.", answers: [{ text: "Start Over", next: "step1" }] },
+      notEligible: { question: "Sorry, unfortunately, you do not qualify for VA Disability.", answers: [{ text: "Start Over", next: "step1" }] },
       step2: { question: "Are you applying for a new claim?", answers: [{ text: "Yes", next: "newClaim" }, { text: "No", next: "step3" }] },
       step3: { question: "Have you been denied?", answers: [{ text: "Yes", next: "chooseDeniedOption" }, { text: "No", next: "step1" }] },
       chooseDeniedOption: { question: "Choose your path:", answers: [{ text: "Supplemental Claim", next: "supplementalClaim" }, { text: "Higher Level Review", next: "higherReview" }] }
