@@ -24,9 +24,11 @@
 
 .claim-menu-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-start;
-  gap: 20px;
+  gap: 40px;
+  margin: 0 auto;
+  max-width: 1100px;
 }
 
 /* Guidance (left column) */
