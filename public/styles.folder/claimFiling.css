@@ -37,12 +37,10 @@ h1 {
 }
 
 .guidance-column { 
-  flex: 1;
-  min-width: 250px;            
+  flex: 1 1 300px;        
 }
 .options-column{
-  flex: 2;
-  width: 400px;
+  flex: 2 1 600px;
 }
 
 /* Options (right column) */
