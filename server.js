@@ -192,7 +192,7 @@ app.set('view engine', 'ejs');
 
 // Routes
 app.use(registrationRoutes);
-app.use('/', symptomRoutes);
+app.use('/', claimFilingRoutes);
 app.use('/auth', authRoutes);
 app.use(subSystemRoutes);
 app.use(vaDisabilityRoutes);
@@ -237,22 +237,6 @@ app.post('/submit-disabilities', (req, res) => {
   }
 });
 
-app.get("/possibleDisabilities", async (req, res) => {
-  try {
-    const db = getDb();
-    const [systems] = await db.execute('SELECT DISTINCT systems FROM va_disabilities');
-    console.log('Systems:', systems);
-    res.render("possibleDisabilities", {
-      title: "Symptom Analysis",
-      csrfToken: req.csrfToken(),
-      nonce: res.locals.nonce,
-      systems: systems.map(row => row.systems),
-    });
-  } catch (err) {
-    console.error('Error fetching systems:', err);
-    res.status(500).send('Error fetching systems');
-  }
-});
 
 app.get('/subSystem', async (req, res) => {
   try {
