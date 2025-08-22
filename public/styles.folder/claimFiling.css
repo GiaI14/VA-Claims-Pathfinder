@@ -36,11 +36,13 @@ h1 {
   max-width: 1000px;
 }
 
-.guidance-column {               
-  width: 300px;          /* ensures columns don’t collapse */       
+.guidance-column { 
+  flex: 1;
+  min-width: 250px;            
 }
 .options-column{
-  width: 600px;
+  flex: 2;
+  width: 400px;
 }
 
 /* Options (right column) */
