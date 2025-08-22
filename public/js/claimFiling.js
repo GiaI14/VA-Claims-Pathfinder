@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   showFlowBtn.addEventListener("click", () => {
     if (flowContainer.style.display === "block") {
-      flowContainer.style.display = "none";  
-      flowContainer.innerHTML = "";           
+      flowContainer.style.display = "none";
+      flowContainer.innerHTML = "";
     } else {
-      flowContainer.style.display = "block"; 
-      renderFlowChart();                      
+      flowContainer.style.display = "block";
+      renderFlowChart();
     }
   });
 
@@ -22,10 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function renderStep(stepId) {
-      // if Start Over, clear everything
-      if (stepId === "step1") {
-        flowContainer.innerHTML = "";
-      }
+      if (stepId === "step1") flowContainer.innerHTML = "";
 
       const step = flowChartData[stepId];
       if (!step) return;
@@ -44,10 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.style.margin = "5px";
 
         btn.addEventListener("click", () => {
-          if (["newClaim","supplementalClaim","higherReview"].includes(ans.next)) {
-            document.getElementById(ans.next).style.display = "block";
+          if (["newClaim", "supplementalClaim", "higherReview"].includes(ans.next)) {
+            // Trigger the original .option click
+            const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+            if (optionEl) optionEl.click();
           } else {
-            renderStep(ans.next); // next step
+            renderStep(ans.next);
           }
         });
 
@@ -59,4 +58,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderStep("step1");
   }
+
+  // Original toggle logic for main claim options
+  document.querySelectorAll('.option').forEach(option => {
+    option.addEventListener('click', () => {
+      const targetId = option.getAttribute('data-target');
+      const contentDiv = document.getElementById(targetId);
+
+      // Toggle
+      if (contentDiv.style.display === 'block') {
+        contentDiv.style.display = 'none';
+      } else {
+        // Close others
+        document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
+        contentDiv.style.display = 'block';
+      }
+    });
+  });
 });
