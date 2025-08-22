@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>VA Claims Flowchart</title>
+  <%- include('includes/head', { title: 'Choose Your Claim Path', nonce: nonce }) %>
+  <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
+
+  <body>
+    <div class="page-wrapper">
+      <%- include('includes/header', { nonce: nonce }) %>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -61,5 +65,16 @@
       document.getElementById(id).style.display = 'block';
     }
   </script>
-</body>
+        <div class="spacer"></div>
+      </div> <!-- closes .container -->
+
+      <%- include('includes/footer') %>
+    </div> <!-- closes .page-wrapper -->
+
+    <!-- Your existing scripts -->
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+  </body>
 </html>
+
+
