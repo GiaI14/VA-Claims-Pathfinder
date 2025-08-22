@@ -57,21 +57,21 @@ document.addEventListener("DOMContentLoaded", () => {
         ]
       },
       newClaim: {
-        question: "Proceed with filing a new claim",
+        question: "",
         message: "You can submit a new claim.",
         answers: [
           { text: "Start Over", next: "step1" }
         ]
       },
       supplementalClaim: {
-        question: "Proceed with a Supplemental Claim",
+        question: "",
         message: "You can submit a Supplemental Claim.",
         answers: [
           { text: "Start Over", next: "step1" }
         ]
       },
       higherReview: {
-        question: "Proceed with a Higher Level Review",
+        question: "",
         message: "You can file a Higher Level Review request.",
         answers: [
           { text: "Start Over", next: "step1" }
