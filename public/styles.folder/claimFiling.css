@@ -24,11 +24,20 @@
 
 .claim-menu-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: center;   /* keep columns centered */
   align-items: flex-start;
-  gap: 40px;
+  gap: 60px;                 /* space between left and right */
   margin: 0 auto;
-  max-width: 5000px;
+  max-width: 1600px;         /* make the whole section wider */
+  width: 100%;               /* allow it to stretch */
+  padding: 20px;             /* breathing room inside */
+}
+
+.guidance-column,
+.options-column {
+  flex: 1;                   /* both take equal width */
+  min-width: 400px;          /* ensures columns don’t collapse */
+  max-width: 700px;          /* makes them wider but keeps readability */
 }
 
 /* Guidance (left column) */
