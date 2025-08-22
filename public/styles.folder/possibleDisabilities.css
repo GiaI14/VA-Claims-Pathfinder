@@ -1,93 +1,59 @@
-html, body {
-    height: 100%;
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f7fa;
+
+.option {
+  width: 80%;
+  max-width: 600px;
+  text-align: left;
+  margin: 10px 0;
+  padding: 12px;
+  border: 2px solid #1e3a8a; /* dark blue border */
+  border-radius: 12px;
+  background: #f9fafb; /* light gray/white */
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
 }
 
+.option:hover {
+  background: #d0f0f0; /* soft teal highlight */
+  border-color: #0d9488; /* teal border on hover */
+}
+
+/* Flow chart container */
 #flowContainer {
-  display: none;
-  position: relative; /* prevents overlaying the top menu */
   margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #1e3a8a; 
+  border-radius: 12px;
+  background: #f3f4f6; /* soft gray background */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
- .top-menu {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 20px;
-        }
 
-        .top-menu .left {
-          flex: 0 0 auto;
-        }
-
-        .top-menu .right {
-          flex: 1 0 auto;
-          display: flex;
-          gap: 10px;
-          justify-content: flex-end;
-        }
-
-        #showFlowBtn {
-          padding: 12px 20px;
-          border: 2px solid #1e3a8a;
-          border-radius: 12px;
-          background: #f9fafb;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
-
-        #showFlowBtn:hover {
-          background: #20b2aa;
-          color: #fff;
-        }
-
-        .option {
-          padding: 12px 20px;
-          border: 2px solid #1e3a8a;
-          border-radius: 12px;
-          background: #f9fafb;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
-
-        .option:hover {
-          background: #20b2aa; /* teal hover */
-          color: #fff;
-        }
-
-        .content {
-          display: none;
-          margin-top: 10px;
-          padding: 15px;
-          border-left: 4px solid #1e3a8a;
-          background: #f3f4f6;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          border-radius: 12px;
-        }
-
-        .flow-step {
-          margin-top: 10px;
-        }
-
-        .flow-step p {
-          font-weight: bold;
-        }
-
-        .flow-step button {
-          margin: 5px;
-          padding: 8px 16px;
-          border-radius: 8px;
-          border: 1px solid #1e3a8a;
-          cursor: pointer;
-          background: #f9fafb;
-          transition: background 0.3s;
-        }
-
-        .flow-step button:hover {
-          background: #20b2aa;
-          color: #fff;
-        }
+/* Each step inside flow chart */
+.flow-step {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-left: 4px solid #1e3a8a;
+  background: #ffffff; /* white background for steps */
+  border-radius: 8px;
 }
+
+.flow-step p {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* Buttons inside flow chart steps */
+.flow-step button {
+  margin: 5px 5px 0 0;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0d9488; /* teal button */
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.flow-step button:hover {
+  background-color: #14b8a6; /* brighter teal on hover */
+}
+
