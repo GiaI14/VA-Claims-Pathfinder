@@ -8,131 +8,141 @@
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
 
-      
+      <style>
+        .option {
+          width: 80%;
+          max-width: 600px;
+          text-align: left;
+          margin: 10px 0;
+          padding: 12px;
+          border: 2px solid #1e3a8a;
+          border-radius: 12px;
+          background: #f9fafb;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+        .option:hover {
+          background: #20c997; /* teal hover */
+        }
+
+        .content {
+          display: none;
+          margin-top: 10px;
+          padding: 15px;
+          border-left: 4px solid #1e3a8a;
+          background: #f3f4f6;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          border-radius: 12px;
+        }
+
+        .content h2, .content h3 {
+          margin-top: 15px;
+        }
+
+        /* Layout for guidance + options side by side */
+        #guidanceWrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-top: 20px;
+        }
+
+        #showFlowBtn {
+          padding: 10px 15px;
+          border-radius: 8px;
+          background: #0d6efd;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+
+        #flowContainer {
+          flex: 1;
+          margin-right: 20px;
+        }
+
+        #claimOptions {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+        }
+      </style>
+
       <h1>Choose Your Claim Path</h1>
 
-      <div class="top-menu">
-        <!-- Left: Need Guidance -->
-        <div class="left">
+      <div id="guidanceWrapper">
+        <!-- Need Guidance Button + Flow chart -->
+        <div id="flowContainerWrapper">
           <button id="showFlowBtn">Need Guidance</button>
+          <div id="flowContainer"></div>
         </div>
 
-        <!-- Right: Main Claim Options -->
-        <div class="right">
-          <div class="option" data-target="newClaim">➤ New Claim</div>
-          <div class="option" data-target="supplementalClaim">➤ Supplemental Claim</div>
-          <div class="option" data-target="higherReview">➤ Higher-Level Review</div>
+        <!-- Main Claim Options -->
+        <div id="claimOptions">
+          <!-- NEW CLAIM -->
+          <div class="option" data-target="newClaim">
+            ➤ New Claim
+            <div id="newClaim" class="content">
+              <h2>Major Requirment</h2>
+              <p>VA disability is following 3 major requirements</p>
+              <p>Connection to your service. The onset of your condition needs to be linked to the time of active service</p>
+              <p>The condition must be chronic. Continue attending your medical appointments and follow prescribed medications and treatments as directed</p>
+              <p>It has to affect your ability to perform your daily duties and responsibilities</p>
+
+              <h3>Direct Connection Claim</h3>
+
+              <h2>Step 1</h2>
+              <p>Start the intent to file</p>
+              <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay</p>
+              <p><a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">Intent to File (VA Form 21-0966)</a></p>
+
+              <h2>Step 2</h2>
+              <p>FOIA (Freedom of Information Act)</p>
+              <p>Request a full military record (medical records, including service treatment records, personnel file, and C-File) through <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer"> FOIA (VA Form 20-10206)</a></p>
+              <p>This may take several months to a year, so start early</p>
+
+              <h2>Step 3</h2>
+              <p>Personal Statement: Describe your disability, when/how it began, and how it affects daily life and employment. <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">VA Form 21-4138 – Personal Statement in Support of Claim</a></p>
+              <p>Lay Statements: Ask family, friends, or coworkers who have observed your condition to provide statements. <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Lay Statement (VA Form 21-10210)</a></p>
+              <p>Buddy Statements: If possible, ask a fellow service member to confirm in-service events, injuries, or stressors that may not appear in your records <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Buddy Statement (VA Form 21-10210)</a></p>
+
+              <h2>Step 4</h2>
+              <p>Gather all medical records related to your claimed condition, including both VA and private treatment records. You can use Blue Button to download your VA records. Other ways to obtain records include submitting a FOIA request or using the service treatment records CD you may have received upon discharge.</p>
+              <p>Highlight relevant events, diagnoses, and treatments. Create a separate file with highlighted pages as supporting evidence.</p>
+
+              <h2>Step 5</h2>
+              <p>Submit claim, adding all previously collected records and statements. <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">Submit a New Claim</a></p>
+
+              <h2>Step 6</h2>
+              <p>The claims process can take several months. Be sure to keep your contact information up to date, attend all scheduled VA claim exams (C&P exams), and regularly check the status of your claim in case the VA requests additional information.</p>
+            </div>
+          </div>
+
+          <!-- SUPPLEMENTAL -->
+          <div class="option" data-target="supplementalClaim">
+            ➤ Supplemental Claim
+            <div id="supplementalClaim" class="content">
+              <p>If your claim was denied but you have new evidence, this is the right option.</p>
+            </div>
+          </div>
+
+          <!-- HIGHER LEVEL REVIEW -->
+          <div class="option" data-target="higherReview">
+            ➤ Higher-Level Review
+            <div id="higherReview" class="content">
+              <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Flow chart container -->
-      <div id="flowContainer" style="display:none;"></div>
-
-      <!-- Hidden claim contents -->
-      <div id="newClaim" class="content">
-        <h2>Major Requirements</h2>
-        <p>VA disability has three major requirements:</p>
-        <ul>
-          <li>Connection to your service: Onset must be linked to active service.</li>
-          <li>Chronic condition: Continue medical appointments, medications, and treatments as prescribed.</li>
-          <li>Affects daily duties and responsibilities.</li>
-        </ul>
-
-        <h3>Direct Connection Claim</h3>
-
-        <h2>Step 1: Intent to File</h2>
-        <p>Submit an <strong>Intent to File</strong> to protect your effective date. From that day, you have 1 year to complete your claim while being eligible for retroactive pay.</p>
-        <p><a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">Intent to File (VA Form 21-0966)</a></p>
-
-        <h2>Step 2: FOIA Request</h2>
-        <p>Request your full military record, including service treatment records, personnel file, and C-File.</p>
-        <p>This may take several months to a year, so start early.</p>
-        <p><a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer">FOIA Request (VA Form 20-10206)</a></p>
-
-        <h2>Step 3: Personal, Lay, and Buddy Statements</h2>
-        <p>Provide statements describing your disability and its impact on daily life and employment:</p>
-        <ul>
-          <li>Personal Statement: <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">VA Form 21-4138</a></li>
-          <li>Lay Statements: From family, friends, or coworkers: <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">VA Form 21-10210</a></li>
-          <li>Buddy Statements: From fellow service members confirming in-service events, injuries, or stressors: <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">VA Form 21-10210</a></li>
-        </ul>
-
-        <h2>Step 4: Gather Medical Records</h2>
-        <p>Collect all medical records related to your claimed condition, including VA and private treatment records. Use Blue Button or FOIA to obtain VA records. Highlight relevant events, diagnoses, and treatments for supporting evidence.</p>
-
-        <h2>Step 5: Submit Claim</h2>
-        <p>Submit your claim along with all collected records and statements.</p>
-        <p><a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">Submit a New Claim</a></p>
-
-        <h2>Step 6: Monitor Claim</h2>
-        <p>The claims process can take several months. Keep contact info updated, attend C&P exams, and check claim status regularly.</p>
-      </div>
-
-      <div id="supplementalClaim" class="content">
-        <p>If your claim was denied but you have new evidence, this is the right option.</p>
-      </div>
-
-      <div id="higherReview" class="content">
-        <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
       </div>
 
       <div class="spacer"></div>
       <%- include('includes/footer') %>
-    </div> <!-- .page-wrapper -->
+    </div> <!-- closes .page-wrapper -->
 
     <!-- Scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-
-    <script nonce="<%= nonce %>">
-      document.addEventListener("DOMContentLoaded", () => {
-        const flowContainer = document.getElementById("flowContainer");
-        const showFlowBtn = document.getElementById("showFlowBtn");
-
-        showFlowBtn.addEventListener("click", () => {
-          if (flowContainer.style.display === "block") {
-            flowContainer.style.display = "none";
-            flowContainer.innerHTML = "";
-          } else {
-            flowContainer.style.display = "block";
-            renderFlowChart();
-          }
-        });
-
-        function renderFlowChart() {
-          const flowChartData = {
-            step1: { question: "Are you honorably discharged?", answers: [{ text: "Yes", next: "step2" }, { text: "No", next: "notEligible" }] },
-            notEligible: { question: "Sorry, you cannot apply for VA Disability.", answers: [{ text: "Start Over", next: "step1" }] },
-            step2: { question: "Are you applying for a new claim?", answers: [{ text: "Yes", next: "newClaim" }, { text: "No", next: "step3" }] },
-            step3: { question: "Have you been denied?", answers: [{ text: "Yes", next: "chooseDeniedOption" }, { text: "No", next: "step1" }] },
-            chooseDeniedOption: { question: "Choose your path:", answers: [{ text: "Supplemental Claim", next: "supplementalClaim" }, { text: "Higher Level Review", next: "higherReview" }] }
-          };
-
-          function renderStep(stepId) {
-            if (stepId === "step1") flowContainer.innerHTML = "";
-
-            const step = flowChartData[stepId];
-            if (!step) return;
-
-            const stepDiv = document.createElement("div");
-            stepDiv.classList.add("flow-step");
-
-            const questionP = document.createElement("p");
-            questionP.textContent = step.question;
-            stepDiv.appendChild(questionP);
-
-            step.answers.forEach(ans => {
-              const btn = document.createElement("button");
-              btn.textContent = ans.text;
-
-              btn.addEventListener("click", () => {
-                // Hide all claim content first
-                document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-
-                if (["newClaim","supplementalClaim","higherReview"].includes(ans.next)) {
-                  document.getElementById(ans.next).style.display = "block";
-                } else {
-                  renderStep(ans.next);
-                }
-              });
-
-              stepDiv.appendChi
+    <script src="/js/claimFiling.js" nonce="<%= nonce %>" defer></script>
+  </body>
+</html>
