@@ -9,79 +9,83 @@
       <%- include('includes/header', { nonce: nonce }) %>
 
       <h1>Choose Your Claim Path</h1>
+
+      <!-- Wrap columns in a flex container -->
       <div class="claim-menu-wrapper">
 
-        <!-- Guidance button -->
-        <div id="guidanceWrapper">
-          <div id="flowContainerWrapper">
-            <button id="showFlowBtn">Need Guidance</button>
-            <div id="flowContainer"></div>
-          </div> <!-- closes flowContainerWrapper -->
+        <!-- Left Column: Guidance -->
+        <div class="guidance-column">
+          <div id="guidanceWrapper">
+            <div id="flowContainerWrapper">
+              <button id="showFlowBtn">Need Guidance</button>
+              <div id="flowContainer"></div>
+            </div>
 
-          <!-- Major Requirement block (always visible under guidance) -->
-          <div id="guidanceRequirements" class="hidden">
-  <h3>Major VA Disability Requirements</h3>
-  <p>VA disability is based on the following three major requirements:</p>
-  <ul>
-    <li>Connection to your service – the onset of your condition must be linked to the time of active service.</li>
-    <li>The condition must be chronic – continue attending your medical appointments and follow prescribed medications and treatments as directed.</li>
-    <li>It must affect your ability to perform your daily duties and responsibilities.</li>
-  </ul>
-</div>
-        </div> <!-- closes guidanceWrapper -->
-
-        <!-- Main Claim Options -->
-        <div id="claimOptions" class="claim-options-wrapper">
-          <!-- NEW CLAIM -->
-          <div class="option" data-target="newClaim">
-            ➤ New Claim
-            <div id="newClaim" class="content">
-              <h3>Direct Connection Claim</h3>
-
-              <h2>Step 1</h2>
-              <p>Start the intent to file</p>
-              <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay</p>
-              <p><a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">Intent to File (VA Form 21-0966)</a></p>
-
-              <h2>Step 2</h2>
-              <p>FOIA (Freedom of Information Act)</p>
-              <p>Request a full military record (medical records, including service treatment records, personnel file, and C-File) through <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer"> FOIA (VA Form 20-10206)</a></p>
-              <p>This may take several months to a year, so start early</p>
-
-              <h2>Step 3</h2>
-              <p>Personal Statement: Describe your disability, when/how it began, and how it affects daily life and employment. <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">VA Form 21-4138 – Personal Statement in Support of Claim</a></p>
-              <p>Lay Statements: Ask family, friends, or coworkers who have observed your condition to provide statements. <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Lay Statement (VA Form 21-10210)</a></p>
-              <p>Buddy Statements: If possible, ask a fellow service member to confirm in-service events, injuries, or stressors that may not appear in your records <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Buddy Statement (VA Form 21-10210)</a></p>
-
-              <h2>Step 4</h2>
-              <p>Gather all medical records related to your claimed condition, including both VA and private treatment records. You can use Blue Button to download your VA records. Other ways to obtain records include submitting a FOIA request or using the service treatment records CD you may have received upon discharge.</p>
-              <p>Highlight relevant events, diagnoses, and treatments. Create a separate file with highlighted pages as supporting evidence.</p>
-
-              <h2>Step 5</h2>
-              <p>Submit claim, adding all previously collected records and statements. <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">Submit a New Claim</a></p>
-
-              <h2>Step 6</h2>
-              <p>The claims process can take several months. Be sure to keep your contact information up to date, attend all scheduled VA claim exams (C&P exams), and regularly check the status of your claim in case the VA requests additional information.</p>
+            <div id="guidanceRequirements" class="hidden">
+              <h3>Major VA Disability Requirements</h3>
+              <p>VA disability is based on the following three major requirements:</p>
+              <ul>
+                <li>Connection to your service – the onset of your condition must be linked to the time of active service.</li>
+                <li>The condition must be chronic – continue attending your medical appointments and follow prescribed medications and treatments as directed.</li>
+                <li>It must affect your ability to perform your daily duties and responsibilities.</li>
+              </ul>
             </div>
           </div>
+        </div>
 
-          <!-- SUPPLEMENTAL -->
-          <div class="option" data-target="supplementalClaim">
-            ➤ Supplemental Claim
-            <div id="supplementalClaim" class="content">
-              <p>If your claim was denied but you have new evidence, this is the right option.</p>
+        <!-- Right Column: Claim Options -->
+        <div class="options-column">
+          <div id="claimOptions" class="claim-options-wrapper">
+            <!-- NEW CLAIM -->
+            <div class="option" data-target="newClaim">
+              ➤ New Claim
+              <div id="newClaim" class="content">
+                <h3>Direct Connection Claim</h3>
+
+                <h2>Step 1</h2>
+                <p>Start the intent to file</p>
+                <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay</p>
+                <p><a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">Intent to File (VA Form 21-0966)</a></p>
+
+                <h2>Step 2</h2>
+                <p>FOIA (Freedom of Information Act)</p>
+                <p>Request a full military record (medical records, including service treatment records, personnel file, and C-File) through <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer"> FOIA (VA Form 20-10206)</a></p>
+                <p>This may take several months to a year, so start early</p>
+
+                <h2>Step 3</h2>
+                <p>Personal Statement: Describe your disability, when/how it began, and how it affects daily life and employment. <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">VA Form 21-4138 – Personal Statement in Support of Claim</a></p>
+                <p>Lay Statements: Ask family, friends, or coworkers who have observed your condition to provide statements. <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Lay Statement (VA Form 21-10210)</a></p>
+                <p>Buddy Statements: If possible, ask a fellow service member to confirm in-service events, injuries, or stressors that may not appear in your records <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">Buddy Statement (VA Form 21-10210)</a></p>
+
+                <h2>Step 4</h2>
+                <p>Gather all medical records related to your claimed condition, including both VA and private treatment records. You can use Blue Button to download your VA records. Other ways to obtain records include submitting a FOIA request or using the service treatment records CD you may have received upon discharge.</p>
+                <p>Highlight relevant events, diagnoses, and treatments. Create a separate file with highlighted pages as supporting evidence.</p>
+
+                <h2>Step 5</h2>
+                <p>Submit claim, adding all previously collected records and statements. <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">Submit a New Claim</a></p>
+
+                <h2>Step 6</h2>
+                <p>The claims process can take several months. Be sure to keep your contact information up to date, attend all scheduled VA claim exams (C&P exams), and regularly check the status of your claim in case the VA requests additional information.</p>
+              </div>
+            </div>
+
+            <!-- SUPPLEMENTAL -->
+            <div class="option" data-target="supplementalClaim">
+              ➤ Supplemental Claim
+              <div id="supplementalClaim" class="content">
+                <p>If your claim was denied but you have new evidence, this is the right option.</p>
+              </div>
+            </div>
+
+            <!-- HIGHER LEVEL REVIEW -->
+            <div class="option" data-target="higherReview">
+              ➤ Higher-Level Review
+              <div id="higherReview" class="content">
+                <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
+              </div>
             </div>
           </div>
-
-          <!-- HIGHER LEVEL REVIEW -->
-          <div class="option" data-target="higherReview">
-            ➤ Higher-Level Review
-            <div id="higherReview" class="content">
-              <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
-            </div>
-          </div>
-        </div> <!-- closes claimOptions -->
-
+        </div>
       </div> <!-- closes claim-menu-wrapper -->
 
       <div class="spacer"></div>
