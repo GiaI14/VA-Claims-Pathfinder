@@ -1,22 +1,12 @@
-document.querySelectorAll('.option').forEach(option => {
-  option.addEventListener('click', async () => {
-    const targetId = option.getAttribute('data-target');
-    const contentDiv = document.getElementById(targetId);
+const express = require('express');
+const router = express.Router();
 
-    if (contentDiv.style.display === 'block') {
-      contentDiv.style.display = 'none';
-      return;
-    }
-
-    // Hide other sections
-    document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-
-    // Fetch content from server
-    const typeMap = { newClaim: 'new', supplementalClaim: 'supplemental', higherReview: 'higher' };
-    const res = await fetch(`/claim/${typeMap[targetId]}`);
-    const html = await res.text();
-
-    contentDiv.innerHTML = html;
-    contentDiv.style.display = 'block';
+// Route to render claim filing page
+router.get('/claim-filing', (req, res) => {
+  res.render('claimFiling', {
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce
   });
 });
+
+module.exports = router;
