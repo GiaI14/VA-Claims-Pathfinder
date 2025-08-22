@@ -1,0 +1,59 @@
+.option {
+  width: 80%;
+  max-width: 600px;
+  text-align: left;
+  margin: 10px 0;
+  padding: 12px;
+  border: 2px solid var(--primary-color); /* main blue border */
+  border-radius: 12px;
+  background: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background var(--transition-speed), border-color var(--transition-speed);
+}
+
+.option:hover {
+  background: var(--li-hover-color); /* soft highlight */
+  border-color: var(--primary-color);
+}
+
+/* Flow Chart Container */
+#flowContainer {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid var(--primary-color);
+  border-radius: 12px;
+  background: var(--background-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Each step inside flow chart */
+.flow-step {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-left: 4px solid var(--primary-color);
+  background: #fff; /* white for steps */
+  border-radius: 8px;
+}
+
+.flow-step p {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Buttons inside flow chart steps */
+.flow-step button {
+  margin: 5px 5px 0 0;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary-color); /* main blue */
+  color: var(--nav-text-color); /* white text */
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+
+.flow-step button:hover {
+  background-color: var(--green-hover); /* green hover for contrast */
+}
