@@ -8,66 +8,7 @@
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
 
-      <style>
-        .option {
-          width: 80%;
-          max-width: 600px;
-          text-align: left;
-          margin: 10px 0;
-          padding: 12px;
-          border: 2px solid #1e3a8a;
-          border-radius: 12px;
-          background: #f9fafb;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
-        .option:hover {
-          background: #20c997; /* teal hover */
-        }
-
-        .content {
-          display: none;
-          margin-top: 10px;
-          padding: 15px;
-          border-left: 4px solid #1e3a8a;
-          background: #f3f4f6;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          border-radius: 12px;
-        }
-
-        .content h2, .content h3 {
-          margin-top: 15px;
-        }
-
-        /* Layout for guidance + options side by side */
-        #guidanceWrapper {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-top: 20px;
-        }
-
-        #showFlowBtn {
-          padding: 10px 15px;
-          border-radius: 8px;
-          background: #0d6efd;
-          color: white;
-          border: none;
-          cursor: pointer;
-        }
-
-        #flowContainer {
-          flex: 1;
-          margin-right: 20px;
-        }
-
-        #claimOptions {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-        }
-      </style>
+     
 
       <h1>Choose Your Claim Path</h1>
 
