@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
       additionalEvidence: {
         question: "Do you have additional evidence (treatment, Nexus letters, DBQs, or other developments)?",
         answers: [
-          { text: "Yes", next: "supplementalClaim", message: "You can submit a Supplemental Claim." },
-          { text: "No", next: "higherReview", message: "You can file a Higher Level Review request." }
+          { text: "Yes", next: "supplementalClaim" },
+          { text: "No", next: "higherReview" }
         ]
       },
       newClaim: {
