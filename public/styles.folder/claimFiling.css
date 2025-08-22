@@ -33,13 +33,13 @@
   width: 100%;
 }
 
-.guidance-column,
-.options-column {
+.guidance-column {
   flex: 1;                   /* both take equal width */
   min-width: 700px;          /* ensures columns don’t collapse */       
 }
-
-/* Guidance (left column) */
+.options-column{
+  flex: 2;
+}
 #guidanceWrapper {
   flex: 1;
   max-width: 300px;
