@@ -33,16 +33,14 @@ h1 {
   align-items: flex-start;
   gap: 60px;                /* space between columns */
   margin: 0 auto;
-  max-width: 1600px;
-  width: 100%;
+  max-width: 1000px;
 }
 
-.guidance-column {
-  flex: 1;                   /* both take equal width */
-  min-width: 300px;          /* ensures columns don’t collapse */       
+.guidance-column {               
+  width: 300px;          /* ensures columns don’t collapse */       
 }
 .options-column{
-  flex: 2;
+  width: 600px;
 }
 
 /* Options (right column) */
