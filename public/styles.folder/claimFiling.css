@@ -24,18 +24,18 @@
 
 .claim-menu-wrapper {
   display: flex;
-  justify-content: center;   /* keep columns centered */
+  justify-content: center;  /* centers the columns in the wrapper */
   align-items: flex-start;
-  gap: 60px;                 /* space between left and right */
+  gap: 60px;                /* space between columns */
   margin: 0 auto;
-  max-width: 2300px;         /* make the whole section wider */
-  width: 100%;               /* allow it to stretch */          
+  max-width: 2300px;
+  width: 100%;
 }
 
 .guidance-column,
 .options-column {
   flex: 1;                   /* both take equal width */
-  min-width: 500px;          /* ensures columns don’t collapse */       
+  min-width: 1000px;          /* ensures columns don’t collapse */       
 }
 
 /* Guidance (left column) */
