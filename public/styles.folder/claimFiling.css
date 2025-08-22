@@ -1,5 +1,4 @@
-<style>
-/* Option Buttons (New Claim, Supplemental, Higher-Level Review) */
+
 .option {
   width: 80%;
   max-width: 600px;
@@ -59,4 +58,4 @@
 .flow-step button:hover {
   background-color: var(--green-hover);     /* teal/green hover for clarity */
 }
-</style>
+
