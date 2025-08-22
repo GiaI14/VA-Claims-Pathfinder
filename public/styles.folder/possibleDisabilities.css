@@ -7,342 +7,82 @@ html, body {
     background-color: #f4f7fa;
 }
 
-main.container {
-    flex: 1;
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+ .top-menu {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 20px;
+        }
+
+        .top-menu .left {
+          flex: 0 0 auto;
+        }
+
+        .top-menu .right {
+          flex: 1 0 auto;
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+
+        #showFlowBtn {
+          padding: 12px 20px;
+          border: 2px solid #1e3a8a;
+          border-radius: 12px;
+          background: #f9fafb;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+
+        #showFlowBtn:hover {
+          background: #20b2aa;
+          color: #fff;
+        }
+
+        .option {
+          padding: 12px 20px;
+          border: 2px solid #1e3a8a;
+          border-radius: 12px;
+          background: #f9fafb;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+
+        .option:hover {
+          background: #20b2aa; /* teal hover */
+          color: #fff;
+        }
+
+        .content {
+          display: none;
+          margin-top: 10px;
+          padding: 15px;
+          border-left: 4px solid #1e3a8a;
+          background: #f3f4f6;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          border-radius: 12px;
+        }
+
+        .flow-step {
+          margin-top: 10px;
+        }
+
+        .flow-step p {
+          font-weight: bold;
+        }
+
+        .flow-step button {
+          margin: 5px;
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: 1px solid #1e3a8a;
+          cursor: pointer;
+          background: #f9fafb;
+          transition: background 0.3s;
+        }
+
+        .flow-step button:hover {
+          background: #20b2aa;
+          color: #fff;
+        }
 }
-
-#symptom-form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    margin-top: 40px;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-h1, h2 {
-    color: #202c2c;
-}
-
-h1 {
-    text-align: center;
-    width: 100%;
-    margin: 40px auto;
-    font-size: 2em; 
-}
-
-
-button {
-    background-color: #0c2624 ;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 5px;
-}
-
-button:hover {
-    background-color: #2f4141;
-}
-
-input[type="text"], input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.disability-entry, .symptom-entry {
-    background-color: #f8f9fa;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 4px;
-}
-
-.disability-entry {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.disability-entry input,
-.disability-entry select {
-    width: auto;
-    margin-right: 10px;
-}
-
-.disability-entry button {
-    margin-left: auto;
-}
-
-
-.disability-entry .disability-name {
-    flex-grow: 1;
-}
-
-.disability-entry .disability-percentage {
-    width: 70px;
-}
-
-#results {
-    margin: 20px auto;
-    padding: 15px;
-    background-color: #e0f7fa;
-    border-radius: 4px;
-    max-width: 845px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-button.remove-entry-button {
-  background-color: #440705;
-  color: white;
-  margin-bottom: 5px;
-  margin-right: 20px;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button.remove-entry-button:hover {
-  background-color: #990000;
-}
-
-.symptom-entry {
-    position: relative;
-    padding-bottom: 40px;
-    margin-bottom: 15px;
-  }
-  
-  .input-group {
-    margin-bottom: 10px;
-  }
-  
-  .input-group label {
-    display: block;
-    margin-bottom: 3px;
-  }
-  
-  .input-group input {
-    width: 100%;
-    max-width: 99.5%;
-    margin-top: 5px;
-    box-sizing: border-box;
-  }
-  
-  .symptom-entry button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
-.button-row button,
-.analyze-section button {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-
-.analyze-section button {
-    background-color: #202c2c
-    color: white;
-    margin-top: 80px;
-    font-weight: bold;
-    width: 8.5rem;
-    font-size: 16px; 
-}
-
-.analyze-section button: hover {
-    background-color: #2f4141;
-}
-.symptom-entry {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .input-group {
-      flex-grow: 1;
-    }
-
-    .system-image {
-      max-width: 250px;
-      max-height: 250px;
-      border: 1px solid #ddd;
-      display: none;
-      cursor: zoom-in !important;
-    }
-
-    /* Lightbox overlay */
-    .lightbox {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      justify-content: center;
-      align-items: center;
-    }
-    /* Center image inside flexbox container */
-    .lightbox img {
-      max-width: 90%;
-      max-height: 80%;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-    }
-    .lightbox .close {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 10000;
-    }
-    .lightbox .close:hover {
-      color: #ccc;
-    }
-.body-part {
-  width: 100%;
-  padding: 8px 10px; /* Reduced top and bottom padding */
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 24px;
-  height: 40px; /* Set a specific height */
-  line-height: 24px; /* Adjust line height for vertical centering */
-}
-
-.body-part:focus {
-  outline: none;
-  border-color: #0071bb;
-  box-shadow: 0 0 0 2px rgba(0, 113, 187, 0.2);
-}
-
-.input-group {
-  margin-bottom: 20px;
-}
-
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.condition-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.medical-code {
-  color: #555;
-}
-
-.match-percentage {
-  float: right;
-  color: #2c7be5;
-  font-weight: 500;
-}
-
-.condition-details {
-  margin-left: 20px;
-  font-size: 0.9rem;
-  color: #444;
-}
-
-.detail-item {
-  margin-bottom: 3px;
-  line-height: 1.4;
-}
-
-.detail-label {
-  display: inline-block;
-  min-width: 160px;
-  color: #333;
-}
-
-.detail-text {
-  display: inline;
-}
-
-@media (max-width: 768px) {
-    body {
-      padding: 10px;
-    }
-  
-    .container,  #symptom-form {
-      margin: 40px 5px 20px 0px;
-      padding: 15px;
-      box-sizing: border-box;
-      width:100%;
-      max-width: 100%;
-    }
-  
-    h1 {
-      font-size: 1.8em;
-    }
-  
-    .symptom-entry {
-      padding-bottom: 60px;
-    }
-  
-    .input-group label {
-      font-size: 14px;
-    }
-  
-    .body-part {
-      font-size: 14px;
-      padding: 8px;
-    }
-    .input-group input,
-    .input-group select {
-      font-size: 14px;
-    }
-  
-    button {
-      font-size: 12px;
-      padding: 8px 12px;
-    }
-  
-    .analyze-section button {
-      width: 100%;
-      margin-top: 40px;
-    }
-  }
