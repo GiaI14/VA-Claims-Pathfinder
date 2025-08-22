@@ -55,81 +55,101 @@ document.addEventListener("DOMContentLoaded", () => {
         ]
       },
       newClaim: {
-        question: "Proceed with filing a new claim",
+        question: "",
         message: "You can submit a new claim.",
         answers: [{ text: "Start Over", next: "step1" }]
       },
       supplementalClaim: {
-        question: "Proceed with a Supplemental Claim",
+        question: "",
         message: "You can submit a Supplemental Claim.",
         answers: [{ text: "Start Over", next: "step1" }]
       },
       higherReview: {
-        question: "Proceed with a Higher Level Review",
+        question: "",
         message: "You can file a Higher Level Review request.",
         answers: [{ text: "Start Over", next: "step1" }]
       }
     };
 
-    function renderStep(stepId) {
-      if (!flowChartData[stepId]) return;
+   function renderStep(stepId) {
+  if (!flowChartData[stepId]) return;
 
-      // Clear container only at step1
-      if (stepId === "step1") flowContainer.innerHTML = "";
+  // Clear container only at step1
+  if (stepId === "step1") flowContainer.innerHTML = "";
 
-      const step = flowChartData[stepId];
-      const stepDiv = document.createElement("div");
-      stepDiv.classList.add("flow-step");
-      stepDiv.style.marginTop = "10px";
+  const step = flowChartData[stepId];
+  const stepDiv = document.createElement("div");
+  stepDiv.classList.add("flow-step");
+  stepDiv.style.marginTop = "10px";
 
-      // Question
-      const questionP = document.createElement("p");
-      questionP.textContent = step.question;
-      stepDiv.appendChild(questionP);
+  // Question
+  const questionP = document.createElement("p");
+  questionP.textContent = step.question;
+  stepDiv.appendChild(questionP);
 
-      // Step message
-      if (step.message) {
-        const messageP = document.createElement("p");
-        messageP.textContent = step.message;
-        messageP.style.fontWeight = "bold";
-        stepDiv.appendChild(messageP);
-      }
+  // Step message
+  if (step.message) {
+    const messageP = document.createElement("p");
+    messageP.textContent = step.message;
+    messageP.style.fontWeight = "bold";
+    stepDiv.appendChild(messageP);
 
-      // Answers
-      step.answers.forEach(ans => {
-        const btn = document.createElement("button");
-        btn.textContent = ans.text;
-        btn.style.margin = "5px";
+    // Automatically open corresponding .option if exists
+    const optionEl = document.querySelector(`.option[data-target="${stepId}"]`);
+    if (optionEl) {
+      const targetId = optionEl.getAttribute('data-target');
+      const contentDiv = document.getElementById(targetId);
 
-        btn.addEventListener("click", (e) => {
-          e.preventDefault(); // prevent bubbling issues
-
-          // Show answer message if exists
-          if (ans.message) {
-            const ansMessageP = document.createElement("p");
-            ansMessageP.textContent = ans.message;
-            ansMessageP.style.fontStyle = "italic";
-            stepDiv.appendChild(ansMessageP);
-          }
-
-          // Render next step
-          if (ans.next) {
-            renderStep(ans.next);
-          }
-        });
-
-        stepDiv.appendChild(btn);
+      // Close other contents
+      document.querySelectorAll('.content').forEach(c => {
+        if (c !== contentDiv) c.style.display = 'none';
       });
 
-      flowContainer.appendChild(stepDiv);
-
-      // Scroll to newly added step
-      stepDiv.scrollIntoView({ behavior: "smooth" });
+      // Open the content
+      if (contentDiv) contentDiv.style.display = 'block';
     }
-
-    // Start flow chart
-    renderStep("step1");
   }
+
+  // Answers
+  step.answers.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans.text;
+    btn.style.margin = "5px";
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Show answer message if exists
+      if (ans.message) {
+        const ansMessageP = document.createElement("p");
+        ansMessageP.textContent = ans.message;
+        ansMessageP.style.fontStyle = "italic";
+        stepDiv.appendChild(ansMessageP);
+
+        // Open option for this step if exists
+        const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+        if (optionEl) {
+          const targetId = optionEl.getAttribute('data-target');
+          const contentDiv = document.getElementById(targetId);
+          document.querySelectorAll('.content').forEach(c => {
+            if (c !== contentDiv) c.style.display = 'none';
+          });
+          if (contentDiv) contentDiv.style.display = 'block';
+        }
+      }
+
+      // Render next step
+      if (ans.next) {
+        renderStep(ans.next);
+      }
+    });
+
+    stepDiv.appendChild(btn);
+  });
+
+  flowContainer.appendChild(stepDiv);
+  stepDiv.scrollIntoView({ behavior: "smooth" });
+}
 
   // Keep original claim option toggles separate
   document.querySelectorAll('.option').forEach(option => {
