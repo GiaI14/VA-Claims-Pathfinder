@@ -78,43 +78,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-    function renderStep(stepId) {
-      if (stepId === "step1") flowContainer.innerHTML = "";
+  function renderStep(stepKey) {
+  const step = flowChartData[stepKey];
+  const flowContainer = document.getElementById("flowContainer");
+  
+  // Clear previous content
+  flowContainer.innerHTML = "";
 
-      const step = flowChartData[stepId];
-      if (!step) return;
+  // Show the question
+  const questionEl = document.createElement("p");
+  questionEl.textContent = step.question;
+  flowContainer.appendChild(questionEl);
 
-      const stepDiv = document.createElement("div");
-      stepDiv.classList.add("flow-step");
-      stepDiv.style.marginTop = "10px";
-
-      const questionP = document.createElement("p");
-      questionP.textContent = step.question;
-      stepDiv.appendChild(questionP);
-
-      step.answers.forEach(ans => {
-        const btn = document.createElement("button");
-        btn.textContent = ans.text;
-        btn.style.margin = "5px";
-
-        btn.addEventListener("click", () => {
-          if (["newClaim", "supplementalClaim", "higherReview"].includes(ans.next)) {
-            // Trigger the original .option click
-            const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
-            if (optionEl) optionEl.click();
-          } else {
-            renderStep(ans.next);
-          }
-        });
-
-        stepDiv.appendChild(btn);
-      });
-
-      flowContainer.appendChild(stepDiv);
-    }
-
-    renderStep("step1");
+  // Show the message if it exists
+  if (step.message) {
+    const messageEl = document.createElement("p");
+    messageEl.style.fontWeight = "bold"; // optional styling
+    messageEl.textContent = step.message;
+    flowContainer.appendChild(messageEl);
   }
+
+  // Show answers as buttons
+  step.answers.forEach(answer => {
+    const button = document.createElement("button");
+    button.textContent = answer.text;
+    button.addEventListener("click", () => renderStep(answer.next));
+    flowContainer.appendChild(button);
+
+    // Show message from answer if it exists
+    if (answer.message) {
+      const answerMessageEl = document.createElement("p");
+      answerMessageEl.style.fontStyle = "italic"; // optional styling
+      answerMessageEl.textContent = answer.message;
+      flowContainer.appendChild(answerMessageEl);
+    }
+  });
+
+  flowContainer.style.display = "block"; // make container visible
+}
+
+   
 
   // Original toggle logic for main claim options
   document.querySelectorAll('.option').forEach(option => {
