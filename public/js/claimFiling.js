@@ -13,13 +13,67 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function renderFlowChart() {
-    const flowChartData = {
-      step1: { question: "Are you honorably discharged?", answers: [{ text: "Yes", next: "step2" }, { text: "No", next: "notEligible" }] },
-      notEligible: { question: "Sorry, unfortunately, you do not qualify for VA Disability", answers: [{ text: "Start Over", next: "step1" }] },
-      step2: { question: "Are you applying for a new claim?", answers: [{ text: "Yes", next: "newClaim" }, { text: "No", next: "step3" }] },
-      step3: { question: "Have you been denied?", answers: [{ text: "Yes", next: "chooseDeniedOption" }, { text: "No", next: "step1" }] },
-      chooseDeniedOption: { question: "Choose your path:", answers: [{ text: "Supplemental Claim", next: "supplementalClaim" }, { text: "Higher Level Review", next: "higherReview" }] }
-    };
+  const flowChartData = {
+    step1: {
+      question: "Are you honorably discharged?",
+      answers: [
+        { text: "Yes", next: "step2" },
+        { text: "No", next: "notEligible" }
+      ]
+    },
+    notEligible: {
+      question: "Sorry, unfortunately, you do not qualify for VA Disability",
+      answers: [
+        { text: "Start Over", next: "step1" }
+      ]
+    },
+    step2: {
+      question: "Are you applying for a new claim?",
+      answers: [
+        { text: "Yes", next: "newClaim" },
+        { text: "No", next: "step3" }
+      ]
+    },
+    step3: {
+      question: "Have you been denied a VA claim?",
+      answers: [
+        { text: "Yes", next: "disagreeDecision" },
+        { text: "No", next: "newClaim" }
+      ]
+    },
+    disagreeDecision: {
+      question: "Do you disagree with the decision?",
+      answers: [
+        { text: "Yes", next: "additionalEvidence" },
+        { text: "No", next: "newClaim" }
+      ]
+    },
+    additionalEvidence: {
+      question: "Do you have additional evidence (treatment records, Nexus letters, DBQs, or other developments)?",
+      answers: [
+        { text: "Yes", next: "supplementalClaim" },
+        { text: "No", next: "higherReview" }
+      ]
+    },
+    newClaim: {
+      question: "Proceed with filing a new claim",
+      answers: [
+        { text: "Start Over", next: "step1" }
+      ]
+    },
+    supplementalClaim: {
+      question: "Proceed with a Supplemental Claim",
+      answers: [
+        { text: "Start Over", next: "step1" }
+      ]
+    },
+    higherReview: {
+      question: "Proceed with a Higher Level Review",
+      answers: [
+        { text: "Start Over", next: "step1" }
+      ]
+    }
+  };
 
     function renderStep(stepId) {
       if (stepId === "step1") flowContainer.innerHTML = "";
