@@ -79,43 +79,58 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
    function renderStep(stepId) {
-      if (stepId === "step1") flowContainer.innerHTML = "";
+  if (stepId === "step1") flowContainer.innerHTML = "";
 
-      const step = flowChartData[stepId];
-      if (!step) return;
+  const step = flowChartData[stepId];
+  if (!step) return;
 
-      const stepDiv = document.createElement("div");
-      stepDiv.classList.add("flow-step");
-      stepDiv.style.marginTop = "10px";
+  const stepDiv = document.createElement("div");
+  stepDiv.classList.add("flow-step");
+  stepDiv.style.marginTop = "10px";
 
-      const questionP = document.createElement("p");
-      questionP.textContent = step.question;
-      stepDiv.appendChild(questionP);
+  // Question
+  const questionP = document.createElement("p");
+  questionP.textContent = step.question;
+  stepDiv.appendChild(questionP);
 
-      step.answers.forEach(ans => {
-        const btn = document.createElement("button");
-        btn.textContent = ans.text;
-        btn.style.margin = "5px";
-
-        btn.addEventListener("click", () => {
-          if (["newClaim", "supplementalClaim", "higherReview"].includes(ans.next)) {
-            // Trigger the original .option click
-            const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
-            if (optionEl) optionEl.click();
-          } else {
-            renderStep(ans.next);
-          }
-        });
-
-        stepDiv.appendChild(btn);
-      });
-
-      flowContainer.appendChild(stepDiv);
-    }
-
-    renderStep("step1");
+  // Message for the step (if any)
+  if (step.message) {
+    const messageP = document.createElement("p");
+    messageP.textContent = step.message;
+    messageP.style.fontWeight = "bold"; // optional styling
+    stepDiv.appendChild(messageP);
   }
 
+  // Answers
+  step.answers.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans.text;
+    btn.style.margin = "5px";
+
+    btn.addEventListener("click", () => {
+      // If the answer has a message, show it before moving on
+      if (ans.message) {
+        const ansMessageP = document.createElement("p");
+        ansMessageP.textContent = ans.message;
+        ansMessageP.style.fontStyle = "italic"; // optional styling
+        stepDiv.appendChild(ansMessageP);
+      }
+
+      if (["newClaim", "supplementalClaim", "higherReview"].includes(ans.next)) {
+        const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+        if (optionEl) optionEl.click();
+      } else {
+        renderStep(ans.next);
+      }
+    });
+
+    stepDiv.appendChild(btn);
+  });
+
+  flowContainer.appendChild(stepDiv);
+}
+
+renderStep("step1");
 
   // Original toggle logic for main claim options
   document.querySelectorAll('.option').forEach(option => {
