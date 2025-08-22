@@ -21,9 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
       chooseDeniedOption: { question: "Choose your path:", answers: [{ text: "Supplemental Claim", next: "supplementalClaim" }, { text: "Higher Level Review", next: "higherReview" }] }
     };
 
-    flowContainer.innerHTML = ""; // clear container on render
-
     function renderStep(stepId) {
+      // if Start Over, clear everything
+      if (stepId === "step1") {
+        flowContainer.innerHTML = "";
+      }
+
       const step = flowChartData[stepId];
       if (!step) return;
 
@@ -39,20 +42,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const btn = document.createElement("button");
         btn.textContent = ans.text;
         btn.style.margin = "5px";
+
         btn.addEventListener("click", () => {
-          // if the answer leads to main claim option, open it
           if (["newClaim","supplementalClaim","higherReview"].includes(ans.next)) {
             document.getElementById(ans.next).style.display = "block";
           } else {
-            renderStep(ans.next); // continue flow chart
+            renderStep(ans.next); // next step
           }
         });
+
         stepDiv.appendChild(btn);
       });
 
       flowContainer.appendChild(stepDiv);
     }
 
-    renderStep("step1"); // start
+    renderStep("step1");
   }
 });
