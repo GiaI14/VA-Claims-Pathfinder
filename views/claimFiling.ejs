@@ -42,6 +42,8 @@
       </style>
 
       <h1>Choose Your Claim Path</h1>
+      <h2>Need guidance? Use our Flow Chart</h2>
+      <div id="flowContainer"></div>
 
       <!-- NEW CLAIM -->
       <div class="option" data-target="newClaim">
@@ -109,7 +111,8 @@
 
    <script nonce="<%= nonce %>">
 document.addEventListener("DOMContentLoaded", () => {
-  // Select all clickable options
+  const options = document.querySelectorAll('.option');
+
   document.querySelectorAll('.option').forEach(option => {
     option.addEventListener('click', () => {
       const targetId = option.getAttribute('data-target');  // get the content ID
