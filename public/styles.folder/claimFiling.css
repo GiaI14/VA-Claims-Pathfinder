@@ -13,6 +13,10 @@
   transition: background 0.3s, border-color 0.3s;
 }
 
+.option .content {
+  display: none;
+  margin-top: 10px;
+} 
 .option:hover {
   background: #023047;       /* super navy-teal */
   color: #fff;
