@@ -52,26 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
       additionalEvidence: {
         question: "Do you have additional evidence (treatment, Nexus letters, DBQs, or other developments)?",
         answers: [
-          { text: "Yes", next: "supplementalClaim", message: "You can submit a Supplemental Claim." },
-          { text: "No", next: "higherReview", message: "You can file a Higher Level Review request." }
+          { text: "Yes", next: "supplementalClaim" },
+          { text: "No", next: "higherReview" }
         ]
       },
       newClaim: {
-        question: "Proceed with filing a new claim",
+        question: "",
         message: "You can submit a new claim.",
         answers: [
           { text: "Start Over", next: "step1" }
         ]
       },
       supplementalClaim: {
-        question: "Proceed with a Supplemental Claim",
+        question: "",
         message: "You can submit a Supplemental Claim.",
         answers: [
           { text: "Start Over", next: "step1" }
         ]
       },
       higherReview: {
-        question: "Proceed with a Higher Level Review",
+        question: "",
         message: "You can file a Higher Level Review request.",
         answers: [
           { text: "Start Over", next: "step1" }
@@ -95,12 +95,23 @@ document.addEventListener("DOMContentLoaded", () => {
       questionP.textContent = step.question;
       stepDiv.appendChild(questionP);
 
-      // Step message (do not auto-open any guidance/option window)
+      // Step message
       if (step.message) {
         const messageP = document.createElement("p");
         messageP.textContent = step.message;
         messageP.style.fontWeight = "bold";
         stepDiv.appendChild(messageP);
+
+        // Open corresponding option content automatically
+        const optionEl = document.querySelector(`.option[data-target="${stepId}"]`);
+        if (optionEl) {
+          const targetId = optionEl.getAttribute("data-target");
+          const contentDiv = document.getElementById(targetId);
+          document.querySelectorAll(".content").forEach(c => {
+            if (c !== contentDiv) c.style.display = "none";
+          });
+          if (contentDiv) contentDiv.style.display = "block";
+        }
       }
 
       // Answers
@@ -124,6 +135,17 @@ document.addEventListener("DOMContentLoaded", () => {
             ansMessageP.textContent = ans.message;
             ansMessageP.style.fontStyle = "italic";
             stepDiv.appendChild(ansMessageP);
+
+            // Open corresponding option content
+            const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+            if (optionEl) {
+              const targetId = optionEl.getAttribute("data-target");
+              const contentDiv = document.getElementById(targetId);
+              document.querySelectorAll(".content").forEach(c => {
+                if (c !== contentDiv) c.style.display = "none";
+              });
+              if (contentDiv) contentDiv.style.display = "block";
+            }
           }
 
           // Render next step
