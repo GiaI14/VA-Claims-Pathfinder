@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   showFlowBtn.addEventListener("click", () => {
     if (flowContainer.style.display === "block") {
-      flowContainer.style.display = "none";  
-      flowContainer.innerHTML = "";           
+      flowContainer.style.display = "none";
+      flowContainer.innerHTML = "";
     } else {
-      flowContainer.style.display = "block"; 
-      renderFlowChart();                      
+      flowContainer.style.display = "block";
+      renderFlowChart();
     }
   });
 
@@ -22,17 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function renderStep(stepId) {
-      // if Start Over, clear everything
-      if (stepId === "step1") {
-        flowContainer.innerHTML = "";
-      }
+      if (stepId === "step1") flowContainer.innerHTML = "";
 
       const step = flowChartData[stepId];
       if (!step) return;
 
       const stepDiv = document.createElement("div");
       stepDiv.classList.add("flow-step");
-      stepDiv.style.marginTop = "10px";
 
       const questionP = document.createElement("p");
       questionP.textContent = step.question;
@@ -41,14 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
       step.answers.forEach(ans => {
         const btn = document.createElement("button");
         btn.textContent = ans.text;
-        btn.style.margin = "5px";
 
         btn.addEventListener("click", () => {
+          // Only show claim content if a claim option is chosen
           if (["newClaim","supplementalClaim","higherReview"].includes(ans.next)) {
             document.getElementById(ans.next).style.display = "block";
-          } else {
-            renderStep(ans.next); // next step
           }
+          renderStep(ans.next);
         });
 
         stepDiv.appendChild(btn);
@@ -59,4 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderStep("step1");
   }
+
+  // Toggle main claim options independently
+  document.querySelectorAll('.option').forEach(option => {
+    option.addEventListener('click', () => {
+      const targetId = option.getAttribute('data-target');
+      const contentDiv = document.getElementById(targetId);
+      contentDiv.style.display = (contentDiv.style.display === 'block') ? 'none' : 'block';
+    });
+  });
 });
