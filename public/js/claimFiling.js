@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  function renderFlowChart() {
+ function renderFlowChart() {
   const flowChartData = {
     step1: {
       question: "Are you honorably discharged?",
@@ -51,24 +51,27 @@ document.addEventListener("DOMContentLoaded", () => {
     additionalEvidence: {
       question: "Do you have additional evidence (treatment records, Nexus letters, DBQs, or other developments)?",
       answers: [
-        { text: "Yes", next: "supplementalClaim" },
-        { text: "No", next: "higherReview" }
+        { text: "Yes", next: "supplementalClaim", message: "You can submit a Supplemental Claim." },
+        { text: "No", next: "higherReview", message: "You can file a Higher Level Review request." }
       ]
     },
     newClaim: {
       question: "Proceed with filing a new claim",
+      message: "You can submit a new claim.",
       answers: [
         { text: "Start Over", next: "step1" }
       ]
     },
     supplementalClaim: {
       question: "Proceed with a Supplemental Claim",
+      message: "You can submit a Supplemental Claim.",
       answers: [
         { text: "Start Over", next: "step1" }
       ]
     },
     higherReview: {
       question: "Proceed with a Higher Level Review",
+      message: "You can file a Higher Level Review request.",
       answers: [
         { text: "Start Over", next: "step1" }
       ]
