@@ -8,10 +8,6 @@
       <%- include('includes/header', { nonce: nonce }) %>
 
       <style>
-        body {
-          font-family: Arial, sans-serif;
-          padding: 20px;
-        }
         .option {
           margin: 10px 0;
           padding: 12px;
@@ -35,43 +31,50 @@
 
       <h1>Choose Your Claim Path</h1>
 
-      <div class="option" onclick="toggleContent('newClaim')">
+      <div class="option" data-target="newClaim">
         ➤ New Claim
         <div id="newClaim" class="content">
           <p>If you’ve never filed before or are filing for a new condition, start here.</p>
         </div>
       </div>
 
-      <div class="option" onclick="toggleContent('supplementalClaim')">
+      <div class="option" data-target="supplementalClaim">
         ➤ Supplemental Claim
         <div id="supplementalClaim" class="content">
           <p>If your claim was denied but you have new evidence, this is the right option.</p>
         </div>
       </div>
 
-      <div class="option" onclick="toggleContent('higherReview')">
+      <div class="option" data-target="higherReview">
         ➤ Higher-Level Review
         <div id="higherReview" class="content">
           <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
         </div>
       </div>
 
-      <script>
-        function toggleContent(id) {
-          // hide all sections first
-          document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-          // show only the clicked one
-          document.getElementById(id).style.display = 'block';
-        }
-      </script>
-
       <div class="spacer"></div>
 
       <%- include('includes/footer') %>
     </div> <!-- closes .page-wrapper -->
 
-    <!-- Your existing scripts -->
+    <!-- Scripts -->
     <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
+
+    <!-- FIX: External script with nonce -->
+    <script nonce="<%= nonce %>">
+      document.addEventListener("DOMContentLoaded", () => {
+        const options = document.querySelectorAll(".option");
+        options.forEach(option => {
+          option.addEventListener("click", () => {
+            // hide all
+            document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+            // show only the clicked one
+            const targetId = option.getAttribute("data-target");
+            document.getElementById(targetId).style.display = "block";
+          });
+        });
+      });
+    </script>
   </body>
 </html>
