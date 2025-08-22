@@ -7,66 +7,65 @@
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .option {
-      margin: 10px 0;
-      padding: 12px;
-      border: 2px solid #1e3a8a;
-      border-radius: 12px;
-      background: #f9fafb;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .option:hover {
-      background: #e0e7ff;
-    }
-    .content {
-      display: none;
-      margin-top: 10px;
-      padding: 10px;
-      border-left: 4px solid #1e3a8a;
-      background: #f3f4f6;
-    }
-  </style>
-</head>
-<body>
-  <h1>Choose Your Claim Path</h1>
-  
-  <div class="option" onclick="toggleContent('newClaim')">
-    ➤ New Claim
-    <div id="newClaim" class="content">
-      <p>If you’ve never filed before or are filing for a new condition, start here.</p>
-    </div>
-  </div>
-  
-  <div class="option" onclick="toggleContent('supplementalClaim')">
-    ➤ Supplemental Claim
-    <div id="supplementalClaim" class="content">
-      <p>If your claim was denied but you have new evidence, this is the right option.</p>
-    </div>
-  </div>
-  
-  <div class="option" onclick="toggleContent('higherReview')">
-    ➤ Higher-Level Review
-    <div id="higherReview" class="content">
-      <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
-    </div>
-  </div>
-  
-  <script>
-    function toggleContent(id) {
-      // hide all sections first
-      document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-      // show only the clicked one
-      document.getElementById(id).style.display = 'block';
-    }
-  </script>
-        <div class="spacer"></div>
-      </div> <!-- closes .container -->
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+        }
+        .option {
+          margin: 10px 0;
+          padding: 12px;
+          border: 2px solid #1e3a8a;
+          border-radius: 12px;
+          background: #f9fafb;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+        .option:hover {
+          background: #e0e7ff;
+        }
+        .content {
+          display: none;
+          margin-top: 10px;
+          padding: 10px;
+          border-left: 4px solid #1e3a8a;
+          background: #f3f4f6;
+        }
+      </style>
+
+      <h1>Choose Your Claim Path</h1>
+
+      <div class="option" onclick="toggleContent('newClaim')">
+        ➤ New Claim
+        <div id="newClaim" class="content">
+          <p>If you’ve never filed before or are filing for a new condition, start here.</p>
+        </div>
+      </div>
+
+      <div class="option" onclick="toggleContent('supplementalClaim')">
+        ➤ Supplemental Claim
+        <div id="supplementalClaim" class="content">
+          <p>If your claim was denied but you have new evidence, this is the right option.</p>
+        </div>
+      </div>
+
+      <div class="option" onclick="toggleContent('higherReview')">
+        ➤ Higher-Level Review
+        <div id="higherReview" class="content">
+          <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
+        </div>
+      </div>
+
+      <script>
+        function toggleContent(id) {
+          // hide all sections first
+          document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
+          // show only the clicked one
+          document.getElementById(id).style.display = 'block';
+        }
+      </script>
+
+      <div class="spacer"></div>
 
       <%- include('includes/footer') %>
     </div> <!-- closes .page-wrapper -->
@@ -76,5 +75,3 @@
     <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
   </body>
 </html>
-
-
