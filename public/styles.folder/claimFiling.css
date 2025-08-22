@@ -22,6 +22,24 @@
   color: #fff;
 }
 
+.claim-menu-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Guidance (left column) */
+#guidanceWrapper {
+  flex: 1;
+  max-width: 300px;
+}
+
+/* Options (right column) */
+.claim-options-wrapper {
+  flex: 2;
+}
+
 /* Flow Chart Container */
 #flowContainer {
   display: none; /* hidden until button click */
