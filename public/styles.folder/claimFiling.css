@@ -39,7 +39,7 @@ h1 {
 
 .guidance-column {
   flex: 1;                   /* both take equal width */
-  min-width: 700px;          /* ensures columns don’t collapse */       
+  min-width: 500px;          /* ensures columns don’t collapse */       
 }
 .options-column{
   flex: 2;
