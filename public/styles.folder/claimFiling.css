@@ -29,8 +29,7 @@
   gap: 60px;                 /* space between left and right */
   margin: 0 auto;
   max-width: 2300px;         /* make the whole section wider */
-  width: 100%;               /* allow it to stretch */
-  padding: 20px;             /* breathing room inside */
+  width: 100%;               /* allow it to stretch */          
 }
 
 .guidance-column,
