@@ -1,3 +1,4 @@
+
 .option {
   width: 80%;
   max-width: 600px;
@@ -13,7 +14,8 @@
 }
 
 .option:hover {
-  background: #d2f4f8;       /* li-hover-color */
+  background: #023047;       /* super navy-teal */
+  color: #fff;
 }
 
 /* Flow Chart Container */
@@ -54,5 +56,6 @@
 }
 
 .flow-step button:hover {
-  background-color: #2ecc71;   /* green-hover */
+  background-color: #023047;   /* super navy-teal */
 }
+
