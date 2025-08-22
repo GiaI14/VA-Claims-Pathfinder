@@ -4,22 +4,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   showFlowBtn.addEventListener("click", () => {
     if (flowContainer.style.display === "block") {
-      flowContainer.style.display = "none";  // hide if already open
-      flowContainer.innerHTML = "";           // clear previous steps
+      flowContainer.style.display = "none";  
+      flowContainer.innerHTML = "";           
     } else {
-      flowContainer.style.display = "block"; // show flow chart
-      renderFlowChart();                      // populate flow chart
+      flowContainer.style.display = "block"; 
+      renderFlowChart();                      
     }
   });
 
   function renderFlowChart() {
     const flowChartData = {
       step1: { question: "Are you honorably discharged?", answers: [{ text: "Yes", next: "step2" }, { text: "No", next: "notEligible" }] },
-      notEligible: { question: "Sorry, unfortunately, you do not qualify for VA Disability.", answers: [{ text: "Start Over", next: "step1" }] },
+      notEligible: { question: "Sorry, you cannot apply for VA Disability.", answers: [{ text: "Start Over", next: "step1" }] },
       step2: { question: "Are you applying for a new claim?", answers: [{ text: "Yes", next: "newClaim" }, { text: "No", next: "step3" }] },
       step3: { question: "Have you been denied?", answers: [{ text: "Yes", next: "chooseDeniedOption" }, { text: "No", next: "step1" }] },
       chooseDeniedOption: { question: "Choose your path:", answers: [{ text: "Supplemental Claim", next: "supplementalClaim" }, { text: "Higher Level Review", next: "higherReview" }] }
     };
+
+    flowContainer.innerHTML = ""; // clear container on render
 
     function renderStep(stepId) {
       const step = flowChartData[stepId];
@@ -38,12 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = ans.text;
         btn.style.margin = "5px";
         btn.addEventListener("click", () => {
+          // if the answer leads to main claim option, open it
           if (["newClaim","supplementalClaim","higherReview"].includes(ans.next)) {
             document.getElementById(ans.next).style.display = "block";
           } else {
-            renderStep(ans.next);
+            renderStep(ans.next); // continue flow chart
           }
-          stepDiv.querySelectorAll("button").forEach(b => b.disabled = true);
         });
         stepDiv.appendChild(btn);
       });
@@ -51,6 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
       flowContainer.appendChild(stepDiv);
     }
 
-    renderStep("step1"); // start flow
+    renderStep("step1"); // start
   }
 });
