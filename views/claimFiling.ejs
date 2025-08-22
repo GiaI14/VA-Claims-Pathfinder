@@ -8,19 +8,19 @@
     <div class="page-wrapper">
       <%- include('includes/header', { nonce: nonce }) %>
 
-     
-
       <h1>Choose Your Claim Path</h1>
+      <div class="claim-menu-wrapper">
 
-      <div id="guidanceWrapper">
-        <!-- Need Guidance Button + Flow chart -->
-        <div id="flowContainerWrapper">
-          <button id="showFlowBtn">Need Guidance</button>
-          <div id="flowContainer"></div>
-        </div>
+        <!-- Guidance button -->
+        <div id="guidanceWrapper">
+          <div id="flowContainerWrapper">
+            <button id="showFlowBtn">Need Guidance</button>
+            <div id="flowContainer"></div>
+          </div> <!-- closes flowContainerWrapper -->
+        </div> <!-- closes guidanceWrapper -->
 
         <!-- Main Claim Options -->
-        <div id="claimOptions">
+        <div id="claimOptions" class="claim-options-wrapper">
           <!-- NEW CLAIM -->
           <div class="option" data-target="newClaim">
             ➤ New Claim
@@ -75,8 +75,9 @@
               <p>If you disagree with a decision and want a senior reviewer to look at it, choose this.</p>
             </div>
           </div>
-        </div>
-      </div>
+        </div> <!-- closes claimOptions -->
+
+      </div> <!-- closes claim-menu-wrapper -->
 
       <div class="spacer"></div>
       <%- include('includes/footer') %>
