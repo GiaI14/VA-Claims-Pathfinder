@@ -35,23 +35,6 @@
   max-width: 300px;
 }
 
-.guidance-options-container {
-  display: flex;
-  justify-content: center;   /* center the whole block */
-  gap: 50px;                 /* space between the two columns */
-  margin-top: 40px;
-}
-
-.need-guidance,
-.options {
-  flex: 1;
-  max-width: 400px;          /* keeps columns from stretching too wide */
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-} 
 /* Options (right column) */
 .claim-options-wrapper {
   flex: 2;
