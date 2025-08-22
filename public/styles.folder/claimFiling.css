@@ -1,3 +1,5 @@
+<style>
+/* Option Buttons (New Claim, Supplemental, Higher-Level Review) */
 .option {
   width: 80%;
   max-width: 600px;
@@ -6,14 +8,14 @@
   padding: 12px;
   border: 2px solid var(--primary-color); /* main blue border */
   border-radius: 12px;
-  background: var(--background-color);
-  color: var(--text-color);
+  background: var(--background-color);   /* light background */
+  color: var(--text-color);              /* dark text */
   cursor: pointer;
   transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
 .option:hover {
-  background: var(--li-hover-color); /* soft highlight */
+  background: var(--li-hover-color);     /* light teal highlight */
   border-color: var(--primary-color);
 }
 
@@ -32,14 +34,14 @@
   margin-bottom: 15px;
   padding: 10px;
   border-left: 4px solid var(--primary-color);
-  background: #fff; /* white for steps */
+  background: #fff;  /* white for steps */
   border-radius: 8px;
 }
 
 .flow-step p {
   margin-bottom: 10px;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--secondary-color);  /* dark blue text for emphasis */
 }
 
 /* Buttons inside flow chart steps */
@@ -48,12 +50,13 @@
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
-  background-color: var(--primary-color); /* main blue */
-  color: var(--nav-text-color); /* white text */
+  background-color: var(--primary-color);   /* main blue */
+  color: var(--nav-text-color);             /* white text */
   cursor: pointer;
   transition: background var(--transition-speed);
 }
 
 .flow-step button:hover {
-  background-color: var(--green-hover); /* green hover for contrast */
+  background-color: var(--green-hover);     /* teal/green hover for clarity */
 }
+</style>
