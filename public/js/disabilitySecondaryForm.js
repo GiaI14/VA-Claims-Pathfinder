@@ -130,8 +130,7 @@ function displaySecondaryConditions(conditions, disabilities) {
       );
 
       const div = document.createElement('div');
-      div.innerHTML = `<h4>${disability.value}</h4>`;
-
+     
       if (related.length > 0) {
         const ul = document.createElement('ul');
         related.forEach(condition => {
