@@ -52,11 +52,10 @@ async function submitDisabilities() {
   console.log('Submit Disabilities button clicked');
 
   const disabilityInputs = document.querySelectorAll('#disabilities input');
-  const disabilities = Array.from(disabilityInputs).map(input => ({ 
-    id: input.closest('.disability-entry').dataset.id,
-    value: input.value.trim()
-  })).filter(d => d.value !== ''); // FIXED syntax
-
+ const disabilities = Array.from(disabilityInputs)
+  .map(input => input.value.trim())
+  .filter(Boolean);
+  
   console.log('Disabilities to submit:', disabilities);
 
   if (disabilities.length === 0) {
