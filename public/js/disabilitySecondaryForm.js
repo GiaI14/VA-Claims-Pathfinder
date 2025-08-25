@@ -24,38 +24,35 @@ function addDisability() {
 
 function handleDisabilityRemoval(event) {
   const disabilityWrapper = event.target.closest('.disability-entry');
-  if (!disabilityWrapper) return;
+  const isRemoveButton = event.target.classList.contains('remove-disability-button');
 
-  const disabilityId = disabilityWrapper.dataset.id;
-
-  // Minus button: remove input + its results (only works before submit)
+  // Minus button: only works before submission
   if (event.target.classList.contains('minus-disability-button')) {
-    console.log('Minus button clicked:', disabilityId);
-
-    // Remove the input entry
+    if (!disabilityWrapper) return;
+    console.log('Minus button clicked:', disabilityWrapper.dataset.id);
     disabilityWrapper.remove();
-
-    // Remove linked results if they exist
-    const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
-    results.forEach(r => r.remove());
   }
 
-  // Remove button: resets everything after submission
-  if (event.target.classList.contains('remove-disability-button')) {
-    console.log('Remove button clicked. Resetting all.');
+  // Remove button after submission: clear everything
+  if (isRemoveButton) {
+    console.log('Remove button clicked, clearing all.');
     document.getElementById('disabilities').innerHTML = '';
     document.getElementById('secondaryConditions').innerHTML = '';
-    document.getElementById('addDisabilityButton').style.display = 'inline-block'; // Show add button again
+    disabilityCounter = 0;
   }
 }
+
 
 async function submitDisabilities() {
   console.log('Submit Disabilities button clicked');
 
   const disabilityInputs = document.querySelectorAll('#disabilities input');
   const disabilities = Array.from(disabilityInputs)
-    .map(input => input.value.trim())
-    .filter(Boolean);
+    .map(input => ({
+      disabilityId: input.closest('.disability-entry').dataset.id,
+      value: input.value.trim()
+    }))
+    .filter(d => d.value !== '');
 
   console.log('Disabilities to submit:', disabilities);
 
@@ -73,7 +70,7 @@ async function submitDisabilities() {
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
-      body: JSON.stringify({ disabilities }),
+      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }), // send only values
     });
 
     console.log('Response status:', response.status);
@@ -87,50 +84,40 @@ async function submitDisabilities() {
     const data = await response.json();
     console.log('Secondary conditions:', data.secondaryConditions);
 
-    displaySecondaryConditions(data.secondaryConditions, disabilityInputs);
+    displaySecondaryConditions(data.secondaryConditions, disabilities);
+
+    // After submission: hide minus buttons and show main Remove button
+    document.querySelectorAll('.minus-disability-button').forEach(btn => btn.remove());
+
+    const disabilitiesDiv = document.getElementById('disabilities');
+    // Add single Remove button if it doesn't exist
+    if (!document.querySelector('.remove-disability-button')) {
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.textContent = 'Remove';
+      removeButton.className = 'remove-disability-button';
+      disabilitiesDiv.appendChild(removeButton);
+    }
+
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred while fetching secondary conditions: ' + error.message);
   }
 }
 
-function displaySecondaryConditions(conditions, inputs) {
+function displaySecondaryConditions(conditions, disabilities) {
   const secondaryConditionsDiv = document.getElementById('secondaryConditions');
   secondaryConditionsDiv.innerHTML = '<h3>Conditions and Secondary Conditions</h3>';
 
-  // Hide add button and all minus buttons after submission
-  const addBtn = document.getElementById('addDisabilityButton');
-  if (addBtn) addBtn.style.display = 'none';
-
-  const minusButtons = document.querySelectorAll('.minus-disability-button');
-  minusButtons.forEach(btn => btn.style.display = 'none');
-
-  // Show Remove button at top if not already
-  let removeBtn = document.querySelector('.remove-disability-button');
-  if (!removeBtn) {
-    removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.textContent = 'Remove';
-    removeBtn.className = 'remove-disability-button';
-    document.getElementById('disabilities').prepend(removeBtn);
-  }
-
   if (conditions.length > 0) {
     const ul = document.createElement('ul');
-
     conditions.forEach((condition, index) => {
       const li = document.createElement('li');
-
-      // Attach result to its input ID
-      const inputWrapper = inputs[index].closest('.disability-entry');
-      const disabilityId = inputWrapper.dataset.id;
-
-      li.setAttribute('data-disability-id', disabilityId);
+      li.setAttribute('data-disability-id', disabilities[index].disabilityId);
       li.innerHTML = `<strong>${condition.condition_name}</strong><br>
                       Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
       ul.appendChild(li);
     });
-
     secondaryConditionsDiv.appendChild(ul);
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
@@ -153,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearAllBtn.addEventListener('click', () => {
       document.getElementById('disabilities').innerHTML = '';
       document.getElementById('secondaryConditions').innerHTML = '';
-      document.getElementById('addDisabilityButton').style.display = 'inline-block';
+      disabilityCounter = 0;
       console.log('All disabilities cleared, results reset.');
     });
   }
