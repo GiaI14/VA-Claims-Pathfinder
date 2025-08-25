@@ -61,20 +61,26 @@ input[type="text"], input[type="number"] {
     align-items: center;
     gap: 10px;
     background-color: #f8f9fa;
-    padding: 15px;
+    padding: 10px 15px;
     border-radius: 4px;
     margin-bottom: 10px;
+    flex-wrap: nowrap;
 }
 
 .disability-entry input,
 .disability-entry select {
-    flex-grow: 1;
+    flex-grow: 1 1 auto;
     width: auto;
-    margin-right: 10px;
+    margin: 0;
 }
 
 .disability-entry button.minus-disability-button {
     flex-shrink: 0;
+    margin-left: 5px;
+}
+
+.disability-entry button.remove-disability-button {
+    display: none;  
     margin-left: 5px;
 }
 
