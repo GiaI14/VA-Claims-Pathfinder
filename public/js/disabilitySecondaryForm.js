@@ -104,4 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('disabilities')
           .addEventListener('click', handleDisabilityRemoval);
+
+   const clearAllBtn = document.getElementById('clearAllDisabilitiesButton');
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', () => {
+      document.getElementById('disabilities').innerHTML = '';
+      document.getElementById('secondaryConditions').innerHTML = '';
+      console.log('All disabilities cleared, results reset.');
+    });
+  }
 });
