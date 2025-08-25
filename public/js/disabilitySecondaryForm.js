@@ -93,10 +93,10 @@ async function submitDisabilities() {
   }
 }
 
-function displaySecondaryConditions(conditions) {
+function displaySecondaryConditions(conditions, inputs) {
   const secondaryConditionsDiv = document.getElementById('secondaryConditions');
   secondaryConditionsDiv.innerHTML = '<h3>Conditions and Secondary Conditions</h3>';
-  
+
   // Hide Add Disability button after results
   const addBtn = document.getElementById('addDisabilityButton');
   if (addBtn) addBtn.style.display = 'none';
@@ -107,18 +107,25 @@ function displaySecondaryConditions(conditions) {
 
   if (conditions.length > 0) {
     const ul = document.createElement('ul');
-    conditions.forEach(condition => {
+
+    conditions.forEach((condition, index) => {
       const li = document.createElement('li');
-      li.setAttribute('data-disability-id', condition.disabilityId);
+      // Attach each result to its input's generated ID
+      const inputWrapper = inputs[index].closest('.disability-entry');
+      const disabilityId = inputWrapper.dataset.id;
+
+      li.setAttribute('data-disability-id', disabilityId);
       li.innerHTML = `<strong>${condition.condition_name}</strong><br>
                       Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
       ul.appendChild(li);
     });
+
     secondaryConditionsDiv.appendChild(ul);
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
 }
+
 
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
