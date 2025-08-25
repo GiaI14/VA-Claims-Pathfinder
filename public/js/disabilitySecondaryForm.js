@@ -22,7 +22,6 @@ function addDisability() {
   disabilitiesDiv.appendChild(disabilityWrapper);
 }
 
- 
 function handleDisabilityRemoval(event) {
   const disabilityWrapper = event.target.closest('.disability-entry');
   if (!disabilityWrapper) return;
@@ -42,18 +41,21 @@ function handleDisabilityRemoval(event) {
 
   if (event.target.classList.contains('remove-disability-button')) {
     console.log('Remove button clicked:', disabilityId);
+
     // Clear only this input’s results
     const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
     results.forEach(r => r.remove());
   }
 }
 
-
 async function submitDisabilities() {
   console.log('Submit Disabilities button clicked');
 
   const disabilityInputs = document.querySelectorAll('#disabilities input');
-  const disabilities = Array.from(disabilityInputs).map(input => input.value.trim()).filter(Boolean);
+  const disabilities = Array.from(disabilityInputs).map(input => ({ 
+    id: input.closest('.disability-entry').dataset.id,
+    value: input.value.trim()
+  })).filter(d => d.value !== ''); // FIXED syntax
 
   console.log('Disabilities to submit:', disabilities);
 
@@ -121,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('disabilities')
           .addEventListener('click', handleDisabilityRemoval);
 
-   const clearAllBtn = document.getElementById('clearAllDisabilitiesButton');
+  const clearAllBtn = document.getElementById('clearAllDisabilitiesButton');
   if (clearAllBtn) {
     clearAllBtn.addEventListener('click', () => {
       document.getElementById('disabilities').innerHTML = '';
