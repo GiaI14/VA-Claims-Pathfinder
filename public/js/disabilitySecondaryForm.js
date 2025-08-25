@@ -28,9 +28,56 @@ function addDisability() {
     }
   });
 
+  const minusButton = document.createElement('button');
+  minusButton.type = 'button';
+  minusButton.textContent = '-';
+  minusButton.className = 'minus-disability-button';
+  disablityWrapper.appendChild(minusButton);
+
   disabilitiesDiv.appendChild(disabilityWrapper);
 }
 
+function handleDisabilityRemoval(event) {
+  if(event.target.classList.contains('remove-disability-button')) {
+    const disabilityWrapper = event.target.closest('.disability-wrapper');
+    const disabilityId = disabilityWrapper.getAttribute('data-id');
+    console.log('Removing disability with ID via Remove button:', disabilityId);
+
+    disabilityWrapper.remove();
+    
+    function handleDisabilityRemoval(event) {
+  if (event.target.classList.contains('remove-disability-button')) {
+    const disabilityWrapper = event.target.closest('.disability-wrapper');
+    const disabilityId = disabilityWrapper.getAttribute('data-id');
+    console.log('Removing disability with ID via Remove button:', disabilityId);
+
+    disabilityWrapper.remove();
+
+    const disabilityInputs = document.querySelectorAll('#disabilities input');
+    const disabilities = Array.from(disabilityInputs).map(input => input.value.trim()).filter(Boolean);
+
+    if (disabilities.length === 0) {
+      document.getElementById('secondaryConditions').innerHTML = '';
+      console.log('No disabilities left. Secondary conditions area cleared.');
+    } else {
+      submitDisabilities();
+    }
+  }
+
+  // Case 2: Minus button (always visible, just remove immediately)
+  if (event.target.classList.contains('minus-disability-button')) {
+    const disabilityWrapper = event.target.closest('.disability-wrapper');
+    const disabilityId = disabilityWrapper.getAttribute('data-id');
+    console.log('Removing disability with ID via Minus button:', disabilityId);
+
+    disabilityWrapper.remove();
+
+    // No need to re-fetch unless you want it — uncomment if needed:
+    // submitDisabilities();
+  }
+}
+
+    
   async function submitDisabilities() {
     console.log('Submit Disabilities button clicked');
   
