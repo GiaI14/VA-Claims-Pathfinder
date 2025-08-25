@@ -4,8 +4,8 @@ function addDisability() {
   const disabilitiesDiv = document.getElementById('disabilities');
   const disabilityWrapper = document.createElement('div');
   disabilityWrapper.className = 'disability-entry';
-  const disabilityId = `disability-${disabilityCounter++}`; // Generate a unique ID
-  disabilityWrapper.setAttribute('data-id', disabilityId); // Assign the unique ID
+  const disabilityId = `disability-${disabilityCounter++}`; 
+  disabilityWrapper.setAttribute('data-id', disabilityId);
 
   const newDisabilityInput = document.createElement('input');
   newDisabilityInput.type = 'text';
@@ -40,7 +40,7 @@ function addDisability() {
 function handleDisabilityRemoval(event) {
   // Case 1: Hidden remove button
   if (event.target.classList.contains('remove-disability-button')) {
-    const disabilityWrapper = event.target.closest('.disability-wrapper');
+    const disabilityWrapper = event.target.closest('.disability-entry');
     const disabilityId = disabilityWrapper.getAttribute('data-id');
     console.log('Removing disability with ID via Remove button:', disabilityId);
 
