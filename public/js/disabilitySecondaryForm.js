@@ -124,19 +124,34 @@ function displaySecondaryConditions(conditions, disabilities) {
   secondaryConditionsDiv.innerHTML = '<h3>Conditions and Secondary Conditions</h3>';
 
   if (conditions.length > 0) {
-    const ul = document.createElement('ul');
-    conditions.forEach((condition, index) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-disability-id', disabilities[index].disabilityId);
-      li.innerHTML = `<strong>${condition.condition_name}</strong><br>
-                      Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
-      ul.appendChild(li);
+    disabilities.forEach(disability => {
+      const related = conditions.filter(c =>
+        c.condition_name.toLowerCase().includes(disability.value.toLowerCase())
+      );
+
+      const div = document.createElement('div');
+      div.innerHTML = `<h4>${disability.value}</h4>`;
+
+      if (related.length > 0) {
+        const ul = document.createElement('ul');
+        related.forEach(condition => {
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${condition.condition_name}</strong><br>
+                          Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
+          ul.appendChild(li);
+        });
+        div.appendChild(ul);
+      } else {
+        div.innerHTML += '<p>No matching conditions found.</p>';
+      }
+
+      secondaryConditionsDiv.appendChild(div);
     });
-    secondaryConditionsDiv.appendChild(ul);
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
 }
+
 
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
