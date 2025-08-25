@@ -3,7 +3,7 @@ let disabilityCounter = 0; // Counter to generate unique IDs
 function addDisability() {
   const disabilitiesDiv = document.getElementById('disabilities');
   const disabilityWrapper = document.createElement('div');
-  disabilityWrapper.className = 'disability-wrapper';
+  disabilityWrapper.className = 'disability-entry';
   const disabilityId = `disability-${disabilityCounter++}`; // Generate a unique ID
   disabilityWrapper.setAttribute('data-id', disabilityId); // Assign the unique ID
 
