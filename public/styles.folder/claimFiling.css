@@ -16,6 +16,13 @@
 h1 {
   text-align: center;
 }
+h2 {
+  font-size: 15px;
+}
+
+h3{ 
+  font-size: 20px;
+}
 
 .option .content {
   display: none;
