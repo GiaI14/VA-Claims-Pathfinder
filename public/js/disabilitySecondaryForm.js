@@ -26,19 +26,20 @@ function handleDisabilityRemoval(event) {
   const disabilityWrapper = event.target.closest('.disability-entry');
   const isRemoveButton = event.target.classList.contains('remove-disability-button');
 
-  // Minus button: only works before submission
   if (event.target.classList.contains('minus-disability-button')) {
     if (!disabilityWrapper) return;
     console.log('Minus button clicked:', disabilityWrapper.dataset.id);
     disabilityWrapper.remove();
   }
 
-  // Remove button after submission: clear everything
   if (isRemoveButton) {
     console.log('Remove button clicked, clearing all.');
     document.getElementById('disabilities').innerHTML = '';
     document.getElementById('secondaryConditions').innerHTML = '';
     disabilityCounter = 0;
+
+    const addBtn = document.getElementById('addDisabilityButton');
+    if (addBtn) addBtn.style.dispay = 'inline-block';
   }
 }
 
