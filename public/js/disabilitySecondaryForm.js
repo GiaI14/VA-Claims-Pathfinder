@@ -24,14 +24,30 @@ function addDisability() {
 
  
 function handleDisabilityRemoval(event) {
-  if (event.target.classList.contains('minus-disability-button')) {
-    const disabilityWrapper = event.target.closest('.disability-entry');
-    const disabilityId = disabilityWrapper.getAttribute('data-id');
-    console.log('Removing disability with ID via Minus button:', disabilityId);
+  const disabilityWrapper = event.target.closest('.disability-entry');
+  if (!disabilityWrapper) return;
 
+  const disabilityId = disabilityWrapper.dataset.id;
+
+  if (event.target.classList.contains('minus-disability-button')) {
+    console.log('Minus button clicked:', disabilityId);
+
+    // Remove the entry
     disabilityWrapper.remove();
+
+    // Remove results linked to this entry
+    const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
+    results.forEach(r => r.remove());
+  }
+
+  if (event.target.classList.contains('remove-disability-button')) {
+    console.log('Remove button clicked:', disabilityId);
+    // Clear only this input’s results
+    const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
+    results.forEach(r => r.remove());
   }
 }
+
 
 async function submitDisabilities() {
   console.log('Submit Disabilities button clicked');
