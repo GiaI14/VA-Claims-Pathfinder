@@ -70,7 +70,7 @@ async function submitDisabilities() {
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
-      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }), // send only values
+      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }),
     });
 
     console.log('Response status:', response.status);
@@ -86,11 +86,15 @@ async function submitDisabilities() {
 
     displaySecondaryConditions(data.secondaryConditions, disabilities);
 
-    // After submission: hide minus buttons and show main Remove button
+    // Hide minus buttons after submission
     document.querySelectorAll('.minus-disability-button').forEach(btn => btn.remove());
 
-    const disabilitiesDiv = document.getElementById('disabilities');
+    // Hide Add Disability button after results
+    const addBtn = document.getElementById('addDisabilityButton');
+    if (addBtn) addBtn.style.display = 'none';
+
     // Add single Remove button if it doesn't exist
+    const disabilitiesDiv = document.getElementById('disabilities');
     if (!document.querySelector('.remove-disability-button')) {
       const removeButton = document.createElement('button');
       removeButton.type = 'button';
@@ -104,6 +108,7 @@ async function submitDisabilities() {
     alert('An error occurred while fetching secondary conditions: ' + error.message);
   }
 }
+
 
 function displaySecondaryConditions(conditions, disabilities) {
   const secondaryConditionsDiv = document.getElementById('secondaryConditions');
