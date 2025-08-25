@@ -76,12 +76,19 @@ input[type="text"], input[type="number"] {
 
 .disability-entry button.minus-disability-button {
     flex-shrink: 0;
-    margin-left: 5px;
+    margin-left: 5px;  /* small gap from input */
+    background-color: #f44336;  /* optional red color */
+    width: 30px;       /* make it small */
+    height: 30px;
+    border-radius: 50%; /* circular */
+    padding: 0;
+    font-size: 18px;
 }
 
 .disability-entry button.remove-disability-button {
     display: none;  
-    margin-left: 5px;
+    margin-left: auto;  
+    background-color: #f44336;
 }
 
 .disability-entry button {
