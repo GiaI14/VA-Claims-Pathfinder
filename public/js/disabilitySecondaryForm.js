@@ -10,21 +10,21 @@ function addDisability() {
   const newDisabilityInput = document.createElement('input');
   newDisabilityInput.type = 'text';
   newDisabilityInput.placeholder = 'Enter disability';
+  newDisabilityInput.className = 'disability-name';
   disabilityWrapper.appendChild(newDisabilityInput);
 
   const removeButton = document.createElement('button');
   removeButton.type = 'button';
   removeButton.textContent = 'Remove';
   removeButton.className = 'remove-disability-button';
-  removeButton.style.display = 'none'; // Initially hide the button
+  removeButton.style.display = 'none'; 
   disabilityWrapper.appendChild(removeButton);
 
-  // Show the "Remove" button when the input has a value
   newDisabilityInput.addEventListener('input', function () {
     if (newDisabilityInput.value.trim() !== '') {
-      removeButton.style.display = 'inline-block'; // Show the button
+      removeButton.style.display = 'inline-block';
     } else {
-      removeButton.style.display = 'none'; // Hide the button
+      removeButton.style.display = 'none'; 
     }
   });
 
