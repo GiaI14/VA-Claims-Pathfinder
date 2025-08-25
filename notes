@@ -1,599 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('includes/head', { title: 'Symptom Analysis', nonce: nonce }) %>
-  <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
+let disabilityCounter = 0; // Counter to generate unique IDs
 
-  <body>
-    <div class="page-wrapper">
-      <%- include('includes/header', { nonce: nonce }) %>
+function addDisability() {
+  const disabilitiesDiv = document.getElementById('disabilities');
+  const disabilityWrapper = document.createElement('div');
+  disabilityWrapper.className = 'disability-entry';
+  const disabilityId = `disability-${disabilityCounter++}`; 
+  disabilityWrapper.setAttribute('data-id', disabilityId);
 
-      <div class="container">
-        <h1>Symptoms Analysis</h1>
-        <input type="hidden" id="csrfToken" value="<%= csrfToken %>" />
-        
-        <!-- Symptoms Section -->
-        <form id="symptom-form">
-          <h2>New Symptoms</h2>
-          <div id="symptomEntriesContainer">
-            <!-- One initial symptom-entry -->
-            <div class="symptom-entry">
-              <div class="input-group">
-                <label>
-                  System Affected:
-                  <select class="body-part" required>
-                    <option value="">Select a system</option>
-                    <% systems.forEach(function(system) { %>
-                      <option value="<%= system %>"><%= system %></option>
-                    <% }); %>
-                  </select>
-                </label>
-                <label>
-                  Symptoms:
-                  <input
-                    type="text"
-                    class="symptoms"
-                    placeholder="Enter at least 5 symptoms (comma separated)"
-                    required
-                  />
-                </label>
-              </div>
+  const newDisabilityInput = document.createElement('input');
+  newDisabilityInput.type = 'text';
+  newDisabilityInput.placeholder = 'Enter disability';
+  newDisabilityInput.className = 'disability-name';
+  disabilityWrapper.appendChild(newDisabilityInput);
 
-              <!-- Image insert (hidden initially) -->
-              <img class="system-image" alt="System Image" style="display: none; cursor: pointer;" />
+  const minusButton = document.createElement('button');
+  minusButton.type = 'button';
+  minusButton.textContent = '-';
+  minusButton.className = 'minus-disability-button';
+  disabilityWrapper.appendChild(minusButton);
 
-              <button type="button" class="remove-entry-button">Remove Entry</button>
-            </div>
-          </div>
+  disabilitiesDiv.appendChild(disabilityWrapper);
+}
 
-          <div class="button-row">
-            <button type="button" id="addEntryButton">Add Another Entry</button>
-          </div>
+function handleDisabilityRemoval(event) {
+  const disabilityWrapper = event.target.closest('.disability-entry');
+  if (!disabilityWrapper) return;
 
-          <div class="analyze-section">
-            <button id="analyzeButton" type="submit">Analyze Symptoms</button>
-          </div>
+  const disabilityId = disabilityWrapper.dataset.id;
 
-          <input type="text" name="honeypot" style="display: none;">
-        </form>
+  if (event.target.classList.contains('minus-disability-button')) {
+    console.log('Minus button clicked:', disabilityId);
 
-        <!-- Results Display -->
-        <div id="results"></div>
-      </div>
+    // Remove the entry
+    disabilityWrapper.remove();
 
-      <!-- Lightbox Overlay -->
-      <div id="lightbox" class="lightbox" style="display: none;">
-        <span class="close" aria-label="Close">&times;</span>
-        <img id="lightbox-img" src="" alt="Large View" />
-      </div>
-       <div class="spacer"></div>
-      <%- include('includes/footer') %>
-    </div>
-
-    <!-- Your existing scripts -->
-    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-
-    <!-- Image/lightbox handler -->
-    <script nonce="<%= nonce %>">
-      const systems = <%- JSON.stringify(systems) %>;
-
-      document.addEventListener('DOMContentLoaded', function() {
-        const systemImages = {
-          'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
-          'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
-          'Cardiovascular system': '512px-Circulatory_System_en_edited.svg.png',
-          'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
-          'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
-          'Endocrine system': '512px-Endocrine_English.svg.png',
-          'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
-          'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
-          'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
-          'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
-          'Respiratory system': '512px-Respiratory_system_complete_fr_simplified.svg.png',
-          'Nervous System': '512px-Nervous_system_diagram-en.svg.png',
-          'Ear': 'Auditory_System.jpg',
-          'Sense Organs': 'Sense-Organ.png',
-        };
-
-        const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-
-        // Show/hide image when system is selected or cleared
-        symptomEntriesContainer.addEventListener('change', function(e) {
-          if (e.target.classList.contains('body-part')) {
-            const selectedSystem = e.target.value;
-            const entryDiv = e.target.closest('.symptom-entry');
-            const imgEl = entryDiv.querySelector('.system-image');
-
-            if (selectedSystem && systemImages[selectedSystem]) {
-              imgEl.src = '/images/' + systemImages[selectedSystem];
-              imgEl.style.display = 'block';
-              imgEl.style.cursor = 'pointer';
-            } else {
-              imgEl.src = '';
-              imgEl.style.display = 'none';
-            }
-          }
-        });
-
-        // Open lightbox when image clicked
-        symptomEntriesContainer.addEventListener('click', function(e) {
-          if (e.target.classList.contains('system-image') && e.target.src) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            lightboxImg.src = e.target.src;
-            lightbox.style.display = 'flex';
-          }
-        });
-
-        // Close lightbox logic
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const closeBtn = lightbox.querySelector('.close');
-
-        function closeLightbox() {
-          lightbox.style.display = 'none';
-          lightboxImg.src = '';
-        }
-
-        lightbox.addEventListener('click', e => {
-          if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
-        });
-        closeBtn.addEventListener('click', closeLightbox);
-
-        // **Removed remove entry logic here**
-
-      });
-    </script>
-  </body>
-</html>
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-document.addEventListener("DOMContentLoaded", function () {
-  const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
-  const addEntryButton = document.getElementById('addEntryButton');
-  const analyzeButton = document.getElementById('analyzeButton');
-
-  // Lightbox elements
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const closeBtn = lightbox ? lightbox.querySelector('.close') : null;
-
-  // Add symptom entry on button click
-  addEntryButton.addEventListener('click', addSymptomEntry);
-
-  // Remove symptom entry when remove button clicked
-  symptomEntriesContainer.addEventListener('click', function (event) {
-    if (event.target.classList.contains('remove-entry-button')) {
-      removeSymptomEntry(event.target);
-    }
-  });
-
-  // Analyze symptoms on form submit
-  analyzeButton.addEventListener('click', analyzeSymptoms);
-
-  // Open lightbox on image click
-  symptomEntriesContainer.addEventListener('click', function (event) {
-    if (event.target.classList.contains('system-image') && event.target.src) {
-      lightboxImg.src = event.target.src;
-      lightbox.style.display = 'flex';
-    }
-  });
-
-  // Close lightbox on overlay or close button click
-  lightbox?.addEventListener('click', function (event) {
-    if (event.target === lightbox) closeLightbox();
-  });
-  lightboxImg?.addEventListener('click', closeLightbox);
-  closeBtn?.addEventListener('click', closeLightbox);
-
-  function closeLightbox() {
-    lightbox.style.display = 'none';
-    lightboxImg.src = '';
+    // Remove results linked to this entry
+    const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
+    results.forEach(r => r.remove());
   }
 
-  // Add new symptom entry (build fresh, no cloning)
-  function addSymptomEntry() {
-    const entryDiv = document.createElement('div');
-    entryDiv.className = 'symptom-entry';
+  if (event.target.classList.contains('remove-disability-button')) {
+    console.log('Remove button clicked:', disabilityId);
 
-    const inputGroup = document.createElement('div');
-    inputGroup.className = 'input-group';
+    // Clear only this input’s results
+    const results = document.querySelectorAll(`#secondaryConditions [data-disability-id="${disabilityId}"]`);
+    results.forEach(r => r.remove());
+  }
+}
 
-    const labelSystem = document.createElement('label');
-    labelSystem.textContent = 'System Affected: ';
-    const selectSystem = document.createElement('select');
-    selectSystem.className = 'body-part';
-    selectSystem.required = true;
+async function submitDisabilities() {
+  console.log('Submit Disabilities button clicked');
 
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Select a system';
-    selectSystem.appendChild(defaultOption);
+  const disabilityInputs = document.querySelectorAll('#disabilities input');
+ const disabilities = Array.from(disabilityInputs)
+  .map(input => input.value.trim())
+  .filter(Boolean);
+  
+  console.log('Disabilities to submit:', disabilities);
 
-    // Use the same systems array from your server-side by making it global or passing to client
-    systems.forEach(sys => {
-      const option = document.createElement('option');
-      option.value = sys;
-      option.textContent = sys;
-      selectSystem.appendChild(option);
+  if (disabilities.length === 0) {
+    alert('Please add at least one disability.');
+    return;
+  }
+
+  try {
+    console.log('Sending request to /api/secondary-conditions...');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const response = await fetch('/api/secondary-conditions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({ disabilities }),
     });
 
-    labelSystem.appendChild(selectSystem);
+    console.log('Response status:', response.status);
 
-    const labelSymptoms = document.createElement('label');
-    labelSymptoms.textContent = 'Symptoms: ';
-    const inputSymptoms = document.createElement('input');
-    inputSymptoms.type = 'text';
-    inputSymptoms.className = 'symptoms';
-    inputSymptoms.placeholder = 'Enter at least 5 symptoms (comma separated)';
-    inputSymptoms.required = true;
-    labelSymptoms.appendChild(inputSymptoms);
-
-    inputGroup.appendChild(labelSystem);
-    inputGroup.appendChild(labelSymptoms);
-
-    const img = document.createElement('img');
-    img.className = 'system-image';
-    img.alt = 'System Image';
-    img.style.display = 'none';
-    img.style.cursor = 'pointer';
-
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'remove-entry-button';
-    removeBtn.textContent = 'Remove Entry';
-
-    entryDiv.appendChild(inputGroup);
-    entryDiv.appendChild(img);
-    entryDiv.appendChild(removeBtn);
-
-    symptomEntriesContainer.appendChild(entryDiv);
-  }
-
-  // Remove symptom entry or reset last one
-  function removeSymptomEntry(button) {
-    const entry = button.closest('.symptom-entry');
-    const allEntries = symptomEntriesContainer.querySelectorAll('.symptom-entry');
-
-    if (allEntries.length > 1) {
-      entry.remove();
-    } else {
-      // Reset inputs and hide image if only one left, no alert
-      entry.querySelector('.symptoms').value = '';
-      entry.querySelector('.body-part').selectedIndex = 0;
-      const img = entry.querySelector('.system-image');
-      img.src = '';
-      img.style.display = 'none';
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error response from server:', errorData);
+      throw new Error(errorData.message || 'Failed to fetch secondary conditions');
     }
-     const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '';
+
+    const data = await response.json();
+    console.log('Secondary conditions:', data.secondaryConditions);
+    displaySecondaryConditions(data.secondaryConditions);
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while fetching secondary conditions: ' + error.message);
   }
+}
 
-  // Analyze symptoms form submit handler
-  async function analyzeSymptoms(event) {
-    event.preventDefault();
-
-    const csrfToken = document.getElementById("csrfToken").value;
-    const symptomEntries = document.querySelectorAll(".symptom-entry");
-    const symptomsData = [];
-
-    symptomEntries.forEach((entry) => {
-      const system = entry.querySelector(".body-part").value.trim();
-      const symptomsInput = entry.querySelector(".symptoms").value.trim();
-      const symptoms = symptomsInput.split(",").map(s => s.trim()).filter(s => s !== "");
-
-      if (system && symptoms.length > 0) {
-        symptomsData.push({ system, symptoms });
-      }
+function displaySecondaryConditions(conditions) {
+  const secondaryConditionsDiv = document.getElementById('secondaryConditions');
+  secondaryConditionsDiv.innerHTML = '<h3>Conditions and Secondary Conditions</h3>';
+  
+  if (conditions.length > 0) {
+    const ul = document.createElement('ul');
+    conditions.forEach(condition => {
+      const li = document.createElement('li');
+      li.setAttribute('data-disability-id', condition.disabilityId);
+      li.innerHTML = `<strong>${condition.condition_name}</strong><br>
+                      Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
+      ul.appendChild(li);
     });
-
-    if (symptomsData.length === 0) {
-      alert("Please select a system and enter at least one symptom for each entry.");
-      return;
-    }
-
-    // Require at least 5 symptoms per entry
-    const invalidEntries = symptomsData.filter(entry => entry.symptoms.length < 5);
-    if (invalidEntries.length > 0) {
-      alert("Each entry must have at least 5 symptoms. Please check your inputs.");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/analyze-symptoms", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken
-        },
-        body: JSON.stringify(symptomsData),
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("Failed to analyze symptoms");
-
-      const result = await response.json();
-      displayResults(result);
-    } catch (error) {
-      console.error("Error analyzing symptoms:", error.message);
-      document.getElementById("results").innerHTML =
-        `<p>An error occurred while processing your request. Details: ${error.message}</p>`;
-    }
+    secondaryConditionsDiv.appendChild(ul);
+  } else {
+    secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
+}
 
-  // Display results function (customize as needed)
-  function displayResults(data) {
-    const resultsContainer = document.getElementById("results");
-    resultsContainer.innerHTML = "";
+// Attach listeners once
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('addDisabilityButton')
+          .addEventListener('click', addDisability);
 
-    if (!data || data.length === 0) {
-      resultsContainer.innerHTML = "<p>No matching conditions found. Please add more symptoms for a more accurate analysis!</p>";
-      return;
-    }
+  document.getElementById('submitDisabilitiesButton')
+          .addEventListener('click', submitDisabilities);
 
-    data.forEach((entry) => {
-      const section = document.createElement("div");
-      section.classList.add("result-section");
+  document.getElementById('disabilities')
+          .addEventListener('click', handleDisabilityRemoval);
 
-      let htmlContent = `<h3>${entry.system}</h3>`;
-
-      if (entry.message) {
-        htmlContent += `<p>${entry.message}</p>`;
-      } else if (entry.possibleConditions?.length > 0) {
-        htmlContent += `<div class="conditions-container">`;
-
-        entry.possibleConditions.forEach((condition) => {
-          const hasDetails = condition.presumptive_raw || 
-                           condition.qualifying_circumstance || 
-                           condition.evidence_basis;
-
-          htmlContent += `
-            <div class="condition-block">
-              <div class="condition-title">
-                ${condition.condition_name} <span class="medical-code">(${condition.medical_code})</span>
-                <span class="match-percentage">${condition.match_percentage.toFixed(2)}% match</span>
-              </div>
-
-              ${hasDetails ? `
-                <div class="condition-details">
-                  ${condition.presumptive_raw ? `
-                    <div class="detail-item">
-                      <span class="detail-label"><strong>Presumptive Type:</strong></span>
-                      <span class="detail-text">${condition.presumptive_raw}</span>
-                    </div>` : ''}
-                  
-                  ${condition.qualifying_circumstance ? `
-                    <div class="detail-item">
-                      <span class="detail-label"><strong>Qualifying Circumstances:</strong></span>
-                      <span class="detail-text">${condition.qualifying_circumstance}</span>
-                    </div>` : ''}
-                  
-                  ${condition.evidence_basis ? `
-                    <div class="detail-item">
-                      <span class="detail-label"><strong>Evidence Basis:</strong></span>
-                      <span class="detail-text">${condition.evidence_basis}</span>
-                    </div>` : ''}
-                </div>
-              ` : ''}
-            </div>
-          `;
-        });
-
-        htmlContent += `</div>`;
-      } else {
-        htmlContent += "<p>No specific conditions matched. Please provide more detailed symptoms.</p>";
-      }
-
-      section.innerHTML = htmlContent;
-      resultsContainer.appendChild(section);
-     
+  const clearAllBtn = document.getElementById('clearAllDisabilitiesButton');
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', () => {
+      document.getElementById('disabilities').innerHTML = '';
+      document.getElementById('secondaryConditions').innerHTML = '';
+      console.log('All disabilities cleared, results reset.');
     });
-  resultsContainer.scrollIntoView({ behavior: 'smooth'});
   }
 });
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const express = require("express");
-const { getDb } = require('../data/database'); // Import getDb
-const natural = require('natural');
-const stringSimilarity = require('string-similarity');
-const tokenizer = new natural.WordTokenizer();
-const router = express.Router();
-
-// Server-side route handler
-function tokenizeAndNormalize(symptoms) {
-    if (typeof symptoms !== 'string') {
-        return [];
-    }
-    
-    return symptoms
-        .split(",")
-        .flatMap(symptom => {
-            // Tokenize each symptom phrase
-            const tokens = tokenizer.tokenize(symptom);
-            
-            // Normalize each token
-            return tokens.map(token => 
-                token.toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-            );
-        })
-        .filter(token => token.length > 1); 
-}
-
-function calculateMatchPercentage(inputSymptoms, databaseSymptoms) {
-    const inputTokens = tokenizeAndNormalize(inputSymptoms.join(", "));
-    const databaseTokens = tokenizeAndNormalize(databaseSymptoms);
-
-    const matchedTokens = inputTokens.filter(inputToken => {
-        const matches = databaseTokens.map(dbToken =>
-            stringSimilarity.compareTwoStrings(inputToken, dbToken)
-        );
-        return matches.some(match => match >= 0.5);
-    });
-
-    if (databaseTokens.length === 0) return 0;
-    return Math.min((matchedTokens.length / databaseTokens.length) * 100, 100);
-}
-
-function calculateSimilarity(str1, str2) {
-    // Use a combination of Jaro-Winkler and Levenshtein distance for better accuracy
-    const jaroWinkler = natural.JaroWinklerDistance(str1, str2);
-    const levenshtein = natural.LevenshteinDistance(str1, str2) / Math.max(str1.length, str2.length);
-    return (jaroWinkler + (1 - levenshtein)) / 2;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////
-router.post("/api/analyze-symptoms", (req, res, next) => {
-    console.log("Session ID:", req.sessionID);
-    console.log("Session:", req.session);
-    console.log("CSRF token sent by client:", req.headers['x-csrf-token']);
-    next();
-}, async (req, res) => {
-    console.log("Received symptom data:", req.body);
-    const symptomsData = req.body;
-
-    if (!Array.isArray(symptomsData) || symptomsData.length === 0) {
-        return res.status(400).json({ error: "Invalid input data. Please provide an array of symptoms." });
-    }
-
-    try {
-        const pool = getDb();
-        const results = [];
-
-        for (const entry of symptomsData) {
-            const { system, symptoms } = entry;
-            console.log("Processing entry:", entry);
-
-            if (!system || !Array.isArray(symptoms) || symptoms.length === 0) {
-                console.warn(`Skipping invalid entry: ${JSON.stringify(entry)}`);
-                continue;
-            }
-
-            const [rows] = await pool.execute(
-                `SELECT 
-                    id, systems, sub_systems, condition_name, medical_code, 
-                    symptoms, secondary_conditions, presumptive_conditions,
-                    qualifying_circumstance, evidence_basis
-                FROM va_disabilities 
-                WHERE systems = ?`,
-                [system]
-            );
-
-            let possibleConditions = [];
-
-            for (const row of rows) {
-                if (!row.symptoms || typeof row.symptoms !== 'string') {
-                    console.warn("Skipping row with invalid symptoms:", row);
-                    continue;
-                }
-
-                let matchPercentage;
-                try {
-                    matchPercentage = calculateMatchPercentage(symptoms, row.symptoms);
-                } catch (err) {
-                    console.error("Error in calculateMatchPercentage:", err, { symptoms, rowSymptoms: row.symptoms });
-                    continue;
-                }
-
-                if (matchPercentage > 25) {
-                    const conditionData = {
-                        condition_name: row.condition_name,
-                        medical_code: row.medical_code,
-                        match_percentage: Number(matchPercentage.toFixed(2)),
-                        matched_symptoms: symptoms.filter(symptom => 
-                            row.symptoms.toLowerCase().includes(symptom.toLowerCase())
-                        ),
-                        total_condition_symptoms: row.symptoms.split(',').length,
-                        is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== 'no',
-                        presumptive_raw: row.presumptive_conditions,
-                        secondary_conditions: row.secondary_conditions,
-                        qualifying_circumstance: row.qualifying_circumstance || null, 
-                        evidence_basis: row.evidence_basis || null
-                    };
-
-                    possibleConditions.push(conditionData);
-                }
-            }
-
-            if (possibleConditions.length === 0) {
-                results.push({
-                    system,
-                    message: `No matching conditions found for the selected system (${system}). Please add more symptoms for better accuracy.`,
-                });
-            } else {
-                possibleConditions.sort((a, b) => b.match_percentage - a.match_percentage);
-                const topConditions = possibleConditions.slice(0, 3);
-
-                results.push({
-                    system,
-                    symptoms,
-                    possibleConditions: topConditions
-                });
-            }
-        }
-        
-        console.log("Analysis results:", JSON.stringify(results, null, 2));
-        res.json(results);
-    } catch (error) {
-        console.error("Error querying database:", error);
-        res.status(500).json({ error: "An error occurred while analyzing symptoms.", details: error.message });
-    }
-});
-
-module.exports = router;
-//////////////////////////////////////////////////////////////////////////
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('includes/head', { title: 'How to file a claim', nonce: nonce }) %>
-  <link rel="stylesheet" href="styles.folder/possibleDisabilities.css" />
-
-  <body>
-    <div class="page-wrapper">
-      <%- include('includes/header', { nonce: nonce }) %>
-
-      <div class="container">
-      <h1>How to file a claim</>
-      <h2>Step 0</h2>
-         <p>VA disability is following 3 major requirements </p>
-           <p>Connection to your service. The onset of your condition needs to be linked to the time of active service</p>
-           <p>The condition must be chronic. Continue attending your medical appointments and follow prescribed medications and treatments as directed</p>
-           <p>It has to affect your ability to perform your daily duties and responsibilities</p>
-      <h3>Dirrect connection claim</h3>
-      <h2>Step 1</h2>
-         <p>Start the intent to file</p>
-         <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay</p>
-         <p><a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer"> Intent to File (VA Form 21-0966)</a></p>
-      <h2>Step 2</h2>
-         <p>FOIA (Freedom of Information Act)</p>
-           <p>Request a full military record through <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer"> FOIA (VA Form 20-10206)</a></p>
-           <p>This may take several months to a year, so start early</p>
-           <p>Full military and medical records, including service treatment records, personnel file, and C-File</p>
-         <h2>Step 3</h2>
-           <p>Personal Statement: Describe your disability, when/how it began, and how it affects daily life and employment.<a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
-  VA Form 21-4138 – Personal Statement in Support of Claim</a></p>
-           <p>Lay Statements: Ask family, friends, or coworkers who have observed your condition to provide statements.<a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-  Lay Statement (VA Form 21-10210)</a></p>
-           <p>Buddy Statements: If possible, ask a fellow service member to confirm in-service events, injuries, or stressors that may not appear in your records <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
- Buddy Statement (VA Form 21-10210)</a></p>
-            <h2>Step 4</h2>
-           <p> Gather all medical records related to your claimed condition, including both VA and private treatment records. You can use Blue Button to download your VA records. Other ways to obtain records include submitting a FOIA request or using the service treatment records CD you may have received upon discharge.</p>
-           <p> Highlight relevant events, diagnoses, and treatments. Create a separate file with highlighted pages as supporting evidence</p>
-           <h2>Step 5</h2>
-           <p>Submit claim, adding all previously collected records and statements. <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction">Submit a New Claim</a></p>
-           <h2>Step 5</h2>
-          <p>The claims process can take several months. Be sure to keep your contact information up to date, attend all scheduled VA claim exams (C&P exams), and regularly check the status of your claim in case the VA requests additional information.</p>
-        <div class="spacer"></div>
-      </div> <!-- closes .container -->
-
-      <%- include('includes/footer') %>
-    </div> <!-- closes .page-wrapper -->
-
-    <!-- Your existing scripts -->
-    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-    <script src="/js/symptomAnalysis.js" nonce="<%= nonce %>" defer></script>
-  </body>
-</html>
-
