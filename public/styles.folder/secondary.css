@@ -70,19 +70,20 @@ input[type="text"], input[type="number"] {
 .disability-entry input,
 .disability-entry select {
     flex-grow: 1 1 auto;
-    width: auto;
+    width: auto !important;
     margin: 0;
 }
 
 .disability-entry button.minus-disability-button {
-    flex-shrink: 0;
-    margin-left: 5px;  /* small gap from input */
-    background-color: #f44336;  /* optional red color */
-    width: 30px;       /* make it small */
+    flex: 0 0 auto;  /* don't shrink or grow */
+    margin-left: 5px;
+    width: 30px;
     height: 30px;
-    border-radius: 50%; /* circular */
+    border-radius: 50%;
     padding: 0;
     font-size: 18px;
+    line-height: 30px;
+    text-align: center;
 }
 
 .disability-entry button.remove-disability-button {
