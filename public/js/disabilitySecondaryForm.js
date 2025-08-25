@@ -59,7 +59,7 @@ function handleDisabilityRemoval(event) {
 
   // Case 2: Minus button
   if (event.target.classList.contains('minus-disability-button')) {
-    const disabilityWrapper = event.target.closest('.disability-wrapper');
+    const disabilityWrapper = event.target.closest('.disability-entry');
     const disabilityId = disabilityWrapper.getAttribute('data-id');
     console.log('Removing disability with ID via Minus button:', disabilityId);
 
