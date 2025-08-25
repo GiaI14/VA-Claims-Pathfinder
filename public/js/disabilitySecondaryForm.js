@@ -49,18 +49,26 @@ async function submitDisabilities() {
 
   const disabilityInputs = document.querySelectorAll('#disabilities input');
   const disabilities = Array.from(disabilityInputs)
-    .map(input => ({
+  .map(input => {
+    const normalizedValue = input.value
+      .trim()
+      .toLowerCase()
+      .split(/\s+/)[0]; // only first word
+
+    return {
       disabilityId: input.closest('.disability-entry').dataset.id,
-      value: input.value.trim()
-    }))
-    .filter(d => d.value !== '');
+      value: normalizedValue
+    };
+  })
+  .filter(d => d.value !== '');
 
-  console.log('Disabilities to submit:', disabilities);
+console.log('Disabilities to submit (normalized):', disabilities);
 
-  if (disabilities.length === 0) {
-    alert('Please add at least one disability.');
-    return;
-  }
+if (disabilities.length === 0) {
+  alert('Please add at least one disability.');
+  return;
+}
+
 
   try {
     console.log('Sending request to /api/secondary-conditions...');
