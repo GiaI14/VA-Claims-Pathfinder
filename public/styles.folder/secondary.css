@@ -61,17 +61,15 @@ input[type="text"], input[type="number"] {
     align-items: center;
     gap: 10px;
     background-color: #f8f9fa;
-    padding: 10px 15px;
+    padding: 15px;
     border-radius: 4px;
     margin-bottom: 10px;
-    flex-wrap: nowrap;
 }
 
 .disability-entry input,
 .disability-entry select {
     flex-grow: 1 1 auto;
     width: auto !important;
-    margin: 0;
 }
 
 .disability-entry button.minus-disability-button {
