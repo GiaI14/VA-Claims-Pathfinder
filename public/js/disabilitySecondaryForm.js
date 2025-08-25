@@ -51,10 +51,9 @@ async function submitDisabilities() {
   console.log('Submit Disabilities button clicked');
 
   const disabilityInputs = document.querySelectorAll('#disabilities input');
-  const disabilities = Array.from(disabilityInputs).map(input => ({
-    id: input.closest('.disability-entry').dataset.id,
-    value: input.value.trim()
-  })).filter(d => d.value !== '');
+  const disabilities = Array.from(disabilityInputs)
+    .map(input => input.value.trim())
+    .filter(Boolean); // Only non-empty values
 
   console.log('Disabilities to submit:', disabilities);
 
@@ -85,7 +84,9 @@ async function submitDisabilities() {
 
     const data = await response.json();
     console.log('Secondary conditions:', data.secondaryConditions);
-    displaySecondaryConditions(data.secondaryConditions);
+
+    // Link results to the correct inputs by ID
+    displaySecondaryConditions(data.secondaryConditions, disabilityInputs);
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred while fetching secondary conditions: ' + error.message);
