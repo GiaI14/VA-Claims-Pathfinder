@@ -68,8 +68,14 @@ input[type="text"], input[type="number"] {
 
 .disability-entry input,
 .disability-entry select {
+    flex-grow: 1;
     width: auto;
     margin-right: 10px;
+}
+
+.disability-entry button.minus-disability-button {
+    flex-shrink: 0;
+    margin-left: 5px;
 }
 
 .disability-entry button {
