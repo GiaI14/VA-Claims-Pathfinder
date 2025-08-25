@@ -13,21 +13,6 @@ function addDisability() {
   newDisabilityInput.className = 'disability-name';
   disabilityWrapper.appendChild(newDisabilityInput);
 
-  const removeButton = document.createElement('button');
-  removeButton.type = 'button';
-  removeButton.textContent = 'Remove';
-  removeButton.className = 'remove-disability-button';
-  removeButton.style.display = 'none'; 
-  disabilityWrapper.appendChild(removeButton);
-
-  newDisabilityInput.addEventListener('input', function () {
-    if (newDisabilityInput.value.trim() !== '') {
-      removeButton.style.display = 'inline-block';
-    } else {
-      removeButton.style.display = 'none'; 
-    }
-  });
-
   const minusButton = document.createElement('button');
   minusButton.type = 'button';
   minusButton.textContent = '-';
@@ -37,35 +22,14 @@ function addDisability() {
   disabilitiesDiv.appendChild(disabilityWrapper);
 }
 
+ 
 function handleDisabilityRemoval(event) {
-  // Case 1: Hidden remove button
-  if (event.target.classList.contains('remove-disability-button')) {
-    const disabilityWrapper = event.target.closest('.disability-entry');
-    const disabilityId = disabilityWrapper.getAttribute('data-id');
-    console.log('Removing disability with ID via Remove button:', disabilityId);
-
-    disabilityWrapper.remove();
-
-    const disabilityInputs = document.querySelectorAll('#disabilities input');
-    const disabilities = Array.from(disabilityInputs).map(input => input.value.trim()).filter(Boolean);
-
-    if (disabilities.length === 0) {
-      document.getElementById('secondaryConditions').innerHTML = '';
-      console.log('No disabilities left. Secondary conditions area cleared.');
-    } else {
-      submitDisabilities();
-    }
-  }
-
-  // Case 2: Minus button
   if (event.target.classList.contains('minus-disability-button')) {
     const disabilityWrapper = event.target.closest('.disability-entry');
     const disabilityId = disabilityWrapper.getAttribute('data-id');
     console.log('Removing disability with ID via Minus button:', disabilityId);
 
     disabilityWrapper.remove();
-    // No auto re-fetch here unless you want:
-    // submitDisabilities();
   }
 }
 
