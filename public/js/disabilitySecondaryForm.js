@@ -38,8 +38,8 @@ function handleDisabilityRemoval(event) {
     document.getElementById('secondaryConditions').innerHTML = '';
     disabilityCounter = 0;
 
-    const addBtn = document.getElementById('addDisabilityButton');
-    if (addBtn) addBtn.style.dispay = 'inline-block';
+     const addBtn = document.getElementById('addDisabilityButton');
+    if (addBtn) addBtn.style.display = 'inline-block';
   }
 }
 
