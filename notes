@@ -26,19 +26,20 @@ function handleDisabilityRemoval(event) {
   const disabilityWrapper = event.target.closest('.disability-entry');
   const isRemoveButton = event.target.classList.contains('remove-disability-button');
 
-  // Minus button: only works before submission
   if (event.target.classList.contains('minus-disability-button')) {
     if (!disabilityWrapper) return;
     console.log('Minus button clicked:', disabilityWrapper.dataset.id);
     disabilityWrapper.remove();
   }
 
-  // Remove button after submission: clear everything
   if (isRemoveButton) {
     console.log('Remove button clicked, clearing all.');
     document.getElementById('disabilities').innerHTML = '';
     document.getElementById('secondaryConditions').innerHTML = '';
     disabilityCounter = 0;
+
+     const addBtn = document.getElementById('addDisabilityButton');
+    if (addBtn) addBtn.style.display = 'inline-block';
   }
 }
 
@@ -70,7 +71,7 @@ async function submitDisabilities() {
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
-      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }), // send only values
+      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }),
     });
 
     console.log('Response status:', response.status);
@@ -86,11 +87,15 @@ async function submitDisabilities() {
 
     displaySecondaryConditions(data.secondaryConditions, disabilities);
 
-    // After submission: hide minus buttons and show main Remove button
+    // Hide minus buttons after submission
     document.querySelectorAll('.minus-disability-button').forEach(btn => btn.remove());
 
-    const disabilitiesDiv = document.getElementById('disabilities');
+    // Hide Add Disability button after results
+    const addBtn = document.getElementById('addDisabilityButton');
+    if (addBtn) addBtn.style.display = 'none';
+
     // Add single Remove button if it doesn't exist
+    const disabilitiesDiv = document.getElementById('disabilities');
     if (!document.querySelector('.remove-disability-button')) {
       const removeButton = document.createElement('button');
       removeButton.type = 'button';
@@ -104,6 +109,7 @@ async function submitDisabilities() {
     alert('An error occurred while fetching secondary conditions: ' + error.message);
   }
 }
+
 
 function displaySecondaryConditions(conditions, disabilities) {
   const secondaryConditionsDiv = document.getElementById('secondaryConditions');
