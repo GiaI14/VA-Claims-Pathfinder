@@ -146,27 +146,28 @@ h3{
     flex-direction: column;
     gap: 20px;
     align-items: center;
-    margin: 0 auto;  /* centers the whole wrapper */
+    margin: 0 auto;
   }
 
   .guidance-column,
   .options-column {
-    width: 95%;       /* almost full width */
-    max-width: 500px;
-    margin: 0 auto;   /* center each column */
+    width: 85%;        /* narrower than full width */
+    max-width: 400px;  /* limits it on larger phones */
+    margin: 0 auto;
   }
 
   #showFlowBtn {
+    width: 85%;
+    max-width: 400px;
     font-size: 16px;
-    padding: 14px 20px;
-    margin: 20px auto; /* center button */
+    padding: 12px 18px;
+    margin: 20px auto;
   }
 
   .option {
-    width: 100%;
+    width: 100%;       /* fill the column */
     padding: 10px;
-    margin-left: 0;   /* remove any leftover left margin */
-    margin-right: 0;  /* remove any leftover right margin */
+    margin: 5px 0;     /* small top/bottom spacing */
   }
 
   .flow-step button {
