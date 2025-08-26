@@ -34,7 +34,7 @@ h3{
   color: black;
 }
 
-.backBtn {
+#flowContainer button.backBtn {
   background-color: #888888; /* medium gray */
   color: white;
   border: none;
@@ -43,7 +43,7 @@ h3{
   cursor: pointer;
 }
 
-.backBtn:hover {
+#flowContainer button.backBtn:hover {
   background-color: #555555; /* darker gray on hover */
 }
 
