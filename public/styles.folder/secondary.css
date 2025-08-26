@@ -47,6 +47,13 @@ button:hover {
   transform: translateY(-2px);
 }
 
+#submitDisabilitiesButton {
+  background-color: #6c63ff; /* different shade */
+}
+
+#submitDisabilitiesButton:hover {
+  background-color: #574bd6;
+}
 /* Inputs */
 input[type="text"],
 input[type="number"],
