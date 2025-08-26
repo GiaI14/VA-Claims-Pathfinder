@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (contentDiv) contentDiv.style.display = "block";
         }
         if (optionEl) {
-          optionEl.scrollIntoView({ behavior: "smooth", block: 'start"});
+          optionEl.scrollIntoView({ behavior: "smooth", block: 'start'});
           }
       }
 
