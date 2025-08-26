@@ -142,28 +142,19 @@ h3{
 }
 
 @media (max-width: 900px) {
-  .claim-menu-wrapper {
-    flex-direction: column;
-    align-items: center;       /* center columns */
-    justify-content: center;   /* center horizontally */
-    gap: 10px;                 /* smaller gap */
-    margin: 0 auto;
-    padding: 0 10px;           /* small padding on sides */
-  }
-
   .guidance-column,
   .options-column {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;            /* force center */
+    width: 95%;       /* slightly less than full width */
+    max-width: 380px; /* reduce max-width a bit */
+    margin: 0 auto;   /* keep centered */
   }
 
   #showFlowBtn {
-    width: 100%;
-    max-width: 400px;
+    width: 95%;
+    max-width: 380px;
     font-size: 16px;
     padding: 12px 18px;
-    margin: 20px auto;         /* center */
+    margin: 20px auto;
   }
 
   .option {
