@@ -120,10 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
               }, 50);
             }
         }
-        if (optionEl) {
-          optionEl.scrollIntoView({ behavior: "smooth", block: 'start'});
-          }
-      }
+       
 
       // Answers
       step.answers.forEach(ans => {
