@@ -1,153 +1,59 @@
-let disabilityCounter = 0; // Counter to generate unique IDs
+            <div id="newClaim" class="content"> 
+  <h3>Direct Connection Claim</h3> 
 
-function addDisability() {
-  const disabilitiesDiv = document.getElementById('disabilities');
-  const disabilityWrapper = document.createElement('div');
-  disabilityWrapper.className = 'disability-entry';
-  const disabilityId = `disability-${disabilityCounter++}`; 
-  disabilityWrapper.setAttribute('data-id', disabilityId);
+  <h2>Step 1</h2> 
+  <p>Start the intent to file</p> 
+  <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay</p> 
+  <ul><li>
+    <a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">
+      Intent to File (VA Form 21-0966)
+    </a>
+  </li></ul>
 
-  const newDisabilityInput = document.createElement('input');
-  newDisabilityInput.type = 'text';
-  newDisabilityInput.placeholder = 'Enter disability';
-  newDisabilityInput.className = 'disability-name';
-  disabilityWrapper.appendChild(newDisabilityInput);
+  <h2>Step 2</h2> 
+  <p>Request a full military record (medical records, including service treatment records, personnel file, and C-File) through filing FOIA (Freedom of Information Act)</p> 
+  <p>Processing of FOIA requests to obtain your military and medical records may take several months, and in some cases up to a year, so it’s best to submit your request early.</p> 
+  <ul><li>
+    <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer">
+      FOIA (VA Form 20-10206)
+    </a>
+  </li></ul> 
 
-  const minusButton = document.createElement('button');
-  minusButton.type = 'button';
-  minusButton.textContent = '-';
-  minusButton.className = 'minus-disability-button';
-  disabilityWrapper.appendChild(minusButton);
+  <h2>Step 3</h2> 
+  <p>Personal Statement: Describe your disability, when/how it began, and how it affects daily life and employment.</p> 
+  <ul><li>
+    <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
+      Personal Statement in Support of Claim (VA Form 21-4138)
+    </a>
+  </li></ul>
 
-  disabilitiesDiv.appendChild(disabilityWrapper);
-}
+  <p>Lay Statements: Ask family, friends, or coworkers who have observed your condition to provide statements.</p> 
+  <ul><li>
+    <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
+      Lay Statement (VA Form 21-10210)
+    </a>
+  </li></ul> 
 
-function handleDisabilityRemoval(event) {
-  const disabilityWrapper = event.target.closest('.disability-entry');
-  const isRemoveButton = event.target.classList.contains('remove-disability-button');
+  <p>Buddy Statements: If possible, ask a fellow service member to confirm in-service events, injuries, or stressors that may not appear in your records.</p> 
+  <ul><li>
+    <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
+      Buddy Statement (VA Form 21-10210)
+    </a>
+  </li></ul> 
 
-  if (event.target.classList.contains('minus-disability-button')) {
-    if (!disabilityWrapper) return;
-    console.log('Minus button clicked:', disabilityWrapper.dataset.id);
-    disabilityWrapper.remove();
-  }
+  <h2>Step 4</h2> 
+  <p>Gather all medical records related to your claimed condition, including both VA and private treatment records. You can use Blue Button to download your VA records. Other ways to obtain records include submitting a FOIA request or using the service treatment records CD you may have received upon discharge.</p> 
+  <p>Highlight relevant events, diagnoses, and treatments. Create a separate file with highlighted pages as supporting evidence.</p> 
 
-  if (isRemoveButton) {
-    console.log('Remove button clicked, clearing all.');
-    document.getElementById('disabilities').innerHTML = '';
-    document.getElementById('secondaryConditions').innerHTML = '';
-    disabilityCounter = 0;
+  <h2>Step 5</h2> 
+  <p>Submit claim, adding all previously collected records and statements.</p> 
+  <ul><li>
+    <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">
+      Submit a New Claim
+    </a>
+  </li></ul> 
 
-     const addBtn = document.getElementById('addDisabilityButton');
-    if (addBtn) addBtn.style.display = 'inline-block';
-  }
-}
-
-
-async function submitDisabilities() {
-  console.log('Submit Disabilities button clicked');
-
-  const disabilityInputs = document.querySelectorAll('#disabilities input');
-  const disabilities = Array.from(disabilityInputs)
-    .map(input => ({
-      disabilityId: input.closest('.disability-entry').dataset.id,
-      value: input.value.trim()
-    }))
-    .filter(d => d.value !== '');
-
-  console.log('Disabilities to submit:', disabilities);
-
-  if (disabilities.length === 0) {
-    alert('Please add at least one disability.');
-    return;
-  }
-
-  try {
-    console.log('Sending request to /api/secondary-conditions...');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const response = await fetch('/api/secondary-conditions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-      },
-      body: JSON.stringify({ disabilities: disabilities.map(d => d.value) }),
-    });
-
-    console.log('Response status:', response.status);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error response from server:', errorData);
-      throw new Error(errorData.message || 'Failed to fetch secondary conditions');
-    }
-
-    const data = await response.json();
-    console.log('Secondary conditions:', data.secondaryConditions);
-
-    displaySecondaryConditions(data.secondaryConditions, disabilities);
-
-    // Hide minus buttons after submission
-    document.querySelectorAll('.minus-disability-button').forEach(btn => btn.remove());
-
-    // Hide Add Disability button after results
-    const addBtn = document.getElementById('addDisabilityButton');
-    if (addBtn) addBtn.style.display = 'none';
-
-    // Add single Remove button if it doesn't exist
-    const disabilitiesDiv = document.getElementById('disabilities');
-    if (!document.querySelector('.remove-disability-button')) {
-      const removeButton = document.createElement('button');
-      removeButton.type = 'button';
-      removeButton.textContent = 'Remove';
-      removeButton.className = 'remove-disability-button';
-      disabilitiesDiv.appendChild(removeButton);
-    }
-
-  } catch (error) {
-    console.error('Error:', error);
-    alert('An error occurred while fetching secondary conditions: ' + error.message);
-  }
-}
-
-
-function displaySecondaryConditions(conditions, disabilities) {
-  const secondaryConditionsDiv = document.getElementById('secondaryConditions');
-  secondaryConditionsDiv.innerHTML = '<h3>Conditions and Secondary Conditions</h3>';
-
-  if (conditions.length > 0) {
-    const ul = document.createElement('ul');
-    conditions.forEach((condition, index) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-disability-id', disabilities[index].disabilityId);
-      li.innerHTML = `<strong>${condition.condition_name}</strong><br>
-                      Secondary Conditions: ${condition.secondary_conditions || 'None'}`;
-      ul.appendChild(li);
-    });
-    secondaryConditionsDiv.appendChild(ul);
-  } else {
-    secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
-  }
-}
-
-// Attach listeners once
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('addDisabilityButton')
-          .addEventListener('click', addDisability);
-
-  document.getElementById('submitDisabilitiesButton')
-          .addEventListener('click', submitDisabilities);
-
-  document.getElementById('disabilities')
-          .addEventListener('click', handleDisabilityRemoval);
-
-  const clearAllBtn = document.getElementById('clearAllDisabilitiesButton');
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener('click', () => {
-      document.getElementById('disabilities').innerHTML = '';
-      document.getElementById('secondaryConditions').innerHTML = '';
-      disabilityCounter = 0;
-      console.log('All disabilities cleared, results reset.');
-    });
-  }
-});
+  <h2>Step 6</h2> 
+  <p>The claims process can take several months. Be sure to keep your contact information up to date, attend all scheduled VA claim exams (C&P exams), and regularly check the status of your claim in case the VA requests additional information.</p> 
+</div> 
+</div>
