@@ -79,89 +79,84 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    const stepHistory = []; // Keep track of steps for Back button
+    const stepHistory = []; // Track previous steps
 
-    function renderStep(stepId) {
-      const step = flowChartData[stepId];
-      if (!step) return;
+function renderStep(stepId) {
+  const step = flowChartData[stepId];
+  if (!step) return;
 
-      // Clear container only at step1
-      if (stepId === "step1") flowContainer.innerHTML = "";
+  // Save current step to history if it's not step1
+  if (flowContainer.firstChild) {
+    stepHistory.push(flowContainer.firstChild);
+  }
 
-      const stepDiv = document.createElement("div");
-      stepDiv.classList.add("flow-step");
-      stepDiv.style.marginTop = "10px";
+  // Clear container
+  flowContainer.innerHTML = "";
 
-      // Question
-      if (step.question) {
-        const questionP = document.createElement("p");
-        questionP.textContent = step.question;
-        stepDiv.appendChild(questionP);
-      }
+  const stepDiv = document.createElement("div");
+  stepDiv.classList.add("flow-step");
 
-      // Step message
-      if (step.message) {
-        const messageP = document.createElement("p");
-        messageP.textContent = step.message;
-        messageP.style.fontWeight = "bold";
-        stepDiv.appendChild(messageP);
+  // Question
+  if (step.question) {
+    const questionP = document.createElement("p");
+    questionP.textContent = step.question;
+    stepDiv.appendChild(questionP);
+  }
 
-        const optionEl = document.querySelector(`.option[data-target="${stepId}"]`);
-        if (optionEl) {
-          const targetId = optionEl.getAttribute("data-target");
-          const contentDiv = document.getElementById(targetId);
-          document.querySelectorAll(".content").forEach(c => {
-            if (c !== contentDiv) c.style.display = "none";
-          });
-          if (contentDiv) contentDiv.style.display = "block";
+  // Message
+  if (step.message) {
+    const messageP = document.createElement("p");
+    messageP.textContent = step.message;
+    messageP.style.fontWeight = "bold";
+    stepDiv.appendChild(messageP);
 
-          setTimeout(() => {
-            contentDiv.scrollIntoView({ behavior: "smooth", block: "start" });
-              }, 50);
-            }
-        }
-       
-
-      // Answers
-      step.answers.forEach(ans => {
-        const btn = document.createElement("button");
-        btn.textContent = ans.text;
-        btn.style.margin = "5px";
-
-        btn.addEventListener("click", () => {
-          if (ans.text.includes("Start Over")) {
-            stepHistory.length = 0;
-            flowContainer.innerHTML = "";
-            document.querySelectorAll(".content").forEach(c => c.style.display = "none");
-            renderStep("step1");
-            return;
-          }
-
-          if (ans.next) {
-            stepHistory.push(stepDiv); // Save current step
-            renderStep(ans.next);
-          }
-        });
-
-        stepDiv.appendChild(btn);
-      });
-
-      // Add Back button if not step1
-      if (stepHistory.length > 0) {
-        const backBtn = document.createElement("button");
-        backBtn.textContent = "⬅ Back";
-        backBtn.classList.add("backBtn");
-        backBtn.style.margin = "5px";
-        backBtn.addEventListener("click", () => {
-          flowContainer.removeChild(stepDiv); // Remove current step
-          const previousStep = stepHistory.pop();
-          if (previousStep) previousStep.scrollIntoView({ behavior: "smooth" });
-        });
-        stepDiv.appendChild(backBtn);
-      }
-
-      flowContainer.appendChild(stepDiv);
+    // Show related option content
+    const optionEl = document.querySelector(`.option[data-target="${stepId}"]`);
+    if (optionEl) {
+      const contentDiv = document.getElementById(optionEl.dataset.target);
+      document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+      if (contentDiv) contentDiv.style.display = "block";
     }
+  }
+
+  // Answer buttons
+  step.answers.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans.text;
+    btn.style.margin = "5px";
+
+    btn.addEventListener("click", () => {
+      if (ans.text.includes("Start Over")) {
+        stepHistory.length = 0;
+        flowContainer.innerHTML = "";
+        document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+        renderStep("step1");
+        return;
+      }
+      if (ans.next) renderStep(ans.next);
+    });
+
+    stepDiv.appendChild(btn);
+  });
+
+  // Back button
+  if (stepHistory.length > 0) {
+    const backBtn = document.createElement("button");
+    backBtn.textContent = "⬅ Back";
+    backBtn.classList.add("backBtn");
+    backBtn.style.margin = "5px";
+
+    backBtn.addEventListener("click", () => {
+      flowContainer.innerHTML = "";
+      const previousStep = stepHistory.pop();
+      if (previousStep) flowContainer.appendChild(previousStep);
+    });
+
+    stepDiv.appendChild(backBtn);
+  }
+
+  flowContainer.appendChild(stepDiv);
+}
 
     // Start flow
     renderStep("step1");
