@@ -46,6 +46,37 @@ h3{
 .guidance-column { 
   width: 500px;        
 }
+
+/* Special style for Need Guidance button */
+#needGuidanceBtn {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 16px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0071bb, #023047); /* gradient for pop */
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+
+#needGuidanceBtn:hover {
+  background: linear-gradient(135deg, #005f99, #011f33);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+#needGuidanceBtn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 .options-column{
   width: 800px;
 }
