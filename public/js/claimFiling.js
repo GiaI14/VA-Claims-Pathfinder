@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       notEligible: {
         question: "Sorry, unfortunately, you do not qualify for VA Disability",
         answers: [
-          { text: "Start Over", next: "step1" }
+          { text: "Start Over 🔄", next: "step1" }
         ]
       },
       step2: {
@@ -60,21 +60,21 @@ document.addEventListener("DOMContentLoaded", () => {
         question: "",
         message: "You can submit a new claim.",
         answers: [
-          { text: "Start Over", next: "step1" }
+          { text: "Start Over 🔄", next: "step1" }
         ]
       },
       supplementalClaim: {
         question: "",
         message: "You can submit a Supplemental Claim.",
         answers: [
-          { text: "Start Over", next: "step1" }
+          { text: "Start Over 🔄", next: "step1" }
         ]
       },
       higherReview: {
         question: "",
         message: "You can file a Higher Level Review request.",
         answers: [
-          { text: "Start Over", next: "step1" }
+          { text: "Start Over 🔄", next: "step1" }
         ]
       }
     };
