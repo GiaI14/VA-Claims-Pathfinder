@@ -144,8 +144,8 @@ h3{
 @media (max-width: 900px) {
   .guidance-column,
   .options-column {
-    width: 95%;       /* slightly less than full width */
-    max-width: 380px; /* reduce max-width a bit */
+    width: 96%;       /* slightly less than full width */
+    max-width: 400px; /* reduce max-width a bit */
     margin: 0 auto;   /* keep centered */
   }
 
