@@ -43,12 +43,12 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(135deg, #005f99, #011f33);
+  background: linear-gradient(135deg, #5a9bd5, #7ab0e0);
   transform: translateY(-2px);
 }
 
 #submitDisabilitiesButton {
-  background-color: #6c63ff; /* different shade */
+  background-color: #6c63ff;
 }
 
 #submitDisabilitiesButton:hover {
