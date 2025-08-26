@@ -114,6 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (c !== contentDiv) c.style.display = "none";
           });
           if (contentDiv) contentDiv.style.display = "block";
+
+          setTimeout(() => {
+            contentDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 50);
+            }
         }
         if (optionEl) {
           optionEl.scrollIntoView({ behavior: "smooth", block: 'start'});
