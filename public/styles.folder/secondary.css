@@ -29,31 +29,33 @@ h1 {
   font-size: 2em;
 }
 
-/* Buttons */
 button {
-  background: linear-gradient(135deg, #0071bb, #023047);
-  color: #fff;
+  background-color: #4682B4; /* Steel blue */
+  color: white;
+  padding: 10px 18px;
   border: none;
-  padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  margin: 5px;
-  transition: transform 0.2s ease, background 0.3s ease;
+  font-size: 16px;
+  display: block;
+  margin: 10px auto;
+  transition: background-color 0.3s ease;
 }
 
+/* Hover effect */
 button:hover {
-  background: linear-gradient(135deg, #005f99, #011f33);
-  transform: translateY(-2px);
+  background-color: #5a9bd5; /* lighter on hover */
 }
 
+/* Make Submit Disabilities slightly lighter than Add Disability */
 #submitDisabilitiesButton {
-  background-color: #6c63ff !important; 
+  background-color: #5a9bd5; /* lighter steel blue */
 }
 
 #submitDisabilitiesButton:hover {
-  background-color: #574bd6 !important;
+  background-color: #7ab0e0; /* even lighter on hover */
 }
+
 /* Inputs */
 input[type="text"],
 input[type="number"],
