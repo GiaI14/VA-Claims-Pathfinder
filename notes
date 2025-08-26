@@ -1,177 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include('includes/head', { title: 'Choose Your Claim Path', nonce: nonce }) %>
-  <link rel="stylesheet" href="styles.folder/shared.css" />
-  <link rel="stylesheet" href="styles.folder/claimFiling.css" />
+document.addEventListener("DOMContentLoaded", () => {
+  const flowContainer = document.getElementById("flowContainer");
+  const showFlowBtn = document.getElementById("showFlowBtn");
 
-  <body>
-    <div class="page-wrapper">
-      <%- include('includes/header', { nonce: nonce }) %>
+  // Toggle flow chart visibility
+  showFlowBtn.addEventListener("click", () => {
+    if (flowContainer.style.display === "block") {
+      flowContainer.style.display = "none";
+      flowContainer.innerHTML = "";
+    } else {
+      flowContainer.style.display = "block";
+      renderFlowChart();
+    }
+  });
 
-      <h1>Choose Your Claim Path</h1>
-      
-      <!-- Wrap columns in a flex container -->
-      <div class="claim-menu-wrapper">
+  function renderFlowChart() {
+    const flowChartData = {
+      step1: {
+        question: "Are you honorably discharged?",
+        answers: [
+          { text: "Yes", next: "step2" },
+          { text: "No", next: "notEligible" }
+        ]
+      },
+      notEligible: {
+        question: "Sorry, unfortunately, you do not qualify for VA Disability",
+        answers: [
+          { text: "Start Over 🔄", next: "step1" }
+        ]
+      },
+      step2: {
+        question: "Are you applying for a new claim?",
+        answers: [
+          { text: "Yes", next: "newClaim" },
+          { text: "No", next: "step3" }
+        ]
+      },
+      step3: {
+        question: "Have you been denied a VA claim?",
+        answers: [
+          { text: "Yes", next: "disagreeDecision" },
+          { text: "No", next: "newClaim" }
+        ]
+      },
+      disagreeDecision: {
+        question: "Do you disagree with the decision?",
+        answers: [
+          { text: "Yes", next: "additionalEvidence" },
+          { text: "No", next: "newClaim" }
+        ]
+      },
+      additionalEvidence: {
+        question: "Do you have additional evidence (treatment, Nexus letters, DBQs, or other developments)?",
+        answers: [
+          { text: "Yes", next: "supplementalClaim" },
+          { text: "No", next: "higherReview" }
+        ]
+      },
+      newClaim: {
+        question: "",
+        message: "You can submit a new claim.",
+        answers: [
+          { text: "Start Over 🔄", next: "step1" }
+        ]
+      },
+      supplementalClaim: {
+        question: "",
+        message: "You can submit a Supplemental Claim.",
+        answers: [
+          { text: "Start Over 🔄", next: "step1" }
+        ]
+      },
+      higherReview: {
+        question: "",
+        message: "You can file a Higher Level Review request.",
+        answers: [
+          { text: "Start Over 🔄", next: "step1" }
+        ]
+      }
+    };
 
-        <!-- Left Column: Guidance -->
-        <div class="guidance-column">
-          <div id="guidanceWrapper">
-            <div id="flowContainerWrapper">
-              <button id="showFlowBtn">Need Guidance</button>
-              <div id="flowContainer"></div>
-            </div>
+    function renderStep(stepId) {
+      const step = flowChartData[stepId];
+      if (!step) return;
 
-            <div id="guidanceRequirements" class="hidden">
-              <h3>Major VA Disability Requirements</h3>
-              <p>VA disability is based on the following three major requirements:</p>
-              <ul>
-                <li>Connection to your service – the onset of your condition must be linked to the time of active service.</li>
-                <li>The condition must be chronic – continue attending your medical appointments and follow prescribed medications and treatments as directed.</li>
-                <li>It must affect your ability to perform your daily duties and responsibilities.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      // Clear container only at step1
+      if (stepId === "step1") flowContainer.innerHTML = "";
 
-        <!-- Right Column: Claim Options -->
-        <div class="options-column">
-          <div id="claimOptions" class="claim-options-wrapper">
+      const stepDiv = document.createElement("div");
+      stepDiv.classList.add("flow-step");
+      stepDiv.style.marginTop = "10px";
 
-            <!-- NEW CLAIM -->
-            <div class="option" data-target="newClaim">
-              ➤ New Claim
-              <div id="newClaim" class="content"> 
-                <div class="claim-steps">
+      // Question
+      const questionP = document.createElement("p");
+      questionP.textContent = step.question;
+      stepDiv.appendChild(questionP);
 
-                  <h3>Direct Connection Claim</h3>
-                  <ol>
-                    <li>
-                      <h4>Start the Intent to File</h4>
-                      <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay.</p>
-                      <a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">
-                        Intent to File (VA Form 21-0966)
-                      </a>
-                    </li>
+      // Step message
+      if (step.message) {
+        const messageP = document.createElement("p");
+        messageP.textContent = step.message;
+        messageP.style.fontWeight = "bold";
+        stepDiv.appendChild(messageP);
 
-                    <li>
-                      <h4>Request a Full Military Record</h4>
-                      <p>Request your service treatment records, personnel file, and C-File through a FOIA (Freedom of Information Act) request. Processing may take months, so submit early.</p>
-                      <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer">
-                        FOIA (VA Form 20-10206)
-                      </a>
-                    </li>
+        // Open corresponding option content automatically
+        const optionEl = document.querySelector(`.option[data-target="${stepId}"]`);
+        if (optionEl) {
+          const targetId = optionEl.getAttribute("data-target");
+          const contentDiv = document.getElementById(targetId);
+          document.querySelectorAll(".content").forEach(c => {
+            if (c !== contentDiv) c.style.display = "none";
+          });
+          if (contentDiv) contentDiv.style.display = "block";
+        }
+      }
 
-                    <li>
-                      <h4>Prepare Personal & Lay Statements</h4>
-                      <p><strong>Personal Statement:</strong> Describe your disability, when/how it began, and how it affects daily life and employment.</p>
-                      <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
-                        VA Form 21-4138
-                      </a>
+      // Answers
+      step.answers.forEach(ans => {
+        const btn = document.createElement("button");
+        btn.textContent = ans.text;
+        btn.style.margin = "5px";
 
-                      <p><strong>Lay Statements:</strong> Family, friends, or coworkers who observed your condition can provide supporting statements.</p>
-                      <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-                        VA Form 21-10210
-                      </a>
+        btn.addEventListener("click", () => {
+          // If Start Over, reset everything
+          if (ans.text === "Start Over") {
+            flowContainer.innerHTML = "";
+            document.querySelectorAll(".content").forEach(c => c.style.display = "none");
+            renderStep("step1");
+            return;
+          }
 
-                      <p><strong>Buddy Statements:</strong> Ask fellow service members to confirm in-service events, injuries, or stressors.</p>
-                      <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-                        VA Form 21-10210
-                      </a>
-                    </li>
+          // Show answer message if exists
+          if (ans.message) {
+            const ansMessageP = document.createElement("p");
+            ansMessageP.textContent = ans.message;
+            ansMessageP.style.fontStyle = "italic";
+            stepDiv.appendChild(ansMessageP);
 
-                    <li>
-                      <h4>Gather Medical Records</h4>
-                      <p>Collect all medical records (VA & private). Use Blue Button for VA records, FOIA requests, or CDs from discharge. Highlight relevant events, diagnoses, and treatments.</p>
-                    </li>
+            // Open corresponding option content
+            const optionEl = document.querySelector(`.option[data-target="${ans.next}"]`);
+            if (optionEl) {
+              const targetId = optionEl.getAttribute("data-target");
+              const contentDiv = document.getElementById(targetId);
+              document.querySelectorAll(".content").forEach(c => {
+                if (c !== contentDiv) c.style.display = "none";
+              });
+              if (contentDiv) contentDiv.style.display = "block";
+            }
+          }
 
-                    <li>
-                      <h4>Submit Your Claim</h4>
-                      <p>Include all collected records and statements with your claim.</p>
-                      <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">
-                        Submit a New Claim
-                      </a>
-                    </li>
+          // Render next step
+          if (ans.next) renderStep(ans.next);
+        });
 
-                    <li>
-                      <h4>Track Your Claim</h4>
-                      <p>Processing can take several months. Keep your contact info updated, attend VA exams (C&P exams), and regularly check claim status for VA requests.</p>
-                    </li>
-                  </ol>
-                </div> <!-- closes .claim-steps -->
-              </div> <!-- closes #newClaim -->
-            </div> <!-- closes .option (New Claim) -->
+        stepDiv.appendChild(btn);
+      });
 
+      flowContainer.appendChild(stepDiv);
+      stepDiv.scrollIntoView({ behavior: "smooth" });
+    }
 
-            <!-- SUPPLEMENTAL -->
-            <div class="option" data-target="supplementalClaim">
-              ➤ Supplemental Claim
-              <div id="supplementalClaim" class="content">
-                <p>Collect additional information that could support your claim, such as:</p>
-                <ul>
-                  <li>New doctor visits</li>
-                  <li>Test results</li>
-                  <li>Other relevant medical documents</li>
-                </ul>
+    // Start flow
+    renderStep("step1");
+  }
 
-                <ul>
-                  <li>Personal statement
-                    <ul>
-                      <li>
-                        <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
-                          Personal Statement in Support of Claim (VA Form 21-4138)
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>Witness statements, if available
-                    <ul>
-                      <li>
-                        <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-                          Lay Statement (VA Form 21-10210)
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>Submit supplemental claim form
-                    <ul>
-                      <li>
-                        <a href="https://www.va.gov/find-forms/about-form-20-0995/" target="_blank" rel="noopener noreferrer">
-                          Decision Review Request: Supplemental Claim (VA Form 20-0995)
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-
-            <!-- HIGHER LEVEL REVIEW -->
-            <div class="option" data-target="higherReview">
-              ➤ Higher-Level Review
-              <div id="higherReview" class="content">
-                <p>Apply, if you disagree with a VA claim decision and want a senior reviewer to look at your claim. No additional information is accepted </p>
-                <p>Prepare and submit Higher-Level-Review request</p>
-                <ul>
-                  <li>
-                    <a href="https://www.va.gov/decision-reviews/higher-level-review/request-higher-level-review-form-20-0996/start">
-                      Higher-Level Review (VA Form 20-0996)
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div> <!-- closes claim-menu-wrapper -->
-
-      <div class="spacer"></div>
-      <%- include('includes/footer') %>
-    </div> <!-- closes .page-wrapper -->
-
-    <!-- Scripts -->
-    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-    <script src="/js/claimFiling.js" nonce="<%= nonce %>" defer></script>
-  </body>
-</html>
+  // Original .option toggles for guidance content
+  document.querySelectorAll(".option").forEach(option => {
+    option.addEventListener("click", () => {
+      const targetId = option.getAttribute("data-target");
+      const contentDiv = document.getElementById(targetId);
+      if (contentDiv.style.display === "block") {
+        contentDiv.style.display = "none";
+      } else {
+        document.querySelectorAll(".content").forEach(c => {
+          if (c !== contentDiv) c.style.display = "none";
+        });
+        if (contentDiv) contentDiv.style.display = "block";
+      }
+    });
+  });
+});
