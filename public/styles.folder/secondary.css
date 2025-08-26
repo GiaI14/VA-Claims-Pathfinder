@@ -49,11 +49,11 @@ button:hover {
 
 /* Special submit button */
 #submitDisabilitiesButton {
-  background: linear-gradient(135deg, #3a6f99, #4a82b2);
+  background: linear-gradient(135deg, #1e3c60, #2c4d73);
 }
 
 #submitDisabilitiesButton:hover {
-  background: linear-gradient(135deg, #4a82b2, #2f5d7d);
+  background: linear-gradient(135deg, #2c4d73, #162d47);
 }
 
 /* Inputs */
