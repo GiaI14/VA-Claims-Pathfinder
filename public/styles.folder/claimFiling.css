@@ -170,6 +170,7 @@ h3{
     width: 100%;
     padding: 10px;
     margin: 5px 0;
+    box-sizing: border-box;
   }
 
   .flow-step button {
