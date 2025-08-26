@@ -49,7 +49,7 @@ button:hover {
 
 /* Special submit button */
 #submitDisabilitiesButton {
-  background: linear-gradient(135deg, ##3a6f99, #4a82b2);
+  background: linear-gradient(135deg, #3a6f99, #4a82b2);
 }
 
 #submitDisabilitiesButton:hover {
