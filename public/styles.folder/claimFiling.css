@@ -145,15 +145,16 @@ h3{
   .claim-menu-wrapper {
     flex-direction: column;
     gap: 20px;
-    align-items: center;
+    align-items: center;   /* center columns */
+    justify-content: center; /* center horizontally */
     margin: 0 auto;
   }
 
   .guidance-column,
   .options-column {
-    width: 85%;        /* narrower than full width */
-    max-width: 400px;  /* limits it on larger phones */
-    margin: 0 auto;
+    width: 85%;
+    max-width: 400px;
+    margin: 0 auto;        /* center columns individually */
   }
 
   #showFlowBtn {
@@ -161,13 +162,13 @@ h3{
     max-width: 400px;
     font-size: 16px;
     padding: 12px 18px;
-    margin: 20px auto;
+    margin: 20px auto;     /* center button */
   }
 
   .option {
-    width: 100%;       /* fill the column */
+    width: 100%;
     padding: 10px;
-    margin: 5px 0;     /* small top/bottom spacing */
+    margin: 5px 0;
   }
 
   .flow-step button {
@@ -175,4 +176,5 @@ h3{
     margin: 5px 0;
   }
 }
+
 
