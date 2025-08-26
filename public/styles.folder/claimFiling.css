@@ -141,3 +141,38 @@ h3{
   background-color: #023047;   /* super navy-teal */
 }
 
+/* MOBILE / RESPONSIVE STYLES */
+@media (max-width: 900px) {
+  .claim-menu-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .guidance-column,
+  .options-column {
+    width: 90%;
+    max-width: 500px;
+  }
+
+  #showFlowBtn {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+
+  .option {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .flow-step button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 500px) {
+  h1 { font-size: 22px; }
+  h3 { font-size: 16px; }
+  #showFlowBtn { font-size: 14px; padding: 12px 16px; }
+}
