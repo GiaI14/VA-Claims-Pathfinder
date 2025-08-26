@@ -34,6 +34,19 @@ h3{
   color: black;
 }
 
+.backBtn {
+  background-color: #888888; /* medium gray */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  background-color: #555555; /* darker gray on hover */
+}
+
 .claim-menu-wrapper {
   display: flex;
   justify-content: center;  /* centers the columns in the wrapper */
