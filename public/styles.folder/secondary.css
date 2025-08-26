@@ -31,7 +31,7 @@ h1 {
 
 /* Buttons */
 button {
-  background: linear-gradient(135deg, #0071bb, #023047);
+  background: linear-gradient(135deg, #5a9bd5, #7ab0e0);
   color: #fff;
   border: none;
   padding: 10px 16px;
@@ -43,7 +43,7 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(135deg, #5a9bd5, #7ab0e0);
+  background: linear-gradient(135deg, #7ab0e0, #4682B4 );
   transform: translateY(-2px);
 }
 
@@ -55,14 +55,6 @@ button:hover {
   background-color: #574bd6;
 }
 
-/* Make Submit Disabilities slightly lighter than Add Disability */
-#submitDisabilitiesButton {
-  background-color: #5a9bd5; /* lighter steel blue */
-}
-
-#submitDisabilitiesButton:hover {
-  background-color: #7ab0e0; /* even lighter on hover */
-}
 
 /* Inputs */
 input[type="text"],
