@@ -1,134 +1,160 @@
 html, body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f7fa;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7fa;
 }
 
+/* Main Form Container */
 #disabilityForm {
   max-width: 700px;
   margin: 60px auto 0 auto;   
   padding: 20px;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Headings */
 h1, h2 {
-    color: #202c2c;
+  color: #202c2c;
 }
 
 h1 {
-    text-align: center;
-    width: 100%;
-    margin: 30px auto 20px;
-    font-size: 2em;
+  text-align: center;
+  width: 100%;
+  margin: 30px auto 20px;
+  font-size: 2em;
 }
 
+/* Buttons */
 button {
-    background-color: #440705;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 5px;
-    transition: background-color 0.3s;
+  background: linear-gradient(135deg, #0071bb, #023047);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 5px;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 button:hover {
-    background-color: #290303;
+  background: linear-gradient(135deg, #005f99, #011f33);
+  transform: translateY(-2px);
 }
 
-input[type="text"], input[type="number"] {
-    width: 100%;
-    padding: 8px 12px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+/* Inputs */
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  display: block;
 }
 
+/* Disabilities Section */
 #disabilities {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .disability-entry {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .disability-entry input,
 .disability-entry select {
-    flex-grow: 1 1 auto;
-    width: auto !important;
+  flex-grow: 1;
 }
 
 .disability-entry button.minus-disability-button {
-    flex: 0 0 auto;  /* don't shrink or grow */
-    margin-left: 5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    padding: 0;
-    font-size: 18px;
-    line-height: 30px;
-    text-align: center;
+  flex: 0 0 auto;
+  margin-left: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 18px;
+  line-height: 32px;
+  text-align: center;
+  background-color: #f44336;
+}
+
+.disability-entry button.minus-disability-button:hover {
+  background-color: #d32f2f;
 }
 
 .disability-entry button.remove-disability-button {
-    display: none;  
-    margin-left: auto;  
-    background-color: #f44336;
+  display: none;  
+  margin-left: auto;  
+  background-color: #f44336;
 }
 
-.disability-entry button {
-    margin-left: auto;
-    background-color: #f44336;
-}
-
-.disability-entry button:hover {
-    background-color: #d32f2f;
+.disability-entry button.remove-disability-button:hover {
+  background-color: #d32f2f;
 }
 
 .disability-name {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .disability-percentage {
-    width: 70px;
+  width: 70px;
 }
 
+/* Secondary Conditions */
 #secondaryConditions {
-    width: 700px;
-    margin: 20px auto 10px auto;
-    padding: 20px;
-    background-color: #d1e9e9;
-    border-radius: 4px;
+  width: 700px;
+  margin: 20px auto 10px auto;
+  padding: 20px;
+  background-color: #d1e9e9;
+  border-radius: 8px;
 }
 
+/* Mobile adjustments */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    .container {
-        margin: 60px auto 20px;
-        padding: 15px;
-    }
-    h1 {
-        font-size: 1.8em;
-    }
-    button {
-        font-size: 12px;
-        padding: 8px 12px;
-    }
-}
+  body {
+    padding: 10px;
+  }
 
+  #disabilityForm, 
+  #secondaryConditions {
+    width: 100%;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.6em;
+  }
+
+  button {
+    font-size: 13px;
+    padding: 8px 14px;
+    width: 100%; /* buttons stack nicely */
+  }
+
+  .disability-entry {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .disability-entry button.minus-disability-button {
+    align-self: flex-end;
+  }
+}
