@@ -48,11 +48,11 @@ button:hover {
 }
 
 #submitDisabilitiesButton {
-  background-color: #6c63ff; /* different shade */
+  background-color: #6c63ff !important; 
 }
 
 #submitDisabilitiesButton:hover {
-  background-color: #574bd6;
+  background-color: #574bd6 !important;
 }
 /* Inputs */
 input[type="text"],
