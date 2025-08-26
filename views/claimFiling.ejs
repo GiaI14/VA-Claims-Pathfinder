@@ -1,119 +1,177 @@
-<!-- NEW CLAIM -->
-<div class="option" data-target="newClaim">
-  ➤ New Claim
-  <div id="newClaim" class="content"> 
-    <div class="claim-steps">
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head', { title: 'Choose Your Claim Path', nonce: nonce }) %>
+  <link rel="stylesheet" href="styles.folder/shared.css" />
+  <link rel="stylesheet" href="styles.folder/claimFiling.css" />
 
-      <h3>Direct Connection Claim</h3>
-      <ol>
-        <li>
-          <h4>Start the Intent to File</h4>
-          <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay.</p>
-          <a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">
-            Intent to File (VA Form 21-0966)
-          </a>
-        </li>
-        <li>
-          <h4>Request a Full Military Record</h4>
-          <p>Request your service treatment records, personnel file, and C-File through a FOIA (Freedom of Information Act) request. Processing may take months, so submit early.</p>
-          <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer">
-            FOIA (VA Form 20-10206)
-          </a>
-        </li>
-        <li>
-          <h4>Prepare Personal & Lay Statements</h4>
-          <p><strong>Personal Statement:</strong> Describe your disability, when/how it began, and how it affects daily life and employment.</p>
-          <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
-            VA Form 21-4138
-          </a>
+  <body>
+    <div class="page-wrapper">
+      <%- include('includes/header', { nonce: nonce }) %>
 
-          <p><strong>Lay Statements:</strong> Family, friends, or coworkers who observed your condition can provide supporting statements.</p>
-          <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-            VA Form 21-10210
-          </a>
+      <h1>Choose Your Claim Path</h1>
 
-          <p><strong>Buddy Statements:</strong> Ask fellow service members to confirm in-service events, injuries, or stressors.</p>
-          <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-            VA Form 21-10210
-          </a>
-        </li>
-        <li>
-          <h4>Gather Medical Records</h4>
-          <p>Collect all medical records (VA & private). Use Blue Button for VA records, FOIA requests, or CDs from discharge. Highlight relevant events, diagnoses, and treatments.</p>
-        </li>
-        <li>
-          <h4>Submit Your Claim</h4>
-          <p>Include all collected records and statements with your claim.</p>
-          <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">
-            Submit a New Claim
-          </a>
-        </li>
-        <li>
-          <h4>Track Your Claim</h4>
-          <p>Processing can take several months. Keep your contact info updated, attend VA exams (C&P exams), and regularly check claim status for VA requests.</p>
-        </li>
-      </ol>
-    </div> <!-- closes .claim-steps -->
-  </div> <!-- closes #newClaim -->
-</div> <!-- closes .option (New Claim) -->
+      <!-- Wrap columns in a flex container -->
+      <div class="claim-menu-wrapper">
+
+        <!-- Left Column: Guidance -->
+        <div class="guidance-column">
+          <div id="guidanceWrapper">
+            <div id="flowContainerWrapper">
+              <button id="showFlowBtn">Need Guidance</button>
+              <div id="flowContainer"></div>
+            </div>
+
+            <div id="guidanceRequirements" class="hidden">
+              <h3>Major VA Disability Requirements</h3>
+              <p>VA disability is based on the following three major requirements:</p>
+              <ul>
+                <li>Connection to your service – the onset of your condition must be linked to the time of active service.</li>
+                <li>The condition must be chronic – continue attending your medical appointments and follow prescribed medications and treatments as directed.</li>
+                <li>It must affect your ability to perform your daily duties and responsibilities.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Claim Options -->
+        <div class="options-column">
+          <div id="claimOptions" class="claim-options-wrapper">
+
+            <!-- NEW CLAIM -->
+            <div class="option" data-target="newClaim">
+              ➤ New Claim
+              <div id="newClaim" class="content"> 
+                <div class="claim-steps">
+
+                  <h3>Direct Connection Claim</h3>
+                  <ol>
+                    <li>
+                      <h4>Start the Intent to File</h4>
+                      <p>Once you submit an Intent to File, you protect your effective date. From that day, you’ll have 1 year to complete your claims while still being eligible for retroactive pay.</p>
+                      <a href="https://www.va.gov/find-forms/about-form-21-0966/" target="_blank" rel="noopener noreferrer">
+                        Intent to File (VA Form 21-0966)
+                      </a>
+                    </li>
+
+                    <li>
+                      <h4>Request a Full Military Record</h4>
+                      <p>Request your service treatment records, personnel file, and C-File through a FOIA (Freedom of Information Act) request. Processing may take months, so submit early.</p>
+                      <a href="https://www.va.gov/find-forms/about-form-20-10206/" target="_blank" rel="noopener noreferrer">
+                        FOIA (VA Form 20-10206)
+                      </a>
+                    </li>
+
+                    <li>
+                      <h4>Prepare Personal & Lay Statements</h4>
+                      <p><strong>Personal Statement:</strong> Describe your disability, when/how it began, and how it affects daily life and employment.</p>
+                      <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
+                        VA Form 21-4138
+                      </a>
+
+                      <p><strong>Lay Statements:</strong> Family, friends, or coworkers who observed your condition can provide supporting statements.</p>
+                      <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
+                        VA Form 21-10210
+                      </a>
+
+                      <p><strong>Buddy Statements:</strong> Ask fellow service members to confirm in-service events, injuries, or stressors.</p>
+                      <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
+                        VA Form 21-10210
+                      </a>
+                    </li>
+
+                    <li>
+                      <h4>Gather Medical Records</h4>
+                      <p>Collect all medical records (VA & private). Use Blue Button for VA records, FOIA requests, or CDs from discharge. Highlight relevant events, diagnoses, and treatments.</p>
+                    </li>
+
+                    <li>
+                      <h4>Submit Your Claim</h4>
+                      <p>Include all collected records and statements with your claim.</p>
+                      <a href="https://www.va.gov/disability/file-disability-claim-form-21-526ez/introduction" target="_blank" rel="noopener noreferrer">
+                        Submit a New Claim
+                      </a>
+                    </li>
+
+                    <li>
+                      <h4>Track Your Claim</h4>
+                      <p>Processing can take several months. Keep your contact info updated, attend VA exams (C&P exams), and regularly check claim status for VA requests.</p>
+                    </li>
+                  </ol>
+                </div> <!-- closes .claim-steps -->
+              </div> <!-- closes #newClaim -->
+            </div> <!-- closes .option (New Claim) -->
 
 
-<!-- SUPPLEMENTAL -->
-<div class="option" data-target="supplementalClaim">
-  ➤ Supplemental Claim
-  <div id="supplementalClaim" class="content">
-    <p>Collect additional information that could support your claim, such as:</p>
-    <ul>
-      <li>New doctor visits</li>
-      <li>Test results</li>
-      <li>Other relevant medical documents</li>
-    </ul>
+            <!-- SUPPLEMENTAL -->
+            <div class="option" data-target="supplementalClaim">
+              ➤ Supplemental Claim
+              <div id="supplementalClaim" class="content">
+                <p>Collect additional information that could support your claim, such as:</p>
+                <ul>
+                  <li>New doctor visits</li>
+                  <li>Test results</li>
+                  <li>Other relevant medical documents</li>
+                </ul>
 
-    <ul>
-      <li>Personal statement
-        <ul>
-          <li>
-            <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
-              Personal Statement in Support of Claim (VA Form 21-4138)
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li>Witness statements, if available
-        <ul>
-          <li>
-            <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
-              Lay Statement (VA Form 21-10210)
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li>Submit supplemental claim form
-        <ul>
-          <li>
-            <a href="https://www.va.gov/find-forms/about-form-20-0995/" target="_blank" rel="noopener noreferrer">
-              Decision Review Request: Supplemental Claim (VA Form 20-0995)
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</div>
+                <ul>
+                  <li>Personal statement
+                    <ul>
+                      <li>
+                        <a href="https://www.va.gov/find-forms/about-form-21-4138/" target="_blank" rel="noopener noreferrer">
+                          Personal Statement in Support of Claim (VA Form 21-4138)
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Witness statements, if available
+                    <ul>
+                      <li>
+                        <a href="https://www.va.gov/find-forms/about-form-21-10210/" target="_blank" rel="noopener noreferrer">
+                          Lay Statement (VA Form 21-10210)
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Submit supplemental claim form
+                    <ul>
+                      <li>
+                        <a href="https://www.va.gov/find-forms/about-form-20-0995/" target="_blank" rel="noopener noreferrer">
+                          Decision Review Request: Supplemental Claim (VA Form 20-0995)
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
 
-<!-- HIGHER LEVEL REVIEW -->
-<div class="option" data-target="higherReview">
-  ➤ Higher-Level Review
-  <div id="higherReview" class="content">
-    <p>Apply, if you disagree with a VA claim decision and want a senior reviewer to look at your claim. No additional information is accepted.</p>
-    <p>Prepare and submit Higher-Level-Review request:</p>
-    <ul>
-      <li>
-        <a href="https://www.va.gov/decision-reviews/higher-level-review/request-higher-level-review-form-20-0996/start" target="_blank" rel="noopener noreferrer">
-          Higher-Level Review (VA Form 20-0996)
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
+            <!-- HIGHER LEVEL REVIEW -->
+            <div class="option" data-target="higherReview">
+              ➤ Higher-Level Review
+              <div id="higherReview" class="content">
+                <p>Apply, if you disagree with a VA claim decision and want a senior reviewer to look at your claim. No additional information is accepted </p>
+                <p>Prepare and submit Higher-Level-Review request</p>
+                <ul>
+                  <li>
+                    <a href="https://www.va.gov/decision-reviews/higher-level-review/request-higher-level-review-form-20-0996/start">
+                      Higher-Level Review (VA Form 20-0996)
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div> <!-- closes claim-menu-wrapper -->
+
+      <div class="spacer"></div>
+      <%- include('includes/footer') %>
+    </div> <!-- closes .page-wrapper -->
+
+    <!-- Scripts -->
+    <script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+    <script src="/js/claimFiling.js" nonce="<%= nonce %>" defer></script>
+  </body>
+</html>
