@@ -152,26 +152,6 @@ app.use(async function (req, res, next) {
   console.log('Middleware - isAuth:', res.locals.isAuth);
   next();
 });
- //////////////////////added////////////////////////////////////////////////
-app.post('/save-results', async (req, res) => {
-  if (!req.session.user) return res.status(401).json({ success: false });
-
-  const userId = req.session.user.id;
-  const { results } = req.body;
-
-  try {
-    const db = getDb();
-    await db.execute(
-      'INSERT INTO saved_results (user_id, results_json, created_at) VALUES (?, ?, NOW())',
-      [userId, JSON.stringify(results)]
-    );
-    res.json({ success: true });
-  } catch (err) {
-    console.error('Error saving results:', err);
-    res.json({ success: false });
-  }
-});
-///////////////////////////added this//////////////////////////////////////////////////////////////////////////////
 
 
 // CSRF error handler
