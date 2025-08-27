@@ -14,7 +14,8 @@ function addDisability() {
   disabilityWrapper.appendChild(newDisabilityInput);
 
   const minusButton = document.createElement('button');
-  minusButton.type = 'button 'X';
+  minusButton.type = 'button'
+  minusButton.textContent ='X';
   minusButton.className = 'minus-disability-button';
   disabilityWrapper.appendChild(minusButton);
 
