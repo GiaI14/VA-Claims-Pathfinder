@@ -236,6 +236,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveBtn.addEventListener('click', () => saveResults(data));
   }
+
+  async function saveResults(data) {
+  try {
+    const response = await fetch('/save-results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ results: data })
+    });
+
+    const res = await response.json();
+    if (res.success) {
+      alert('Results saved successfully!');
+    } else {
+      alert('Failed to save results.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error saving results.');
+  }
+}
+
   ////////////////////////////////////////////////////////////////////////////
   // ------------------- REMOVE ENTRY -------------------
   symptomEntriesContainer.addEventListener('click', (e) => {
