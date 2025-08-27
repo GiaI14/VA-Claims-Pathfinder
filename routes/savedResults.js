@@ -13,6 +13,7 @@ router.post('/save-results', async (req, res) => {
     return res.status(400).json({ success: false, message: 'No results provided' });
   }
 
+  // Use null if the user doesn't exist or is not found in DB
   const userId = req.session.user.id || null;
   const googleUserId = req.session.user.google_id || null;
 
@@ -22,12 +23,14 @@ router.post('/save-results', async (req, res) => {
       'INSERT INTO saved_results (user_id, google_user_id, results_json, created_at) VALUES (?, ?, ?, NOW())',
       [userId, googleUserId, JSON.stringify(results)]
     );
-    res.status(200).json({ success: true });
+
+    res.status(200).json({ success: true, message: 'Results saved successfully' });
   } catch (err) {
-    console.error('Error saving results:', err); // <-- log full error
-    res.status(500).json({ success: false, message: err.message });
+    console.error('Error saving results:', err); // logs the real MySQL error
+    res.status(500).json({ success: false, message: 'Database error: ' + err.message });
   }
 });
+
 
 
 
