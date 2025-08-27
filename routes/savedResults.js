@@ -27,7 +27,7 @@ router.post('/save-results', async (req, res) => {
     );
     res.json({ success: true });
   } catch (err) {
-    console.error('Error saving results:', err); // log DB error
+    console.error('Error saving results:', err); 
     res.status(500).json({ success: false, error: 'Database insert failed' });
   }
 });
