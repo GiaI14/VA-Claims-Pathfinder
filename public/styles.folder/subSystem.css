@@ -100,7 +100,7 @@ h1 {
   margin-top: 15px;
   padding: 8px 16px;
   font-size: 16px;
-  background-color:#0c2624;
+  background-color: linear-gradient(135deg, #0071bb, #023047);
   color: white;
   border: none;
   border-radius: 4px;
