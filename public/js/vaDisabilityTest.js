@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     saveBtn.addEventListener('click', () => saveResults(data));
   }
-  
+  ////////////////////////////////////////////////////////////////////////////
   // ------------------- REMOVE ENTRY -------------------
   symptomEntriesContainer.addEventListener('click', (e) => {
     if (!e.target.classList.contains('remove-entry-button')) return;
