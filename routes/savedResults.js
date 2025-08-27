@@ -22,13 +22,13 @@ router.post('/save-results', async (req, res) => {
       'INSERT INTO saved_results (user_id, google_user_id, results_json, created_at) VALUES (?, ?, ?, NOW())',
       [userId, googleUserId, JSON.stringify(results)]
     );
-
     res.status(200).json({ success: true });
   } catch (err) {
-    console.error('Error saving results:', err);
-    res.status(500).json({ success: false, message: 'Database error' });
+    console.error('Error saving results:', err); // <-- log full error
+    res.status(500).json({ success: false, message: err.message });
   }
 });
+
 
 
 // Get saved results
