@@ -4,13 +4,17 @@ const { getDb } = require('../data/database');
 
 // Save results
 router.post('/save-results', async (req, res) => {
-  if (!req.session.user) return res.status(401).json({ success: false });
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
 
   const { results } = req.body;
-  const userId = req.session.user.id;
-  const googleUserId = req.session.user.google_id || null;
+  if (!results) {
+    return res.status(400).json({ success: false, message: 'No results provided' });
+  }
 
-  if (!results) return res.status(400).json({ success: false });
+  const userId = req.session.user.id || null;
+  const googleUserId = req.session.user.google_id || null;
 
   try {
     const db = getDb();
@@ -18,12 +22,14 @@ router.post('/save-results', async (req, res) => {
       'INSERT INTO saved_results (user_id, google_user_id, results_json, created_at) VALUES (?, ?, ?, NOW())',
       [userId, googleUserId, JSON.stringify(results)]
     );
-    res.json({ success: true });
+
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error('Error saving results:', err);
-    res.json({ success: false });
+    res.status(500).json({ success: false, message: 'Database error' });
   }
 });
+
 
 // Get saved results
 router.get('/get-saved-results', async (req, res) => {
