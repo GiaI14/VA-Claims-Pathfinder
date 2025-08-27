@@ -3,30 +3,36 @@ const router = express.Router();
 const { getDb } = require('../data/database');
 
 // Save results
-app.post('/save-results', async (req, res) => {
-  console.log('Incoming /save-results request');  // 👈 should fire every time
-  console.log('Session user:', req.session?.user || req.session?.googleUser);
-  console.log('Results from client:', req.body);
+router.post('/save-results', async (req, res) => {
+  console.log('POST /save-results hit');
+  console.log('Session user:', req.session.user);
+  console.log('Results:', req.body.results);
+
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+
+  const { results } = req.body;
+  if (!results) {
+    return res.status(400).json({ success: false, message: 'No results provided' });
+  }
+
+  const userId = req.session.user.id || null;
+  const googleUserId = req.session.user.google_id || null;
 
   try {
-    const user = req.session.user || req.session.googleUser;
-    if (!user) {
-      return res.status(401).json({ error: 'User not authenticated' });
-    }
-
     const db = getDb();
     await db.execute(
-      'INSERT INTO saved_results (user_id, results_json) VALUES (?, ?)',
-      [user.id, JSON.stringify(req.body.results)]
+      'INSERT INTO saved_results (user_id, google_user_id, results_json, created_at) VALUES (?, ?, ?, NOW())',
+      [userId, googleUserId, JSON.stringify(results)]
     );
 
-    res.json({ success: true });
+    res.status(200).json({ success: true, message: 'Results saved successfully' });
   } catch (err) {
     console.error('Error saving results:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: 'Database error: ' + err.message });
   }
 });
-
 
 // Get saved results
 router.get('/get-saved-results', async (req, res) => {
@@ -48,4 +54,4 @@ router.get('/get-saved-results', async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router;   // 👈 important
