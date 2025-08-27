@@ -227,8 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       resultsDiv.appendChild(div);
     });
-  }
 
+    /////////////added/////////////////////////////////////////////////////
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Save Results';
+    saveBtn.className = 'save-results-btn';
+    resultsDiv.appendChild(saveBtn);
+
+    saveBtn.addEventListener('click', () => saveResults(data));
+  }
+  
   // ------------------- REMOVE ENTRY -------------------
   symptomEntriesContainer.addEventListener('click', (e) => {
     if (!e.target.classList.contains('remove-entry-button')) return;
