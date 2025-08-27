@@ -1,50 +1,75 @@
-<header>
-  <nav class="navbar">
-    <a href="/" class="logo">VA Claims Pathfinder</a>
-    <div class="hamburger" id="hamburger">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </div>
-    <ul class="nav-menu" id="nav-menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/calculator">Disability Calculator</a></li>
-     <% if (isAuth) { %> 
-   <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
-   <li><a href="/secondary">Secondary Conditions Finder</a></li>
-   <li><a href="/claimFiling">How to file a claim</a></li>
-  <li>
-    <form action="/logout" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
-      <button id="nav-logout-btn">Logout</button>
-    </form>
-  </li>
-<% } else { %>
-  <li><a href="/login">Login</a></li>
-  <li><a href="/signup">Signup</a></li>
-<% } %>
-    </ul>
-  </nav>
-  <%- include('mobile-drawer', { nonce: nonce }) %>
-</header>
-
-<script nonce="<%= nonce %>">
-  document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
-
-    if (hamburger && navMenu) {
-      hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-      });
+ // ------------------- DISPLAY RESULTS -------------------frontEnd
+  function displayResults(data) {
+    resultsDiv.innerHTML = '';
+    if (!data || data.length === 0) {
+      resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
+      return;
     }
 
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-      link.addEventListener('click', function() {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-      });
+    data.forEach(entry => {
+      const div = document.createElement('div');
+      div.className = 'result-item';
+
+      if (entry.possibleConditions && entry.possibleConditions.length > 0) {
+        const conditionsHtml = entry.possibleConditions.map(cond => `
+          <h4>${cond.condition_name} (Code: ${cond.medical_code})</h4>
+          <p>Confidence: ${cond.match_percentage}%</p>
+        `).join('<hr>');
+
+        div.innerHTML = `
+          <h3>System: ${entry.system}</h3>
+          ${conditionsHtml}
+        `;
+      } else {
+        div.innerHTML = `
+          <h3>System: ${entry.system}</h3>
+          <p>${entry.message || 'No matching conditions found.'}</p>
+        `;
+      }
+
+      resultsDiv.appendChild(div);
     });
+  }
+
+  // ------------------- REMOVE ENTRY -------------------
+  symptomEntriesContainer.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('remove-entry-button')) return;
+
+    const entry = e.target.closest('.symptom-entry');
+    if (!entry) return;
+
+    const systemSelect = entry.querySelector('.system-select');
+    if (systemSelect) {
+      systemSelect.selectedIndex = 0;
+      const event = new Event('change', { bubbles: true });
+      systemSelect.dispatchEvent(event);
+    }
+
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    if (subSystemSelect) {
+      subSystemSelect.innerHTML = `<option value="" disabled selected hidden>Select a sub-system</option>`;
+    }
+
+    const systemImage = entry.querySelector('.system-image');
+    if (systemImage) {
+      systemImage.src = '';
+      systemImage.style.display = 'none';
+    }
+
+    entry.querySelectorAll('input[type="radio"]').forEach(r => (r.checked = false));
+
+    const typedInput = entry.querySelector('.typed-symptoms');
+    if (typedInput) {
+      typedInput.value = '';
+      typedInput.style.display = 'none';
+    }
+
+    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
+    if (dynamicList) {
+      dynamicList.innerHTML = '';
+      dynamicList.style.display = 'none';
+    }
+
+    resultsDiv.innerHTML = '';
   });
-</script>
+}); 
