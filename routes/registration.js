@@ -174,6 +174,15 @@ router.post('/login', async function (req, res) {
   }
 });
 ///////////////////////////////////////////////////////////////////////////////////////////
+router.get('/dashboard', isAuth, (req, res) => {
+  res.render('dashboard', {
+    csrfToken: req.csrfToken(),
+    nonce: res.locals.nonce,
+    user: req.session.user // pass user info to template
+  });
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////
 router.post('/logout', function (req, res) {
   console.log("Received CSRF:", req.body._csrf);
   
