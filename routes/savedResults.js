@@ -15,6 +15,7 @@ router.post('/save-results', async (req, res) => {
   // Debugging logs
   console.log('Session user:', user);
   console.log('Results:', results);
+  console.error('Error saving results:', err);
 
   if (!results) return res.status(400).json({ success: false });
 
