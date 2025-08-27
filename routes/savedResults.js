@@ -4,6 +4,10 @@ const { getDb } = require('../data/database');
 
 // Save results
 router.post('/save-results', async (req, res) => {
+  console.log('POST /save-results hit');
+  console.log('Session user:', req.session.user);
+  console.log('Results:', req.body.results);
+
   if (!req.session.user) {
     return res.status(401).json({ success: false, message: 'Not authenticated' });
   }
@@ -13,7 +17,6 @@ router.post('/save-results', async (req, res) => {
     return res.status(400).json({ success: false, message: 'No results provided' });
   }
 
-  // Use null if the user doesn't exist or is not found in DB
   const userId = req.session.user.id || null;
   const googleUserId = req.session.user.google_id || null;
 
@@ -26,12 +29,10 @@ router.post('/save-results', async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Results saved successfully' });
   } catch (err) {
-    console.error('Error saving results:', err); // logs the real MySQL error
+    console.error('Error saving results:', err); // <-- logs full MySQL error
     res.status(500).json({ success: false, message: 'Database error: ' + err.message });
   }
 });
-
-
 
 
 // Get saved results
