@@ -3,22 +3,20 @@ const router = express.Router();
 const { getDb } = require('../data/database');
 
 // Save results
+// Save results
 router.post('/save-results', async (req, res) => {
-  console.log('POST /save-results hit');
-  console.log('Session user:', req.session.user);
-  console.log('Results:', req.body.results);
-
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+  if (!req.session.user) return res.status(401).json({ success: false });
 
   const { results } = req.body;
-  if (!results) {
-    return res.status(400).json({ success: false, message: 'No results provided' });
-  }
+  const user = req.session.user || req.session.googleUser; // <- your line
+  const userId = user?.id || null;
+  const googleUserId = user?.google_id || null;
 
-  const userId = req.session.user.id || null;
-  const googleUserId = req.session.user.google_id || null;
+  // Debugging logs
+  console.log('Session user:', user);
+  console.log('Results:', results);
+
+  if (!results) return res.status(400).json({ success: false });
 
   try {
     const db = getDb();
@@ -26,11 +24,10 @@ router.post('/save-results', async (req, res) => {
       'INSERT INTO saved_results (user_id, google_user_id, results_json, created_at) VALUES (?, ?, ?, NOW())',
       [userId, googleUserId, JSON.stringify(results)]
     );
-
-    res.status(200).json({ success: true, message: 'Results saved successfully' });
+    res.json({ success: true });
   } catch (err) {
-    console.error('Error saving results:', err); // <-- logs full MySQL error
-    res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+    console.error('Error saving results:', err); // log DB error
+    res.status(500).json({ success: false, error: 'Database insert failed' });
   }
 });
 
