@@ -1,1 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' })%> 
+<link rel="stylesheet" href="/styles.folder/shared.css">
+<body>
+<div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
 
+  
+     <div class="spacer"></div>
+    <%- include('includes/footer') %>
+</div>
+
+<script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+<script src="/js/index.js" nonce="<%= nonce %>"></script>
+</body>
+</html>
