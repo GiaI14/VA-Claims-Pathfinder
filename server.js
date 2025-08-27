@@ -22,6 +22,7 @@ const secondaryConditionRoutes = require('./routes/secondaryConditionRoutes');
 const authRoutes = require('./routes/auth');
 const subSystemRoutes = require('./routes/subSystemRoutes');
 const vaDisabilityRoutes = require('./routes/vaDisabilityRoutes');
+const savedResultsRoutes = require('./routes/savedResults');
 
 dotenv.config();
 
@@ -173,6 +174,7 @@ app.use('/', claimFilingRoutes);
 app.use('/auth', authRoutes);
 app.use(subSystemRoutes);
 app.use(vaDisabilityRoutes);
+app.use(savedResultsRoutes);
 
 app.get('/', (req, res) => {
   res.render('index', {
