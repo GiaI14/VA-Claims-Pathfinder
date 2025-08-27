@@ -5,6 +5,12 @@ const { OAuth2Client } = require('google-auth-library');
 const router = express.Router();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
+function isAuth(req, res, next) {
+  if (!req.session.isAuthenticated) {
+    return res.redirect('/login');
+  }
+  next();
+}
 
 router.get('/', function (req, res) {
   const loggedOut = req.query.loggedOut === 'true';
