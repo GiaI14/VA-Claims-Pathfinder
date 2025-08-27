@@ -6,6 +6,21 @@
 <div class="page-wrapper">
     <%- include('includes/header', { nonce: nonce }) %>
 
+<h2>Your Saved Results</h2>
+<div id="saved-results">
+  <!-- Saved results will be rendered here by loadSavedResults() -->
+</div>
+
+<!-- Include the JS file -->
+<script src="/js/savedResults.js" nonce="<%= nonce %>"></script>
+
+<script nonce="<%= nonce %>">
+  // Automatically load saved results when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    loadSavedResults();
+  });
+</script>
+
   
      <div class="spacer"></div>
     <%- include('includes/footer') %>
