@@ -266,6 +266,9 @@ app.get('/policy', (req, res) => {
   });
 });
 
+app.get('/dashboard', (req, res) => {
+  res.render('dashboard', {csrfToken: req.csrfToken() }));
+});
 
 // Generic error handler
 app.use((err, req, res, next) => {
