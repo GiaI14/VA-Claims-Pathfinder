@@ -47,10 +47,15 @@ router.get('/get-saved-results', async (req, res) => {
       'SELECT results_json, created_at FROM saved_results WHERE user_id = ? OR google_user_id = ? ORDER BY created_at DESC',
       [userId, googleUserId]
     );
-    res.json(rows);
+
+    const parsed = rows.map(r => ({
+      created_at: r.created_at,
+      results_json: JSON.parse(r.results_json)
+    })); 
+    res.json(parsed);
   } catch (err) {
     console.error('Error fetching saved results:', err);
-    res.json([]);
+    res.status(500).json({ success: false, message: 'Database error: + err.message});
   }
 });
 
