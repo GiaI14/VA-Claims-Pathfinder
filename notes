@@ -1,75 +1,18 @@
- // ------------------- DISPLAY RESULTS -------------------frontEnd
-  function displayResults(data) {
-    resultsDiv.innerHTML = '';
-    if (!data || data.length === 0) {
-      resultsDiv.innerHTML = '<p>No matching conditions found.</p>';
-      return;
-    }
+Check your database (log into MySQL and run SHOW TABLES;)
+You should see a special table like _migrations (or similar) that tracks which migrations ran.
 
-    data.forEach(entry => {
-      const div = document.createElement('div');
-      div.className = 'result-item';
+Add real schema changes
+If your app needs tables (like users, claims, etc.), you’ll put those db.createTable(...) statements inside the migration file.
 
-      if (entry.possibleConditions && entry.possibleConditions.length > 0) {
-        const conditionsHtml = entry.possibleConditions.map(cond => `
-          <h4>${cond.condition_name} (Code: ${cond.medical_code})</h4>
-          <p>Confidence: ${cond.match_percentage}%</p>
-        `).join('<hr>');
+Run new migrations
+Whenever you want to evolve your schema, just run:
 
-        div.innerHTML = `
-          <h3>System: ${entry.system}</h3>
-          ${conditionsHtml}
-        `;
-      } else {
-        div.innerHTML = `
-          <h3>System: ${entry.system}</h3>
-          <p>${entry.message || 'No matching conditions found.'}</p>
-        `;
-      }
+npx db-migrate create add-users-table --sql-file -e dev --config database.json
 
-      resultsDiv.appendChild(div);
-    });
-  }
 
-  // ------------------- REMOVE ENTRY -------------------
-  symptomEntriesContainer.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('remove-entry-button')) return;
+Then edit that new migration file with your schema changes, and apply with:
 
-    const entry = e.target.closest('.symptom-entry');
-    if (!entry) return;
+npx db-migrate up -e dev --config database.json
 
-    const systemSelect = entry.querySelector('.system-select');
-    if (systemSelect) {
-      systemSelect.selectedIndex = 0;
-      const event = new Event('change', { bubbles: true });
-      systemSelect.dispatchEvent(event);
-    }
-
-    const subSystemSelect = entry.querySelector('.sub-system-select');
-    if (subSystemSelect) {
-      subSystemSelect.innerHTML = `<option value="" disabled selected hidden>Select a sub-system</option>`;
-    }
-
-    const systemImage = entry.querySelector('.system-image');
-    if (systemImage) {
-      systemImage.src = '';
-      systemImage.style.display = 'none';
-    }
-
-    entry.querySelectorAll('input[type="radio"]').forEach(r => (r.checked = false));
-
-    const typedInput = entry.querySelector('.typed-symptoms');
-    if (typedInput) {
-      typedInput.value = '';
-      typedInput.style.display = 'none';
-    }
-
-    const dynamicList = entry.querySelector('.dynamic-symptoms-list');
-    if (dynamicList) {
-      dynamicList.innerHTML = '';
-      dynamicList.style.display = 'none';
-    }
-
-    resultsDiv.innerHTML = '';
-  });
-}); 
+To get those running go to powershell
+cd "C:\Users\gianu\Documents\VA-Claims-Pathfinder"
