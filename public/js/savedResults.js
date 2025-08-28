@@ -1,6 +1,9 @@
 async function loadSavedResults() {
   try {
     const response = await fetch('/get-saved-results');
+    if (!response.ok){
+    throw new Error(`HTTP ${response.status}: ${text}`);
+  }
     const data = await response.json();
 
     const container = document.getElementById('saved-results');
