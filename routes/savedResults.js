@@ -55,7 +55,7 @@ router.get('/get-saved-results', async (req, res) => {
     res.json(parsed);
   } catch (err) {
     console.error('Error fetching saved results:', err);
-    res.status(500).json({ success: false, message: 'Database error: + err.message});
+    res.status(500).json({ success: false, message: 'Database error: ' + err.message});
   }
 });
 
