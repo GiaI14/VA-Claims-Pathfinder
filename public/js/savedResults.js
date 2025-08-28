@@ -6,7 +6,7 @@ async function saveResults(results) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(csrfToken && { 'X-CSRF-Token': csrfToken })
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ results }),
       credentials: 'include'  // 👈 important: sends session cookie
