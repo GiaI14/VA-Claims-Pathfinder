@@ -44,6 +44,10 @@
   margin-right: 6px;
 }
 
+.div.result-item {
+  margin-top: 20px;
+}
+  
 .system-image {
   cursor: zoom-in !important;
 }
