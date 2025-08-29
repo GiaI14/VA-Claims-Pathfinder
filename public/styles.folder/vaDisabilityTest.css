@@ -39,6 +39,10 @@
   cursor: pointer;
 }
 
+#results {
+  margin-top: 30px !important;
+}
+
 /* Make checkboxes look neat */
 .dynamic-symptoms-list input[type="checkbox"] {
   margin-right: 6px;
