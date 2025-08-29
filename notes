@@ -10,3 +10,9 @@ Import it there.
 
 & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" -u root -p va-disabilities | Out-File -Encoding UTF8 "C:\Users\gianu\OneDrive\Desktop\va-disabilities.sql"; scp "C:\Users\gianu\OneDrive\Desktop\va-disabilities.sql" root@67.205.168.90:/root/; ssh root@67.205.168.90 "mysql -u root -p va-disabilities < /root/va-disabilities.sql"
 
+CHECK UBANTU RELEASE for upgrades in powershell
+ssh root@67.205.168.90 
+
+sudo apt update
+sudo apt upgrade -y
+sudo do-release-upgrade
