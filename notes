@@ -1,18 +1,12 @@
-Check your database (log into MySQL and run SHOW TABLES;)
-You should see a special table like _migrations (or similar) that tracks which migrations ran.
+Perfect — here’s a single PowerShell line that will:
 
-Add real schema changes
-If your app needs tables (like users, claims, etc.), you’ll put those db.createTable(...) statements inside the migration file.
+Create a fresh dump of your va-disabilities database.
 
-Run new migrations
-Whenever you want to evolve your schema, just run:
+Save it to your Desktop.
 
-npx db-migrate create add-users-table --sql-file -e dev --config database.json
+Copy it to your Ubuntu server.
 
+Import it there.
 
-Then edit that new migration file with your schema changes, and apply with:
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" -u root -p va-disabilities | Out-File -Encoding UTF8 "C:\Users\gianu\OneDrive\Desktop\va-disabilities.sql"; scp "C:\Users\gianu\OneDrive\Desktop\va-disabilities.sql" root@67.205.168.90:/root/; ssh root@67.205.168.90 "mysql -u root -p va-disabilities < /root/va-disabilities.sql"
 
-npx db-migrate up -e dev --config database.json
-
-To get those running go to powershell
-cd "C:\Users\gianu\Documents\VA-Claims-Pathfinder"
