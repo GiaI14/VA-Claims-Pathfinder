@@ -1,12 +1,13 @@
-const { getDb } = require('./data/database');
+const { connectToDatabase, getDb } = require('./data/database');
 
 async function testDatabase() {
-    const db = getDb();
-    console.log('Database connection pool:', db); // Debugging log
-
     try {
-        const [rows] = await db.query('SELECT 1 + 1 AS solution');
-        console.log('Query results:', rows); // Debugging log
+        await connectToDatabase(); // Make sure pool is initialized
+        const db = getDb();
+        console.log('Database connection pool:', db); // Debugging log
+
+        const [rows] = await db.query('SELECT DATABASE() AS db, NOW() AS now, 1 + 1 AS solution');
+        console.log('Query results:', rows); // Should show current DB name, time, and solution=2
     } catch (err) {
         console.error('Database connection test failed:', err);
     }
