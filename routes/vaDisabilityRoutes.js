@@ -93,9 +93,9 @@ router.post("/api/analyze-symptoms", async (req, res) => {
             condition_name: row.condition_name,
             medical_code: row.medical_code,
             match_percentage: Number(matchPercentage.toFixed(2)),
-            matched_symptoms: symptoms.filter(symptom =>
-              row.symptoms.toLowerCase().includes(symptom.toLowerCase())
-            ),
+            matched_symptoms: symptoms
+              .filter(symptom => row.symptoms.toLowerCase().includes(symptom.toLowerCase()))
+              .map(s => s.toUpperCase()),
             total_condition_symptoms: row.symptoms.split(',').length,
             is_presumptive: row.presumptive_conditions && row.presumptive_conditions.toLowerCase().trim() !== "no",
             presumptive_raw: row.presumptive_conditions,
