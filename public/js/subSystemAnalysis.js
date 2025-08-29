@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Skin': '512px-Dermatology_-_Integumentary_system_1_--_Smart-Servier.png',
     'Digestive System': '512px-Digestive_system_diagram_en.svg.png',
     'Endocrine system': '512px-Endocrine_English.svg.png',
-    'Gynecological conditions and disprders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
+    'Gynecological conditions and disorders of the breast': '512px-Female_genital_system_-_Sagittal_view.svg.png',
     'Eye': '512px-Lateral_orbit_nerves_chngd.jpg',
     'Genitourinary system': '512px-Male_and_female_genital_organs.svg.png',
     'Musculoskeletal system': '512px-Skeleton_and_muscles.png',
