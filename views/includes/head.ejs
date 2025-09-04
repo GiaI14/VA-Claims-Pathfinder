@@ -14,6 +14,7 @@
     <%- customStyles %>
   <% } %>
 <script nonce="<%= nonce %>">
-   window.isAuth = <%= user ? 'true' : 'false' %>;
+  window.isAuth = <%- JSON.stringify(user ? true : false) %>;
 </script>
+
 </head>
