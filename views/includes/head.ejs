@@ -13,4 +13,7 @@
   <% if (typeof customStyles !== "undefined") { %>
     <%- customStyles %>
   <% } %>
+<script>
+  window.isAuth = <%= isAuth %>; // true or false
+</script>
 </head>
