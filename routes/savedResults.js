@@ -3,28 +3,24 @@ const router = express.Router();
 const { getDb } = require('../data/database');
 
 // Save results
-// Save results
 router.post('/save-results', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+
   const { results } = req.body;
   if (!results) {
     return res.status(400).json({ success: false, message: 'No results provided' });
   }
 
-  // If not logged in → stash results in session
-  if (!req.session.user) {
-    req.session.tempResults = results;
-    await req.session.save();
-    return res.status(200).json({ success: true, message: 'Results stored in session (guest)' });
-  }
-
-  // If logged in → save to DB as usual
+  // Determine which ID to use
   let userId = null;
   let googleUserId = null;
 
-  if (req.session.user.google_id) {  
-    googleUserId = req.session.user.id; 
-  } else {                            
-    userId = req.session.user.id;     
+  if (req.session.user.google_id) {  // Google login
+    googleUserId = req.session.user.id; // numeric ID
+  } else {                            // normal registered user
+    userId = req.session.user.id;      // numeric ID
   }
 
   try {
@@ -40,7 +36,6 @@ router.post('/save-results', async (req, res) => {
     res.status(500).json({ success: false, message: 'Database error: ' + err.message });
   }
 });
-
 
 // Get saved results
 router.get('/get-saved-results', async (req, res) => {
