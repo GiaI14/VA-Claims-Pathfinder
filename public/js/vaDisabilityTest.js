@@ -228,6 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsDiv.appendChild(div);
     });
 
+    addSaveButton(resultsDiv, data);
+  }
     /////////////added///////////////////////////////////////////////////
 function addSaveButton(resultsDiv, data) {
   // Only add once
