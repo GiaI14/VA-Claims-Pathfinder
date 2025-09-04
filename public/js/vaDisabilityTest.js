@@ -228,12 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsDiv.appendChild(div);
     });
 
-    /////////////added/////////////////////////////////////////////////////
-
-    document.addEventListener('DOMContentLoaded', () => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-  console.log('CSRF token:', csrfToken);
-});
+    /////////////added///////////////////////////////////////////////////
 
     const saveBtn = document.createElement('button');
     saveBtn.textContent = 'Save Results';
