@@ -13,7 +13,7 @@
   <% if (typeof customStyles !== "undefined") { %>
     <%- customStyles %>
   <% } %>
-<script>
+<script nonce="<%= nonce %>">
    window.isAuth = <%= user ? 'true' : 'false' %>;
 </script>
 </head>
