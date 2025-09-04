@@ -243,7 +243,7 @@ app.get('/vaDisabilityTest', async (req, res) => {
     res.render('vaDisabilityTest', { 
       csrfToken: req.csrfToken(),
       nonce: res.locals.nonce,
-      isAuth: req.session.isAuthenticated || false,
+      user: req.session.user || null,
       systemsFromServer
     });
   } catch (err) {
