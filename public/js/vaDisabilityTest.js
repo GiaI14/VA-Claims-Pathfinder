@@ -245,11 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function saveResults(data) {
   try {
+    const csrfToken = document.getElementById('csrfToken').value;
+
     const response = await fetch('/save-results', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       },
+      credentials: 'same-origin', // important to send cookies
       body: JSON.stringify({ results: data })
     });
 
