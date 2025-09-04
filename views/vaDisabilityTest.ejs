@@ -73,7 +73,9 @@
   </div>
 
   <input type="hidden" id="csrfToken" value="<%= csrfToken %>">
-
+  <script nonce="<%= nonce %>">
+    window.isAuth = <%- JSON.stringify(user ? true : false) %>;
+  </script>
   <script src="/js/vaDisabilityTest.js" nonce="<%= nonce %>" defer></script>
 
 <div id="lightbox">
