@@ -230,7 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /////////////added///////////////////////////////////////////////////
 function addSaveButton(resultsDiv, data) {
-  // Check if user is authenticated (window.isAuth is set in your EJS)
+  // Only add once
+  if (resultsDiv.querySelector('.save-results-btn') || resultsDiv.querySelector('.login-message')) return;
+
   if (window.isAuth) {
     const saveBtn = document.createElement('button');
     saveBtn.textContent = 'Save Results';
@@ -255,7 +257,7 @@ async function saveResults(data) {
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
-      credentials: 'same-origin', // important to send cookies
+      credentials: 'same-origin',
       body: JSON.stringify({ results: data })
     });
 
@@ -270,7 +272,6 @@ async function saveResults(data) {
     alert('Error saving results.');
   }
 }
-
 
   ////////////////////////////////////////////////////////////////////////////
   // ------------------- REMOVE ENTRY -------------------
