@@ -242,11 +242,6 @@ function addSaveButton(resultsDiv, data) {
     resultsDiv.appendChild(saveBtn);
 
     saveBtn.addEventListener('click', () => saveResults(data));
-  } else {
-    const loginMessage = document.createElement('p');
-    loginMessage.textContent = 'Log in to save your results.';
-    loginMessage.className = 'login-message';
-    resultsDiv.appendChild(loginMessage);
   }
 }
 
