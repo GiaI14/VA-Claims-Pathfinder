@@ -229,6 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /////////////added/////////////////////////////////////////////////////
+
+    document.addEventListener('DOMContentLoaded', () => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  console.log('CSRF token:', csrfToken);
+});
+
     const saveBtn = document.createElement('button');
     saveBtn.textContent = 'Save Results';
     saveBtn.className = 'save-results-btn';
