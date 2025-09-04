@@ -245,8 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function saveResults(data) {
   try {
-    const csrfToken = document.getElementById('csrfToken').value;
-
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const response = await fetch('/save-results', {
       method: 'POST',
       headers: {
