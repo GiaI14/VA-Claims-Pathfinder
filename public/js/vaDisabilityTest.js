@@ -75,66 +75,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.symptom-entry').forEach(bindRadios);
 
+
   // ------------------- SYSTEM SELECT -------------------
-  symptomEntriesContainer.addEventListener('change', async e => {
-    if (!e.target.classList.contains('system-select')) return;
+symptomEntriesContainer.addEventListener('change', async e => {
+  if (!e.target.classList.contains('system-select')) return;
 
-    const loginMessage = document.getElementById('loginMessage');
-    if (loginMessage) loginMessage.style.display = 'none';
+  // Hide login message if present
+  if (loginMessage) loginMessage.style.display = 'none';
 
-    const entry = e.target.closest('.symptom-entry');
-    const system = e.target.value;
-    const subSystemSelect = entry.querySelector('.sub-system-select');
-    const systemImage = entry.querySelector('.system-image');
+  const entry = e.target.closest('.symptom-entry');
+  const system = e.target.value;
+  const subSystemSelect = entry.querySelector('.sub-system-select');
+  const systemImage = entry.querySelector('.system-image');
 
-    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+  subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
 
-    // Show system image
-    if (system && systemImages[system]) {
-      systemImage.src = `/images/${systemImages[system]}`;
-      systemImage.style.display = 'inline-block';
-    } else {
-      systemImage.src = '';
-      systemImage.style.display = 'none';
-    }
+  // Show system image
+  if (system && systemImages[system]) {
+    systemImage.src = `/images/${systemImages[system]}`;
+    systemImage.style.display = 'inline-block';
+  } else {
+    systemImage.src = '';
+    systemImage.style.display = 'none';
+  }
 
-    if (!system) return;
+  if (!system) return;
 
-    
-    const entry = e.target.closest('.symptom-entry');
-    const system = e.target.value;
-    const subSystemSelect = entry.querySelector('.sub-system-select');
-    const systemImage = entry.querySelector('.system-image');
+  try {
+    const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
+    if (!res.ok) throw new Error('Failed to fetch sub-systems');
+    const subSystems = await res.json();
 
-    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
-
-    // Show system image
-    if (system && systemImages[system]) {
-      systemImage.src = `/images/${systemImages[system]}`;
-      systemImage.style.display = 'inline-block';
-    } else {
-      systemImage.src = '';
-      systemImage.style.display = 'none';
-    }
-
-    if (!system) return;
-
-    try {
-      const res = await fetch(`/api/sub-systems/${encodeURIComponent(system)}`);
-      if (!res.ok) throw new Error('Failed to fetch sub-systems');
-      const subSystems = await res.json();
-
-      subSystems.forEach(sub => {
-        const option = document.createElement('option');
-        option.value = sub;
-        option.textContent = sub;
-        subSystemSelect.appendChild(option);
-      });
-    } catch (err) {
-      console.error('Error loading sub-systems:', err);
-      alert('Error loading sub-systems');
-    }
-  });
+    subSystems.forEach(sub => {
+      const option = document.createElement('option');
+      option.value = sub;
+      option.textContent = sub;
+      subSystemSelect.appendChild(option);
+    });
+  } catch (err) {
+    console.error('Error loading sub-systems:', err);
+    alert('Error loading sub-systems');
+  }
+});
 
   // ------------------- SUB-SYSTEM SELECT -------------------
   symptomEntriesContainer.addEventListener('change', async e => {
