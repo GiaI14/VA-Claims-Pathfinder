@@ -39,8 +39,8 @@ router.post('/save-results', async (req, res) => {
 router.get('/get-saved-results', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
-  const userId = req.session.user.id;
-  const googleUserId = req.session.user.google_id || null;
+  const userId = req.session.user.user.id || null;
+  const googleUserId = req.session.user.google_user_id || null;
 
   try {
     const db = getDb();
