@@ -13,8 +13,4 @@
   <% if (typeof customStyles !== "undefined") { %>
     <%- customStyles %>
   <% } %>
-<script nonce="<%= nonce %>">
-  window.isAuth = <%- JSON.stringify(user ? true : false) %>;
-</script>
-
 </head>
