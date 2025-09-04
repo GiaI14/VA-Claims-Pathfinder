@@ -229,16 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /////////////added///////////////////////////////////////////////////
-
+function addSaveButton(resultsDiv, data) {
+  // Check if user is authenticated (window.isAuth is set in your EJS)
+  if (window.isAuth) {
     const saveBtn = document.createElement('button');
     saveBtn.textContent = 'Save Results';
     saveBtn.className = 'save-results-btn';
     resultsDiv.appendChild(saveBtn);
 
     saveBtn.addEventListener('click', () => saveResults(data));
+  } else {
+    const loginMessage = document.createElement('p');
+    loginMessage.textContent = 'Log in to save your results.';
+    loginMessage.className = 'login-message';
+    resultsDiv.appendChild(loginMessage);
   }
+}
 
-  async function saveResults(data) {
+async function saveResults(data) {
   try {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const response = await fetch('/save-results', {
@@ -262,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     alert('Error saving results.');
   }
 }
+
 
   ////////////////////////////////////////////////////////////////////////////
   // ------------------- REMOVE ENTRY -------------------
