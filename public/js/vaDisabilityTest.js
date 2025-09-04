@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
   const loginMessage = document.getElementById('loginMessage');
+
+  if (window.isAuth && loginMessage) {
+     loginMessage.style.display = 'none';
+  }
   
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
