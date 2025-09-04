@@ -1,6 +1,6 @@
 async function saveResults(results) {
   try {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content; // if you embed it in HTML
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     const response = await fetch('/save-results', {
       method: 'POST',
@@ -9,7 +9,7 @@ async function saveResults(results) {
         'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ results }),
-      credentials: 'include'  // 👈 important: sends session cookie
+      credentials: 'same-origin'  // 👈 important: sends session cookie
     });
 
     if (!response.ok) {
@@ -34,7 +34,9 @@ async function saveResults(results) {
 
 async function loadSavedResults() {
   try {
-    const response = await fetch('/get-saved-results');
+    const response = await fetch('/get-saved-results', {
+      credentials: 'same-origin'
+    });
     if (!response.ok){
     throw new Error(`HTTP ${response.status}: ${text}`);
   }
