@@ -84,8 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 symptomEntriesContainer.addEventListener('change', async e => {
   if (!e.target.classList.contains('system-select')) return;
 
-  // Hide login message if present
-  if (loginMessage) loginMessage.style.display = 'none';
+  if(!window.isAuth && loginMessage) {
+    loginMessage.style.display = 'none'
+  }
 
   const entry = e.target.closest('.symptom-entry');
   const system = e.target.value;
