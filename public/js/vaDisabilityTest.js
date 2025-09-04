@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const symptomEntriesContainer = document.getElementById('symptomEntriesContainer');
   const analyzeButton = document.getElementById('analyzeButton');
   const resultsDiv = document.getElementById('results');
-
+  const loginMessage = document.getElementById('loginMessage');
+  
   const systemImages = {
     'Dental and Oral Conditions': '512px-202402_Oral_Cavity.svg.png',
     'Hemic and Lymphatic Systems': '512px-2201_Anatomy_of_the_Lymphatic_System.jpg',
@@ -78,6 +79,28 @@ document.addEventListener('DOMContentLoaded', () => {
   symptomEntriesContainer.addEventListener('change', async e => {
     if (!e.target.classList.contains('system-select')) return;
 
+    const loginMessage = document.getElementById('loginMessage');
+    if (loginMessage) loginMessage.style.display = 'none';
+
+    const entry = e.target.closest('.symptom-entry');
+    const system = e.target.value;
+    const subSystemSelect = entry.querySelector('.sub-system-select');
+    const systemImage = entry.querySelector('.system-image');
+
+    subSystemSelect.innerHTML = `<option value="">Select a sub-system</option>`;
+
+    // Show system image
+    if (system && systemImages[system]) {
+      systemImage.src = `/images/${systemImages[system]}`;
+      systemImage.style.display = 'inline-block';
+    } else {
+      systemImage.src = '';
+      systemImage.style.display = 'none';
+    }
+
+    if (!system) return;
+
+    
     const entry = e.target.closest('.symptom-entry');
     const system = e.target.value;
     const subSystemSelect = entry.querySelector('.sub-system-select');
