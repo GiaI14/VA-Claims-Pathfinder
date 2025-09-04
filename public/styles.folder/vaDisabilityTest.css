@@ -43,7 +43,7 @@
   margin-top: 30px !important;
 }
 
-#loginMessage {
+.loginMessage {
     background-color: rgba(255, 0, 0, 0.2); /* light red, transparent */
     color: #900; /* dark red text */
     padding: 8px 12px;
