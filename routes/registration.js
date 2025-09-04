@@ -144,7 +144,9 @@ router.post('/login', async function (req, res) {
         email: enteredEmail,
         googleClientId: process.env.GOOGLE_CLIENT_ID,
         csrfToken: req.csrfToken(),
-        loggedOut: false
+        loggedOut: false,
+        user: req.session.user || null,
+        nonce: res.locals.nonce
       });
     }
 
