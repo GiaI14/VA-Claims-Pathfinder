@@ -1,0 +1,39 @@
+.result-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.result-card:hover {
+  transform: translateY(-3px);
+}
+
+.card-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table td:first-child {
+  width: 40%;
+  color: #555;
+}
