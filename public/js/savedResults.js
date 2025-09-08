@@ -33,6 +33,7 @@ async function saveResults(results) {
 }
 
 async function loadSavedResults() {
+  console.log("All keys in first condition:", item.results_json[0].possibleConditions[0]);
   try {
     const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
     const data = await response.json();
