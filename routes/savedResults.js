@@ -57,7 +57,9 @@ router.get('/get-saved-results', async (req, res) => {
 
     const parsed = rows.map(r => ({
       created_at: r.created_at,
-      results_json: r.results_json   // ✅ already JSON object
+      (typeof r.results_json === 'string')
+        ? JSON.parse(r.results_json)   // TEXT column
+        : r.results_json
     }));
 
     res.json(parsed);
