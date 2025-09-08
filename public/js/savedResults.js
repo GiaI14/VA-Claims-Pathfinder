@@ -106,7 +106,3 @@ async function loadSavedResults() {
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
 
-
-
-
-
