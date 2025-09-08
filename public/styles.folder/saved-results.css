@@ -1,13 +1,14 @@
 #showResultsBtn {
-  background-color: #004080;  /* navy */
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s;
-  margin-bottom: 15px;
+  display: inline-block;     /* keeps button width tight */
+    padding: 10px 20px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;       /* space below button */
+    transition: background-color 0.3s;
 }
 
 #showResultsBtn:hover {
