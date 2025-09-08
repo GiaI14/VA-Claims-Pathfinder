@@ -51,7 +51,7 @@ async function loadSavedResults() {
       const card = document.createElement('div');
       card.className = 'result-card';
 
-      // Header with save date
+      // Header
       const header = document.createElement('div');
       header.className = 'card-header';
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
@@ -61,31 +61,38 @@ async function loadSavedResults() {
       const content = document.createElement('div');
       content.className = 'card-content';
 
-      const table = document.createElement('table');
-      table.className = 'results-table';
-      const tbody = document.createElement('tbody');
+      // Check if results_json is array
+      const entries = Array.isArray(item.results_json) ? item.results_json : [item.results_json];
 
-      // Only display selected fields
-      const fieldsToShow = ['system', 'condition_name', 'medical_code', 'match_percent'];
-      fieldsToShow.forEach(field => {
-        if (item.results_json[field] !== undefined) {
-          const tr = document.createElement('tr');
+      entries.forEach(entry => {
+        const table = document.createElement('table');
+        table.className = 'results-table';
+        const tbody = document.createElement('tbody');
 
-          const tdKey = document.createElement('td');
-          tdKey.textContent = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-          tdKey.style.fontWeight = 'bold';
+        // Only selected fields
+        const fieldsToShow = ['system', 'condition_name', 'medical_code', 'match_percent'];
+        fieldsToShow.forEach(field => {
+          if (entry[field] !== undefined) {
+            const tr = document.createElement('tr');
 
-          const tdValue = document.createElement('td');
-          tdValue.textContent = item.results_json[field];
+            const tdKey = document.createElement('td');
+            tdKey.textContent = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            tdKey.style.fontWeight = 'bold';
 
-          tr.appendChild(tdKey);
-          tr.appendChild(tdValue);
-          tbody.appendChild(tr);
-        }
+            const tdValue = document.createElement('td');
+            tdValue.textContent = entry[field];
+
+            tr.appendChild(tdKey);
+            tr.appendChild(tdValue);
+            tbody.appendChild(tr);
+          }
+        });
+
+        table.appendChild(tbody);
+        content.appendChild(table);
+        content.appendChild(document.createElement('hr')); // separator between entries
       });
 
-      table.appendChild(tbody);
-      content.appendChild(table);
       card.appendChild(content);
       container.appendChild(card);
     });
