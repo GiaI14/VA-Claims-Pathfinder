@@ -37,35 +37,38 @@ async function loadSavedResults() {
     const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
     const data = await response.json();
 
+    // Adjust: handle array or object response
+    const results = data.results || data; // fallback to old format
+
     const container = document.getElementById('saved-results');
     container.innerHTML = '';
 
-    if (!data.success || data.results.length === 0) {
+    if (!results || results.length === 0) {
       container.innerHTML = '<p>No saved results found.</p>';
       return;
     }
 
-    data.results.forEach(item => {
+    results.forEach(item => {
       const card = document.createElement('div');
       card.className = 'result-card';
 
-      // Create header
+      // Header
       const header = document.createElement('div');
       header.className = 'card-header';
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
       card.appendChild(header);
 
-      // Create content container
+      // Content
       const content = document.createElement('div');
       content.className = 'card-content';
 
-      // Flatten results_json into a nice table
       const table = document.createElement('table');
       table.className = 'results-table';
       const tbody = document.createElement('tbody');
 
       Object.entries(item.results_json).forEach(([key, value]) => {
         const tr = document.createElement('tr');
+
         const tdKey = document.createElement('td');
         tdKey.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         tdKey.style.fontWeight = 'bold';
@@ -88,10 +91,7 @@ async function loadSavedResults() {
   } catch (err) {
     console.error('Error loading saved results:', err);
     const container = document.getElementById('saved-results');
-    container.innerHTML = `<p style="color:red;">Error loading saved results.</p>`;
-  }
-}
+    container.innerHTML = `<p style="color:red;">Error loading save
 
-document.addEventListener('DOMContentLoaded', loadSavedResults);
 
 
