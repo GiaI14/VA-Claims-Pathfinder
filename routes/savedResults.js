@@ -42,7 +42,6 @@ router.post('/save-results', async (req, res) => {
 router.get('/get-saved-results', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
-  // Support both normal + Google logins
   const userId = req.session.user.id || null;
   const googleUserId = req.session.user.google_id || null;
 
@@ -56,10 +55,9 @@ router.get('/get-saved-results', async (req, res) => {
       [userId, googleUserId]
     );
 
-    // Parse JSON back into objects
     const parsed = rows.map(r => ({
       created_at: r.created_at,
-      results_json: JSON.parse(r.results_json)
+      results_json: r.results_json   // ✅ already JSON object
     }));
 
     res.json(parsed);
@@ -71,7 +69,6 @@ router.get('/get-saved-results', async (req, res) => {
     });
   }
 });
-
 
 
 module.exports = router;  
