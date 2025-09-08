@@ -15,6 +15,11 @@
   background-color: #0066cc;
 }
 
+.record-section {
+    text-align: center; /* centers the button inside the section */
+    margin-bottom: 30px; /* space between different sections */
+}
+
 /* Card container */
 .result-card {
   background-color: #f8f8f8;
