@@ -1,44 +1,21 @@
-/* Card container */
 .result-card {
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px 15px;
   margin-bottom: 15px;
+  max-width: 600px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  max-width: 600px; /* limit width */
-  overflow: hidden;
 }
-
-/* Card header */
 .card-header {
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 8px;
 }
-
-/* System name */
 .card-content > div {
   font-size: 13px;
   margin-bottom: 5px;
 }
-
-/* Table */
-.results-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 5px;
-}
-
-.results-table td {
-  padding: 4px 6px;
+.results-table td, .results-table th {
   font-size: 13px;
-  border: 1px solid #eee;
-}
-
-/* Optional: smaller hr */
-.results-table + hr {
-  margin: 5px 0;
-  border: none;
-  border-top: 1px solid #eee;
 }
