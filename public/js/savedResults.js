@@ -47,7 +47,7 @@ async function loadSavedResults() {
 
     data.forEach(item => {
 
-      // 🔹 TEMP: log first condition keys to check match percentage field name
+      // TEMP: log first condition keys to check field names
       if (item.results_json && item.results_json[0].possibleConditions && item.results_json[0].possibleConditions.length > 0) {
         console.log("All keys in first condition:", item.results_json[0].possibleConditions[0]);
       }
@@ -55,7 +55,7 @@ async function loadSavedResults() {
       const card = document.createElement('div');
       card.className = 'result-card';
 
-      // Header with save date
+      // Card header with saved date
       const header = document.createElement('div');
       header.className = 'card-header';
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
@@ -66,6 +66,7 @@ async function loadSavedResults() {
 
       // Loop through results_json array
       item.results_json.forEach(entry => {
+
         // Show system
         const systemDiv = document.createElement('div');
         systemDiv.style.fontWeight = 'bold';
@@ -73,34 +74,55 @@ async function loadSavedResults() {
         systemDiv.textContent = `System: ${entry.system || 'N/A'}`;
         content.appendChild(systemDiv);
 
-        // Loop through possibleConditions
+        // Only show table if there are possible conditions
         if (entry.possibleConditions && entry.possibleConditions.length > 0) {
-          entry.possibleConditions.forEach(cond => {
-            const table = document.createElement('table');
-            table.className = 'results-table';
-            const tbody = document.createElement('tbody');
 
-            ['condition_name', 'medical_code', 'match_percentage'].forEach(field => {
-              if (cond[field] !== undefined) {
-                const tr = document.createElement('tr');
+          const table = document.createElement('table');
+          table.className = 'results-table';
+          table.style.width = '100%';
+          table.style.borderCollapse = 'collapse';
+          table.style.marginBottom = '10px';
 
-                const tdKey = document.createElement('td');
-                tdKey.textContent = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                tdKey.style.fontWeight = 'bold';
-
-                const tdValue = document.createElement('td');
-                tdValue.textContent = field ==='match_percentage' ? cond[field] + '%' : cond[field];
-
-                tr.appendChild(tdKey);
-                tr.appendChild(tdValue);
-                tbody.appendChild(tr);
-              }
-            });
-
-            table.appendChild(tbody);
-            content.appendChild(table);
-            content.appendChild(document.createElement('hr'));
+          // Table header
+          const thead = document.createElement('thead');
+          const headerRow = document.createElement('tr');
+          ['Condition Name', 'Medical Code', 'Match %'].forEach(h => {
+            const th = document.createElement('th');
+            th.textContent = h;
+            th.style.fontWeight = 'bold';
+            th.style.textAlign = 'left';
+            th.style.padding = '4px 6px';
+            th.style.borderBottom = '1px solid #ddd';
+            headerRow.appendChild(th);
           });
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+
+          // Table body
+          const tbody = document.createElement('tbody');
+          entry.possibleConditions.forEach(cond => {
+            const tr = document.createElement('tr');
+
+            const tdName = document.createElement('td');
+            tdName.textContent = cond.condition_name || '';
+            tdName.style.padding = '4px 6px';
+
+            const tdCode = document.createElement('td');
+            tdCode.textContent = cond.medical_code || '';
+            tdCode.style.padding = '4px 6px';
+
+            const tdMatch = document.createElement('td');
+            tdMatch.textContent = cond.match_percentage !== undefined ? cond.match_percentage + '%' : '';
+            tdMatch.style.padding = '4px 6px';
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdCode);
+            tr.appendChild(tdMatch);
+            tbody.appendChild(tr);
+          });
+
+          table.appendChild(tbody);
+          content.appendChild(table);
         }
       });
 
