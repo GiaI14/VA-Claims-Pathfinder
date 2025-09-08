@@ -80,7 +80,7 @@ async function loadSavedResults() {
             table.className = 'results-table';
             const tbody = document.createElement('tbody');
 
-            ['condition_name', 'medical_code', 'match_percent'].forEach(field => {
+            ['condition_name', 'medical_code', 'match_percentage'].forEach(field => {
               if (cond[field] !== undefined) {
                 const tr = document.createElement('tr');
 
