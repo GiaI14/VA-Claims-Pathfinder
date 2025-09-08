@@ -37,7 +37,6 @@ async function loadSavedResults() {
     const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
     const data = await response.json();
 
-    // Adjust: handle array or object response
     const results = data.results || data; // fallback to old format
 
     const container = document.getElementById('saved-results');
@@ -58,15 +57,17 @@ async function loadSavedResults() {
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
       card.appendChild(header);
 
-      // Content
+      // Content container
       const content = document.createElement('div');
       content.className = 'card-content';
 
+      // Create a table for results_json
       const table = document.createElement('table');
       table.className = 'results-table';
       const tbody = document.createElement('tbody');
 
-      Object.entries(item.results_json).forEach(([key, value]) => {
+      // Iterate over keys in results_json
+      for (const [key, value] of Object.entries(item.results_json)) {
         const tr = document.createElement('tr');
 
         const tdKey = document.createElement('td');
@@ -74,17 +75,17 @@ async function loadSavedResults() {
         tdKey.style.fontWeight = 'bold';
 
         const tdValue = document.createElement('td');
-        tdValue.textContent = value;
+        // Check if value is object or array, convert to readable string
+        tdValue.textContent = (typeof value === 'object') ? JSON.stringify(value, null, 2) : value;
 
         tr.appendChild(tdKey);
         tr.appendChild(tdValue);
         tbody.appendChild(tr);
-      });
+      }
 
       table.appendChild(tbody);
       content.appendChild(table);
       card.appendChild(content);
-
       container.appendChild(card);
     });
 
