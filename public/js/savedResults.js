@@ -9,7 +9,7 @@ async function saveResults(results) {
         'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ results }),
-      credentials: 'same-origin'  // 👈 important: sends session cookie
+      credentials: 'same-origin'  
     });
 
     if (!response.ok) {
@@ -89,7 +89,7 @@ async function loadSavedResults() {
                 tdKey.style.fontWeight = 'bold';
 
                 const tdValue = document.createElement('td');
-                tdValue.textContent = cond[field];
+                tdValue.textContent = field ==='match_percentage' ? cond[field] + '%' : cond[field];
 
                 tr.appendChild(tdKey);
                 tr.appendChild(tdValue);
@@ -99,7 +99,7 @@ async function loadSavedResults() {
 
             table.appendChild(tbody);
             content.appendChild(table);
-            content.appendChild(document.createElement('hr')); // separator between conditions
+            content.appendChild(document.createElement('hr'));
           });
         }
       });
