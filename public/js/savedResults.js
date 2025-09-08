@@ -139,3 +139,26 @@ async function loadSavedResults() {
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
 
+document.addEventListener('DOMContentLoaded', () => {
+
+  const showBtn = document.getElementById('showResultsBtn');
+  const resultsContainer = document.getElementById('saved-results');
+
+  showBtn.addEventListener('click', async () => {
+    // Toggle visibility
+    if (resultsContainer.style.display === 'none') {
+      resultsContainer.style.display = 'block';
+      showBtn.textContent = "Hide VA Disability Results";
+      // Load the results only when first clicked
+      if (!resultsContainer.hasChildNodes()) {
+        await loadSavedResults();
+      }
+    } else {
+      resultsContainer.style.display = 'none';
+      showBtn.textContent = "VA Disability Results";
+    }
+  });
+
+});
+
+
