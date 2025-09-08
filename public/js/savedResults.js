@@ -46,6 +46,12 @@ async function loadSavedResults() {
     }
 
     data.forEach(item => {
+
+      // 🔹 TEMP: log first condition keys to check match percentage field name
+      if (item.results_json && item.results_json[0].possibleConditions && item.results_json[0].possibleConditions.length > 0) {
+        console.log("All keys in first condition:", item.results_json[0].possibleConditions[0]);
+      }
+
       const card = document.createElement('div');
       card.className = 'result-card';
 
@@ -110,5 +116,4 @@ async function loadSavedResults() {
 }
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
-
 
