@@ -19,3 +19,19 @@
 .results-table td, .results-table th {
   font-size: 13px;
 }
+
+.va-btn {
+    padding: 10px 20px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px; /* space below button */
+    transition: background-color 0.3s;
+}
+
+.va-btn:hover {
+    background-color: #1558b0;
+}
