@@ -37,19 +37,27 @@ async function loadSavedResults() {
     const response = await fetch('/get-saved-results', {
       credentials: 'same-origin'
     });
-    if (!response.ok){
-    throw new Error(`HTTP ${response.status}: ${text}`);
-  }
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`HTTP ${response.status}: ${text}`);
+    }
+
     const data = await response.json();
 
     const container = document.getElementById('saved-results');
     container.innerHTML = '';
 
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p>No saved results found.</p>';
+      return;
+    }
+
     data.forEach(item => {
       const div = document.createElement('div');
       div.className = 'saved-result';
       div.innerHTML = `
-        <p>Saved on: ${new Date(item.created_at).toLocaleString()}</p>
+        <p><strong>Saved on:</strong> ${new Date(item.created_at).toLocaleString()}</p>
         <pre>${JSON.stringify(item.results_json, null, 2)}</pre>
         <hr>
       `;
@@ -57,7 +65,10 @@ async function loadSavedResults() {
     });
   } catch (err) {
     console.error('Error loading saved results:', err);
+    const container = document.getElementById('saved-results');
+    container.innerHTML = `<p style="color:red;">Error loading saved results.</p>`;
   }
 }
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
+
