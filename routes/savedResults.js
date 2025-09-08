@@ -38,28 +38,40 @@ router.post('/save-results', async (req, res) => {
 });
 
 // Get saved results
+// Get saved results
 router.get('/get-saved-results', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
-  const userId = req.session.user.user.id || null;
-  const googleUserId = req.session.user.google_user_id || null;
+  // Support both normal + Google logins
+  const userId = req.session.user.id || null;
+  const googleUserId = req.session.user.google_id || null;
 
   try {
     const db = getDb();
     const [rows] = await db.execute(
-      'SELECT results_json, created_at FROM saved_results WHERE user_id = ? OR google_user_id = ? ORDER BY created_at DESC',
+      `SELECT results_json, created_at 
+       FROM saved_results 
+       WHERE user_id = ? OR google_user_id = ? 
+       ORDER BY created_at DESC`,
       [userId, googleUserId]
     );
 
+    // Parse JSON back into objects
     const parsed = rows.map(r => ({
       created_at: r.created_at,
       results_json: JSON.parse(r.results_json)
-    })); 
+    }));
+
     res.json(parsed);
   } catch (err) {
     console.error('Error fetching saved results:', err);
-    res.status(500).json({ success: false, message: 'Database error: ' + err.message});
+    res.status(500).json({ 
+      success: false, 
+      message: 'Database error: ' + err.message 
+    });
   }
 });
 
-module.exports = router;   // 👈 important
+
+
+module.exports = router;  
