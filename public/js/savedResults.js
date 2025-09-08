@@ -91,7 +91,12 @@ async function loadSavedResults() {
   } catch (err) {
     console.error('Error loading saved results:', err);
     const container = document.getElementById('saved-results');
-    container.innerHTML = `<p style="color:red;">Error loading save
+    container.innerHTML = `<p style="color:red;">Error loading saved results.</p>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadSavedResults);
+
 
 
 
