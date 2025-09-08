@@ -1,5 +1,4 @@
-/* Button */
-.primary-btn {
+#showResultsBtn {
   background-color: #004080;  /* navy */
   color: #fff;
   border: none;
@@ -11,7 +10,7 @@
   margin-bottom: 15px;
 }
 
-.primary-btn:hover {
+#showResultsBtn:hover {
   background-color: #0066cc;
 }
 
