@@ -34,35 +34,57 @@ async function saveResults(results) {
 
 async function loadSavedResults() {
   try {
-    const response = await fetch('/get-saved-results', {
-      credentials: 'same-origin'
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`HTTP ${response.status}: ${text}`);
-    }
-
+    const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
     const data = await response.json();
 
     const container = document.getElementById('saved-results');
     container.innerHTML = '';
 
-    if (!data || data.length === 0) {
+    if (!data.success || data.results.length === 0) {
       container.innerHTML = '<p>No saved results found.</p>';
       return;
     }
 
-    data.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'saved-result';
-      div.innerHTML = `
-        <p><strong>Saved on:</strong> ${new Date(item.created_at).toLocaleString()}</p>
-        <pre>${JSON.stringify(item.results_json, null, 2)}</pre>
-        <hr>
-      `;
-      container.appendChild(div);
+    data.results.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+
+      // Create header
+      const header = document.createElement('div');
+      header.className = 'card-header';
+      header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
+      card.appendChild(header);
+
+      // Create content container
+      const content = document.createElement('div');
+      content.className = 'card-content';
+
+      // Flatten results_json into a nice table
+      const table = document.createElement('table');
+      table.className = 'results-table';
+      const tbody = document.createElement('tbody');
+
+      Object.entries(item.results_json).forEach(([key, value]) => {
+        const tr = document.createElement('tr');
+        const tdKey = document.createElement('td');
+        tdKey.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        tdKey.style.fontWeight = 'bold';
+
+        const tdValue = document.createElement('td');
+        tdValue.textContent = value;
+
+        tr.appendChild(tdKey);
+        tr.appendChild(tdValue);
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      content.appendChild(table);
+      card.appendChild(content);
+
+      container.appendChild(card);
     });
+
   } catch (err) {
     console.error('Error loading saved results:', err);
     const container = document.getElementById('saved-results');
@@ -71,4 +93,5 @@ async function loadSavedResults() {
 }
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
+
 
