@@ -1,3 +1,5 @@
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
 async function saveResults(results) {
   try {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
