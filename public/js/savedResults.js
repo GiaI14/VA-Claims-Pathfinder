@@ -161,4 +161,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// Delete button
+const deleteBtn = document.createElement('button');
+deleteBtn.textContent = "Delete";
+deleteBtn.className = "delete-btn";
+deleteBtn.addEventListener('click', async () => {
+  if (confirm("Are you sure you want to delete this saved result?")) {
+    try {
+      const res = await fetch(`/delete-saved-result/${item.id}`, {
+        method: 'DELETE',
+        credentials: 'same-origin'
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        card.remove(); // Remove card from dashboard
+      } else {
+        alert("Failed to delete result.");
+      }
+    } catch (err) {
+      console.error("Error deleting result:", err);
+      alert("Error deleting result.");
+    }
+  }
+});
+card.appendChild(deleteBtn);
 
