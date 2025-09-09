@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Delete button
+// Add delete button at bottom of card
 const deleteBtn = document.createElement('button');
 deleteBtn.textContent = "Delete";
 deleteBtn.className = "delete-btn";
@@ -175,7 +176,7 @@ deleteBtn.addEventListener('click', async () => {
 
       const result = await res.json();
       if (result.success) {
-        card.remove(); // Remove card from dashboard
+        card.remove(); // remove card from DOM
       } else {
         alert("Failed to delete result.");
       }
@@ -186,4 +187,7 @@ deleteBtn.addEventListener('click', async () => {
   }
 });
 card.appendChild(deleteBtn);
+
+// Finally add card to container
+container.appendChild(card);
 
