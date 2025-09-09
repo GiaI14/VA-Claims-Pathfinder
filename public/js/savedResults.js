@@ -46,12 +46,6 @@ async function loadSavedResults() {
     }
 
     data.forEach(item => {
-
-      // TEMP: log first condition keys to check field names
-      if (item.results_json && item.results_json[0].possibleConditions && item.results_json[0].possibleConditions.length > 0) {
-        console.log("All keys in first condition:", item.results_json[0].possibleConditions[0]);
-      }
-
       const card = document.createElement('div');
       card.className = 'result-card';
 
@@ -66,24 +60,19 @@ async function loadSavedResults() {
 
       // Loop through results_json array
       item.results_json.forEach(entry => {
-
-        // Show system
         const systemDiv = document.createElement('div');
         systemDiv.style.fontWeight = 'bold';
         systemDiv.style.marginTop = '10px';
         systemDiv.textContent = `System: ${entry.system || 'N/A'}`;
         content.appendChild(systemDiv);
 
-        // Only show table if there are possible conditions
         if (entry.possibleConditions && entry.possibleConditions.length > 0) {
-
           const table = document.createElement('table');
           table.className = 'results-table';
           table.style.width = '100%';
           table.style.borderCollapse = 'collapse';
           table.style.marginBottom = '10px';
 
-          // Table header
           const thead = document.createElement('thead');
           const headerRow = document.createElement('tr');
           ['Condition Name', 'Medical Code', 'Match %'].forEach(h => {
@@ -98,7 +87,6 @@ async function loadSavedResults() {
           thead.appendChild(headerRow);
           table.appendChild(thead);
 
-          // Table body
           const tbody = document.createElement('tbody');
           entry.possibleConditions.forEach(cond => {
             const tr = document.createElement('tr');
@@ -127,6 +115,35 @@ async function loadSavedResults() {
       });
 
       card.appendChild(content);
+
+      // ✅ Add delete button here
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "delete-btn";
+      deleteBtn.style.marginTop = "10px";
+      deleteBtn.addEventListener('click', async () => {
+        if (confirm("Are you sure you want to delete this saved result?")) {
+          try {
+            const res = await fetch(`/delete-saved-result/${item.id}`, {
+              method: 'DELETE',
+              credentials: 'same-origin'
+            });
+
+            const result = await res.json();
+            if (result.success) {
+              card.remove(); // remove card from DOM
+            } else {
+              alert("Failed to delete result.");
+            }
+          } catch (err) {
+            console.error("Error deleting result:", err);
+            alert("Error deleting result.");
+          }
+        }
+      });
+      card.appendChild(deleteBtn);
+
+      // ✅ Finally append the card to the container
       container.appendChild(card);
     });
 
@@ -136,6 +153,7 @@ async function loadSavedResults() {
     container.innerHTML = `<p style="color:red;">Error loading saved results.</p>`;
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', loadSavedResults);
 
