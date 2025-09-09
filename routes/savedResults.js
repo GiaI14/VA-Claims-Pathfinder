@@ -38,6 +38,7 @@ router.post('/save-results', async (req, res) => {
 });
 
 // Get saved results
+// Get saved results
 router.get('/get-saved-results', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
@@ -47,19 +48,20 @@ router.get('/get-saved-results', async (req, res) => {
   try {
     const db = getDb();
     const [rows] = await db.execute(
-      `SELECT results_json, created_at 
+      `SELECT id, results_json, created_at 
        FROM saved_results 
        WHERE user_id = ? OR google_user_id = ? 
        ORDER BY created_at DESC`,
       [userId, googleUserId]
     );
 
-   const parsed = rows.map(r => ({
-  created_at: r.created_at,
-  results_json: (typeof r.results_json === 'string')
-    ? JSON.parse(r.results_json)
-    : r.results_json
-}));
+    const parsed = rows.map(r => ({
+      id: r.id, // include id here
+      created_at: r.created_at,
+      results_json: (typeof r.results_json === 'string')
+        ? JSON.parse(r.results_json)
+        : r.results_json
+    }));
 
     res.json(parsed);
   } catch (err) {
@@ -70,6 +72,7 @@ router.get('/get-saved-results', async (req, res) => {
     });
   }
 });
+
 
 // DELETE a saved result by ID
 router.delete('/delete-saved-result/:id', async (req, res) => {
