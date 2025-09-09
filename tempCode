@@ -1,33 +1,104 @@
-// Get saved results
-router.get('/get-saved-results', async (req, res) => {
-  if (!req.session.user) return res.status(401).json([]);
-
-  const userId = req.session.user.id || null;
-  const googleUserId = req.session.user.google_id || null;
-
+async function loadSavedResults() {
   try {
-    const db = getDb();
-    const [rows] = await db.execute(
-      `SELECT results_json, created_at 
-       FROM saved_results 
-       WHERE user_id = ? OR google_user_id = ? 
-       ORDER BY created_at DESC`,
-      [userId, googleUserId]
-    );
+    const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
+    const data = await response.json();
 
-   const parsed = rows.map(r => ({
-  created_at: r.created_at,
-  results_json: (typeof r.results_json === 'string')
-    ? JSON.parse(r.results_json)
-    : r.results_json
-}));
+    const container = document.getElementById('saved-results');
+    container.innerHTML = '';
 
-    res.json(parsed);
-  } catch (err) {
-    console.error('Error fetching saved results:', err);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Database error: ' + err.message 
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p>No saved results found.</p>';
+      return;
+    }
+
+    data.forEach(item => {
+
+      // TEMP: log first condition keys to check field names
+      if (item.results_json && item.results_json[0].possibleConditions && item.results_json[0].possibleConditions.length > 0) {
+        console.log("All keys in first condition:", item.results_json[0].possibleConditions[0]);
+      }
+
+      const card = document.createElement('div');
+      card.className = 'result-card';
+
+      // Card header with saved date
+      const header = document.createElement('div');
+      header.className = 'card-header';
+      header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
+      card.appendChild(header);
+
+      const content = document.createElement('div');
+      content.className = 'card-content';
+
+      // Loop through results_json array
+      item.results_json.forEach(entry => {
+
+        // Show system
+        const systemDiv = document.createElement('div');
+        systemDiv.style.fontWeight = 'bold';
+        systemDiv.style.marginTop = '10px';
+        systemDiv.textContent = `System: ${entry.system || 'N/A'}`;
+        content.appendChild(systemDiv);
+
+        // Only show table if there are possible conditions
+        if (entry.possibleConditions && entry.possibleConditions.length > 0) {
+
+          const table = document.createElement('table');
+          table.className = 'results-table';
+          table.style.width = '100%';
+          table.style.borderCollapse = 'collapse';
+          table.style.marginBottom = '10px';
+
+          // Table header
+          const thead = document.createElement('thead');
+          const headerRow = document.createElement('tr');
+          ['Condition Name', 'Medical Code', 'Match %'].forEach(h => {
+            const th = document.createElement('th');
+            th.textContent = h;
+            th.style.fontWeight = 'bold';
+            th.style.textAlign = 'left';
+            th.style.padding = '4px 6px';
+            th.style.borderBottom = '1px solid #ddd';
+            headerRow.appendChild(th);
+          });
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+
+          // Table body
+          const tbody = document.createElement('tbody');
+          entry.possibleConditions.forEach(cond => {
+            const tr = document.createElement('tr');
+
+            const tdName = document.createElement('td');
+            tdName.textContent = cond.condition_name || '';
+            tdName.style.padding = '4px 6px';
+
+            const tdCode = document.createElement('td');
+            tdCode.textContent = cond.medical_code || '';
+            tdCode.style.padding = '4px 6px';
+
+            const tdMatch = document.createElement('td');
+            tdMatch.textContent = cond.match_percentage !== undefined ? cond.match_percentage + '%' : '';
+            tdMatch.style.padding = '4px 6px';
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdCode);
+            tr.appendChild(tdMatch);
+            tbody.appendChild(tr);
+          });
+
+          table.appendChild(tbody);
+          content.appendChild(table);
+        }
+      });
+
+      card.appendChild(content);
+      container.appendChild(card);
     });
+
+  } catch (err) {
+    console.error('Error loading saved results:', err);
+    const container = document.getElementById('saved-results');
+    container.innerHTML = `<p style="color:red;">Error loading saved results.</p>`;
   }
-});
+}
