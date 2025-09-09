@@ -78,14 +78,24 @@ router.get('/get-saved-results', async (req, res) => {
 router.delete('/delete-saved-result/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.id || req.session?.user?.id; // adjust based on your auth
+    const db = getDb(); // <-- FIX: get DB connection
+    const userId = req.session?.user?.id || null;
+    const googleUserId = req.session?.user?.google_id || null;
 
-    if (!userId) {
+    if (!userId && !googleUserId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Ensure user can only delete their own results
-    await db.query('DELETE FROM saved_results WHERE id = ? AND user_id = ?', [id, userId]);
+    // Ensure the record belongs to the logged-in user
+    const [result] = await db.execute(
+      `DELETE FROM saved_results 
+       WHERE id = ? AND (user_id = ? OR google_user_id = ?)`,
+      [id, userId, googleUserId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Result not found or not yours' });
+    }
 
     res.json({ success: true });
   } catch (err) {
@@ -93,5 +103,6 @@ router.delete('/delete-saved-result/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete result' });
   }
 });
+
 
 module.exports = router;  
