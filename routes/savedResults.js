@@ -71,5 +71,24 @@ router.get('/get-saved-results', async (req, res) => {
   }
 });
 
+// DELETE a saved result by ID
+router.delete('/delete-saved-result/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user?.id || req.session?.user?.id; // adjust based on your auth
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Ensure user can only delete their own results
+    await db.query('DELETE FROM saved_results WHERE id = ? AND user_id = ?', [id, userId]);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting saved result:', err);
+    res.status(500).json({ error: 'Failed to delete result' });
+  }
+});
 
 module.exports = router;  
