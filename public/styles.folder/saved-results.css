@@ -48,6 +48,7 @@
 .results-table td, .results-table th {
   font-size: 13px;
   padding: 4px 6px;
+  text-align: left;
   border-bottom: 1px solid #eee;
 }
 
