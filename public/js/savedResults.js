@@ -126,6 +126,9 @@ async function loadSavedResults() {
           try {
             const res = await fetch(`/delete-saved-result/${item.id}`, {
               method: 'DELETE',
+              headers: {
+                'X-CSRF-Token': csrfToken
+              },
               credentials: 'same-origin'
             });
 
