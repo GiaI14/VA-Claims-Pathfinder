@@ -130,7 +130,13 @@ function displaySecondaryConditions(conditions, disabilities) {
       );
 
       const div = document.createElement('div');
-     
+      div.className = 'disability-group';
+      div.style.marginBottom = '15px';
+
+      const title = document.createElement('h4');
+      title.textContent = `Disability: ${disability.value}`;
+      div.appendChild(title);
+
       if (related.length > 0) {
         const ul = document.createElement('ul');
         related.forEach(condition => {
@@ -146,52 +152,56 @@ function displaySecondaryConditions(conditions, disabilities) {
 
       secondaryConditionsDiv.appendChild(div);
     });
+
+    // Save button per disability group
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save Secondary Conditions';
+    saveButton.id = 'saveResultsBtn';
+    saveButton.style.display = 'inline-block';
+    saveButton.style.padding = '10px 20px';
+    saveButton.style.backgroundColor = '#1a73e8';
+    saveButton.style.color = 'white';
+    saveButton.style.border = 'none';
+    saveButton.style.borderRadius = '6px';
+    saveButton.style.fontSize = '16px';
+    saveButton.style.cursor = 'pointer';
+    saveButton.style.marginTop = '15px';
+
+    secondaryConditionsDiv.appendChild(saveButton);
+
+    saveButton.addEventListener('click', () => {
+      const savedSecondaryConditions = [];
+      secondaryConditionsDiv.querySelectorAll('.disability-group').forEach(group => {
+        const disabilityName = group.querySelector('h4')?.innerText || '';
+        const conditionsList = [];
+        group.querySelectorAll('li').forEach(item => conditionsList.push(item.innerText));
+        savedSecondaryConditions.push({ disability: disabilityName, conditions: conditionsList });
+      });
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      fetch('/save-results', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({ results: savedSecondaryConditions }),
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(data => alert('Secondary conditions saved successfully!'))
+      .catch(error => {
+        console.error(error);
+        alert('Error saving secondary conditions.');
+      });
+    });
+
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
-  
-const saveButton = document.createElement('button');
-  saveButton.textContent = 'Save Results';
-  saveButton.id = 'saveResultsBtn';
-  saveButton.style.display = 'inline-block';
-  saveButton.style.padding = '10px 20px';
-  saveButton.style.backgroundColor = '#1a73e8';
-  saveButton.style.color = 'white';
-  saveButton.style.border = 'none';
-  saveButton.style.borderRadius = '6px';
-  saveButton.style.fontSize = '16px';
-  saveButton.style.cursor = 'pointer';
-  saveButton.style.marginTop = '15px';
-
-  // Append after everything else
-  secondaryConditionsDiv.appendChild(saveButton);
-
-  saveButton.addEventListener('click', () => {
-  const savedSecondaryConditions = [];
-  const listItems = secondaryConditionsDiv.querySelectorAll('li');
-  listItems.forEach(item => savedSecondaryConditions.push(item.innerText));
-
-  // Get CSRF token at the time of click
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  fetch('/save-results', {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': csrfToken
-    },
-    body: JSON.stringify({results: savedSecondaryConditions }),
-    credentials: 'same-origin'
-  })
-  .then(response => response.json())
-  .then(data => alert('Secondary conditions saved successfully!'))
-  .catch(error => {
-    console.error(error);
-    alert('Error saving secondary conditions.');
-  });
-});
 }
-// Attach listeners once
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addDisabilityButton')
           .addEventListener('click', addDisability);
@@ -212,3 +222,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
