@@ -177,8 +177,11 @@ const saveButton = document.createElement('button');
     fetch('/saveResults', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      'CSRF-Token': csrfToken
+    },
       body: JSON.stringify({ savedSecondaryConditions })
     })
+    
     .then(response => response.json())
     .then(data => {
       alert('Secondary conditions saved successfully!');
