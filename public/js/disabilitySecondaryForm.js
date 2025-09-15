@@ -149,6 +149,22 @@ function displaySecondaryConditions(conditions, disabilities) {
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
+const saveButton = document.createElement('button');
+  saveButton.textContent = 'Save Results';
+  saveButton.id = 'saveResultsBtn';
+  saveButton.style.display = 'inline-block';
+  saveButton.style.padding = '10px 20px';
+  saveButton.style.backgroundColor = '#1a73e8';
+  saveButton.style.color = 'white';
+  saveButton.style.border = 'none';
+  saveButton.style.borderRadius = '6px';
+  saveButton.style.fontSize = '16px';
+  saveButton.style.cursor = 'pointer';
+  saveButton.style.marginTop = '15px';
+
+  // Append after everything else
+  secondaryConditionsDiv.appendChild(saveButton);
+  
 }
 
 
