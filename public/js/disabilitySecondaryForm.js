@@ -149,6 +149,7 @@ function displaySecondaryConditions(conditions, disabilities) {
   } else {
     secondaryConditionsDiv.innerHTML += '<p>No matching conditions found.</p>';
   }
+  
 const saveButton = document.createElement('button');
   saveButton.textContent = 'Save Results';
   saveButton.id = 'saveResultsBtn';
@@ -164,9 +165,30 @@ const saveButton = document.createElement('button');
 
   // Append after everything else
   secondaryConditionsDiv.appendChild(saveButton);
-  
-}
 
+  saveButton.addEventListener('click', () => {
+    const savedSecondaryConditions = [];
+    const listItems = secondaryConditionsDiv.querySelectorAll('li');
+
+    listItems.forEach(item => {
+      savedSecondaryConditions.push(item.innerText);
+    });
+    
+    fetch('/saveResults', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ savedSecondaryConditions })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert('Secondary conditions saved successfully!');
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Error saving secondary conditions.');
+    });
+  });
+}
 
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
