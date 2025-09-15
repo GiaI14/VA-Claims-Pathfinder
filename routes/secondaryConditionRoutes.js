@@ -68,6 +68,8 @@ router.post('/secondary-conditions/save', async (req, res) => {
   }
 });
 
+/////////////////NEED TO DELETE////////////////////////////////////////////////////////////////////////
+
 router.get('/saved-secondary', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
