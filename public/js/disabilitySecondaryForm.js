@@ -179,8 +179,9 @@ const saveButton = document.createElement('button');
       headers: { 'Content-Type': 'application/json' },
       'CSRF-Token': csrfToken
     },
-      body: JSON.stringify({ savedSecondaryConditions })
-    })
+      body: JSON.stringify({ savedSecondaryConditions }),
+      credentials: 'same-origin'
+    });
     
     .then(response => response.json())
     .then(data => {
