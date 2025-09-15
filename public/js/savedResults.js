@@ -11,7 +11,7 @@ async function saveResults(results) {
         'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ results }),
-      credentials: 'same-origin'  
+      credentials: 'same-origin'
     });
 
     if (!response.ok) {
@@ -51,7 +51,6 @@ async function loadSavedResults() {
       const card = document.createElement('div');
       card.className = 'result-card';
 
-      // Card header with saved date
       const header = document.createElement('div');
       header.className = 'card-header';
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
@@ -60,7 +59,6 @@ async function loadSavedResults() {
       const content = document.createElement('div');
       content.className = 'card-content';
 
-      // Loop through results_json array
       item.results_json.forEach(entry => {
         const systemDiv = document.createElement('div');
         systemDiv.style.fontWeight = 'bold';
@@ -118,7 +116,6 @@ async function loadSavedResults() {
 
       card.appendChild(content);
 
-      // Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "delete-btn";
@@ -131,13 +128,9 @@ async function loadSavedResults() {
               headers: { 'X-CSRF-Token': csrfToken },
               credentials: 'same-origin'
             });
-
             const result = await res.json();
-            if (result.success) {
-              card.remove();
-            } else {
-              alert("Failed to delete result.");
-            }
+            if (result.success) card.remove();
+            else alert("Failed to delete result.");
           } catch (err) {
             console.error("Error deleting result:", err);
             alert("Error deleting result.");
@@ -156,7 +149,7 @@ async function loadSavedResults() {
   }
 }
 
-/////////////////////////NEW CODE/////////////////////////////////////
+// =================== NEW CODE ======================
 async function loadSavedSecondaryConditions() {
   try {
     const response = await fetch('/saved-secondary', { credentials: 'same-origin' });
@@ -188,7 +181,6 @@ async function loadSavedSecondaryConditions() {
       });
       card.appendChild(ul);
 
-      // Delete button inside the loop
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "delete-btn";
@@ -223,29 +215,31 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSavedResults();
   loadSavedSecondaryConditions();
 
-  // Toggle primary VA results
   const showBtn = document.getElementById('showResultsBtn');
   const resultsContainer = document.getElementById('saved-results');
-  showBtn.addEventListener('click', () => {
-    if (resultsContainer.style.display === 'none') {
-      resultsContainer.style.display = 'block';
-      showBtn.textContent = "Hide VA Disability Results";
-    } else {
-      resultsContainer.style.display = 'none';
-      showBtn.textContent = "VA Disability Results";
-    }
-  });
+  if (showBtn) {
+    showBtn.addEventListener('click', () => {
+      if (resultsContainer.style.display === 'none') {
+        resultsContainer.style.display = 'block';
+        showBtn.textContent = "Hide VA Disability Results";
+      } else {
+        resultsContainer.style.display = 'none';
+        showBtn.textContent = "VA Disability Results";
+      }
+    });
+  }
 
-  // Toggle secondary conditions
   const showSecondaryBtn = document.getElementById('showSecondaryBtn');
   const secondaryContainer = document.getElementById('savedSecondaryContainer');
-  showSecondaryBtn.addEventListener('click', () => {
-    if (secondaryContainer.style.display === 'none') {
-      secondaryContainer.style.display = 'block';
-      showSecondaryBtn.textContent = "Hide Secondary Conditions";
-    } else {
-      secondaryContainer.style.display = 'none';
-      showSecondaryBtn.textContent = "Show Secondary Conditions";
-    }
-  });
+  if (showSecondaryBtn) {
+    showSecondaryBtn.addEventListener('click', () => {
+      if (secondaryContainer.style.display === 'none') {
+        secondaryContainer.style.display = 'block';
+        showSecondaryBtn.textContent = "Hide Secondary Conditions";
+      } else {
+        secondaryContainer.style.display = 'none';
+        showSecondaryBtn.textContent = "Show Secondary Conditions";
+      }
+    });
+  }
 });
