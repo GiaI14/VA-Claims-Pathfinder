@@ -51,6 +51,8 @@ router.post('/secondary-conditions/save', async (req, res) => {
   const userId = req.session.user.id || null;
   const googleUserId = req.session.user.google_id || null;
 
+   console.log('Saving secondary conditions:', { userId, googleUserId, results });
+  
   try {
     const db = getDb();
     await db.execute(
