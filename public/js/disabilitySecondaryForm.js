@@ -190,7 +190,7 @@ const saveButton = document.createElement('button');
     alert('Error saving secondary conditions.');
   });
 });
-
+}
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addDisabilityButton')
