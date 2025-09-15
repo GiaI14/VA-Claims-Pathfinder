@@ -180,7 +180,7 @@ function displaySecondaryConditions(conditions, disabilities) {
 
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-      fetch('/secondary-conditions/save', {
+      fetch('/api/secondary-conditions/save', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
