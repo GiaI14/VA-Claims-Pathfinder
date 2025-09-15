@@ -118,6 +118,7 @@ if (disabilities.length === 0) {
   }
 }
 
+/////////////////////////////Might need DELETING/?///////
 
 function displaySecondaryConditions(conditions, disabilities) {
   const secondaryConditionsDiv = document.getElementById('secondaryConditions');
