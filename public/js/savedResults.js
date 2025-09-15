@@ -149,7 +149,7 @@ async function loadSavedResults() {
   }
 }
 
-// =================== NEW CODE ======================
+// =================== NEEDS DELETING ======================
 async function loadSavedSecondaryConditions() {
   try {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
