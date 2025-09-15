@@ -152,9 +152,17 @@ async function loadSavedResults() {
 // =================== NEW CODE ======================
 async function loadSavedSecondaryConditions() {
   try {
-    const response = await fetch('/saved-secondary', { credentials: 'same-origin' });
-    if (!response.ok) throw new Error('Failed to fetch saved secondary conditions');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const response = await fetch('/api/saved-secondary', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      credentials: 'same-origin'
+    });
 
+    if (!response.ok) throw new Error('Failed to fetch saved secondary conditions');
     const data = await response.json();
     const container = document.getElementById('savedSecondaryContainer');
     container.innerHTML = '';
@@ -176,18 +184,19 @@ async function loadSavedSecondaryConditions() {
       const ul = document.createElement('ul');
       item.results.forEach(cond => {
         const li = document.createElement('li');
-        li.textContent = cond.disability + ': ' + (cond.conditions.join(', ') || 'None');
+        li.textContent = `${cond.disability}: ${cond.conditions.join(', ') || 'None'}`;
         ul.appendChild(li);
       });
       card.appendChild(ul);
 
+      // Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "delete-btn";
       deleteBtn.addEventListener('click', async () => {
         if (confirm("Are you sure you want to delete this saved result?")) {
           try {
-            const res = await fetch(`/delete-saved-result/${item.id}`, {
+            const res = await fetch(`/api/delete-saved-result/${item.id}`, {
               method: 'DELETE',
               headers: { 'X-CSRF-Token': csrfToken },
               credentials: 'same-origin'
@@ -201,13 +210,14 @@ async function loadSavedSecondaryConditions() {
           }
         }
       });
-      card.appendChild(deleteBtn);
 
+      card.appendChild(deleteBtn);
       container.appendChild(card);
     });
-
   } catch (err) {
     console.error('Error loading saved secondary conditions:', err);
+    const container = document.getElementById('savedSecondaryContainer');
+    container.innerHTML = `<p style="color:red;">Error loading saved secondary conditions.</p>`;
   }
 }
 
