@@ -169,10 +169,9 @@ const saveButton = document.createElement('button');
   saveButton.addEventListener('click', () => {
   const savedSecondaryConditions = [];
   const listItems = secondaryConditionsDiv.querySelectorAll('li');
+  listItems.forEach(item => savedSecondaryConditions.push(item.innerText));
 
-  listItems.forEach(item => {
-    savedSecondaryConditions.push(item.innerText);
-  });
+  // Get CSRF token at the time of click
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   fetch('/saveResults', {
@@ -185,9 +184,7 @@ const saveButton = document.createElement('button');
     credentials: 'same-origin'
   })
   .then(response => response.json())
-  .then(data => {
-    alert('Secondary conditions saved successfully!');
-  })
+  .then(data => alert('Secondary conditions saved successfully!'))
   .catch(error => {
     console.error(error);
     alert('Error saving secondary conditions.');
