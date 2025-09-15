@@ -159,33 +159,79 @@ async function loadSavedResults() {
   }
 }
 
+/////////////////////////NEW CODE/////////////////////////////////////
+async function loadSavedSecondaryConditions() {
+  try {
+    const response = await fetch('/saved-secondary', { credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Failed to fetch saved secondary conditions');
 
-document.addEventListener('DOMContentLoaded', loadSavedResults);
+    const data = await response.json();
+    const container = document.getElementById('savedSecondaryContainer');
+    container.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p>No saved secondary conditions found.</p>';
+      return;
+    }
+
+    data.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+
+      const header = document.createElement('div');
+      header.className = 'card-header';
+      header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
+      card.appendChild(header);
+
+      const ul = document.createElement('ul');
+      item.results.forEach(cond => {
+        const li = document.createElement('li');
+        li.textContent = cond; // adjust if saved format differs
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error('Error loading saved secondary conditions:', err);
+  }
+}
+//////////////////////////////////////////////////////////////
 
 document.addEventListener('DOMContentLoaded', () => {
+  loadSavedResults();
+  loadSavedSecondaryConditions();
 
+  // Toggle primary VA results
   const showBtn = document.getElementById('showResultsBtn');
   const resultsContainer = document.getElementById('saved-results');
-
-  showBtn.addEventListener('click', async () => {
-    // Toggle visibility
+  showBtn.addEventListener('click', () => {
     if (resultsContainer.style.display === 'none') {
       resultsContainer.style.display = 'block';
       showBtn.textContent = "Hide VA Disability Results";
-      // Load the results only when first clicked
-      if (!resultsContainer.hasChildNodes()) {
-        await loadSavedResults();
-      }
     } else {
       resultsContainer.style.display = 'none';
       showBtn.textContent = "VA Disability Results";
     }
   });
 
+  // Toggle secondary conditions
+  const showSecondaryBtn = document.getElementById('showSecondaryBtn');
+  const secondaryContainer = document.getElementById('savedSecondaryContainer');
+  showSecondaryBtn.addEventListener('click', () => {
+    if (secondaryContainer.style.display === 'none') {
+      secondaryContainer.style.display = 'block';
+      showSecondaryBtn.textContent = "Hide Secondary Conditions";
+    } else {
+      secondaryContainer.style.display = 'none';
+      showSecondaryBtn.textContent = "Show Secondary Conditions";
+    }
+  });
 });
 
 // Delete button
-// Add delete button at bottom of card
 const deleteBtn = document.createElement('button');
 deleteBtn.textContent = "Delete";
 deleteBtn.className = "delete-btn";
