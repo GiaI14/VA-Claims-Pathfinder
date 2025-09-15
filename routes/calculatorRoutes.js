@@ -173,9 +173,14 @@ router.post('/calculate-disability', (req, res) => {
     }
 
     const additionalChildrenUnder18 = Math.max(0, childrenUnder18 - 1)
-    baseCompensation += (childUnder18Pay[rating] || 0) * additionalChildrenUnder18
-    baseCompensation += (childOver18Pay[rating] || 0) * childrenOver18
+    baseCompensation += childUnder18Pay[rating] * additionalChildrenUnder18
 
+    if (childrenUnder18 > 0) {
+      baseCompensation += childOver18Pay[rating] * childrenOver18
+    } else {
+      baseCompensation += childOver18Pay[rating] * Math.max(0, childrenOver18 - 1)
+    }
+    
     console.log(`Final compensation: $${baseCompensation.toFixed(2)}`)
     return parseFloat(baseCompensation.toFixed(2))
   }
