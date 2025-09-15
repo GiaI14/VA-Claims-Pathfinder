@@ -37,8 +37,6 @@ router.post('/save-results', async (req, res) => {
   }
 });
 
-// Get saved results
-// Get saved results
 router.get('/get-saved-results', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
