@@ -40,6 +40,32 @@ router.post('/secondary-conditions', async (req, res) => {
   }
 });
 
+router.post('/secondary-conditions/save', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Not authenticated' });
+
+  const { results } = req.body; // Array of secondary conditions
+  if (!results || results.length === 0) {
+    return res.status(400).json({ success: false, message: 'No secondary conditions provided.' });
+  }
+
+  const userId = req.session.user.id || null;
+  const googleUserId = req.session.user.google_id || null;
+
+  try {
+    const db = getDb();
+    await db.execute(
+      `INSERT INTO saved_secondary (user_id, google_user_id, results_json, created_at)
+       VALUES (?, ?, ?, NOW())`,
+      [userId, googleUserId, JSON.stringify(results)]
+    );
+
+    res.json({ success: true, message: 'Secondary conditions saved successfully.' });
+  } catch (err) {
+    console.error('Error saving secondary conditions:', err);
+    res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+  }
+});
+
 router.get('/saved-secondary', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
