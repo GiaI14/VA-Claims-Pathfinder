@@ -50,35 +50,17 @@ router.get('/saved-secondary', async (req, res) => {
     const db = getDb();
     const [rows] = await db.execute(
       `SELECT id, results_json, created_at
-       FROM saved_results
-       WHERE (user_id = ? OR google_user_id = ?) AND results_json IS NOT NULL
+       FROM saved_secondary
+       WHERE user_id = ? OR google_user_id = ?
        ORDER BY created_at DESC`,
       [userId, googleUserId]
     );
 
-    // Only return results that look like secondary conditions
-    const parsed = rows
-      .map(r => {
-        let resultsData;
-        try {
-          resultsData = typeof r.results_json === 'string' ? JSON.parse(r.results_json) : r.results_json;
-        } catch (e) {
-          console.error('Error parsing JSON for saved result id', r.id);
-          resultsData = [];
-        }
-
-        // Check if the result looks like secondary conditions (array of objects with "disability" key)
-        if (Array.isArray(resultsData) && resultsData.length > 0 && resultsData[0].disability) {
-          return {
-            id: r.id,
-            created_at: r.created_at,
-            results: resultsData
-          };
-        } else {
-          return null;
-        }
-      })
-      .filter(r => r !== null);
+    const parsed = rows.map(r => ({
+      id: r.id,
+      created_at: r.created_at,
+      results: typeof r.results_json === 'string' ? JSON.parse(r.results_json) : r.results_json
+    }));
 
     res.json(parsed);
   } catch (err) {
@@ -86,6 +68,7 @@ router.get('/saved-secondary', async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
 
 
 module.exports = router;
