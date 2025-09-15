@@ -173,11 +173,13 @@ const saveButton = document.createElement('button');
     listItems.forEach(item => {
       savedSecondaryConditions.push(item.innerText);
     });
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     fetch('/saveResults', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      'X-CSRF-Token': csrfToken
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
     },
       body: JSON.stringify({ savedSecondaryConditions }),
       credentials: 'same-origin'
@@ -192,7 +194,6 @@ const saveButton = document.createElement('button');
       alert('Error saving secondary conditions.');
     });
   });
-}
 
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
