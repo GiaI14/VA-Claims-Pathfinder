@@ -40,4 +40,34 @@ router.post('/secondary-conditions', async (req, res) => {
   }
 });
 
+router.get('/saved-secondary', async (req, res) => {
+  if (!req.session.user) return res.status(401).json([]);
+
+  const userId = req.session.user.id || null;
+  const googleUserId = req.session.user.google_id || null;
+
+  try {
+    const db = getDb();
+    const [rows] = await db.execute(
+      `SELECT id, results_json, created_at
+       FROM saved_results
+       WHERE (user_id = ? OR google_user_id = ?) AND results_json IS NOT NULL
+       ORDER BY created_at DESC`,
+      [userId, googleUserId]
+    );
+
+    const parsed = rows.map(r => ({
+      id: r.id,
+      created_at: r.created_at,
+      results: typeof r.results_json === 'string' ? JSON.parse(r.results_json) : r.results_json
+    }));
+
+    res.json(parsed);
+  } catch (err) {
+    console.error('Error fetching saved secondary results:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+
 module.exports = router;
