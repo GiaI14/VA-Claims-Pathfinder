@@ -167,33 +167,32 @@ const saveButton = document.createElement('button');
   secondaryConditionsDiv.appendChild(saveButton);
 
   saveButton.addEventListener('click', () => {
-    const savedSecondaryConditions = [];
-    const listItems = secondaryConditionsDiv.querySelectorAll('li');
+  const savedSecondaryConditions = [];
+  const listItems = secondaryConditionsDiv.querySelectorAll('li');
 
-    listItems.forEach(item => {
-      savedSecondaryConditions.push(item.innerText);
-    });
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    fetch('/saveResults', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-    },
-      body: JSON.stringify({ savedSecondaryConditions }),
-      credentials: 'same-origin'
-    });
-    
-    .then(response => response.json())
-    .then(data => {
-      alert('Secondary conditions saved successfully!');
-    })
-    .catch(error => {
-      console.error(error);
-      alert('Error saving secondary conditions.');
-    });
+  listItems.forEach(item => {
+    savedSecondaryConditions.push(item.innerText);
   });
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  fetch('/saveResults', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({ savedSecondaryConditions }),
+    credentials: 'same-origin'
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert('Secondary conditions saved successfully!');
+  })
+  .catch(error => {
+    console.error(error);
+    alert('Error saving secondary conditions.');
+  });
+});
 
 // Attach listeners once
 document.addEventListener('DOMContentLoaded', () => {
