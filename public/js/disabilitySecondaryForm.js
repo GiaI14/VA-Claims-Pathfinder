@@ -174,13 +174,13 @@ const saveButton = document.createElement('button');
   // Get CSRF token at the time of click
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  fetch('/saveResults', {
+  fetch('/save-results', {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken
     },
-    body: JSON.stringify({ savedSecondaryConditions }),
+    body: JSON.stringify({results: savedSecondaryConditions }),
     credentials: 'same-origin'
   })
   .then(response => response.json())
