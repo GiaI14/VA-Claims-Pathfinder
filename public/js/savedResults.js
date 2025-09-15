@@ -183,21 +183,22 @@ async function loadSavedSecondaryConditions() {
       header.textContent = `Saved on: ${new Date(item.created_at).toLocaleString()}`;
       card.appendChild(header);
 
-      const ul = document.createElement('ul');
-      item.results.forEach(cond => {
-        const li = document.createElement('li');
-        li.textContent = cond; // adjust if saved format differs
+      item.results.forEach(entry=> {
+        const title = document.createElement('h4');
+        title.textContent = entry.disability || 'Disability';
+        card.appendChild(title);
         ul.appendChild(li);
-      });
-      card.appendChild(ul);
-
-      container.appendChild(card);
+     const ul = document.createElement('ul');
+    entry.conditions.forEach(cond => {
+      const li = document.createElement('li');
+      li.textContent = cond;
+      ul.appendChild(li);
     });
+    card.appendChild(ul);
+  });
 
-  } catch (err) {
-    console.error('Error loading saved secondary conditions:', err);
-  }
-}
+  container.appendChild(card);
+});
 //////////////////////////////////////////////////////////////
 
 document.addEventListener('DOMContentLoaded', () => {
