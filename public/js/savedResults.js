@@ -118,7 +118,7 @@ async function loadSavedResults() {
 
       card.appendChild(content);
 
-      // ✅ Add delete button here
+      // Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "delete-btn";
@@ -128,15 +128,13 @@ async function loadSavedResults() {
           try {
             const res = await fetch(`/delete-saved-result/${item.id}`, {
               method: 'DELETE',
-              headers: {
-                'X-CSRF-Token': csrfToken
-              },
+              headers: { 'X-CSRF-Token': csrfToken },
               credentials: 'same-origin'
             });
 
             const result = await res.json();
             if (result.success) {
-              card.remove(); // remove card from DOM
+              card.remove();
             } else {
               alert("Failed to delete result.");
             }
@@ -148,7 +146,6 @@ async function loadSavedResults() {
       });
       card.appendChild(deleteBtn);
 
-      // ✅ Finally append the card to the container
       container.appendChild(card);
     });
 
@@ -184,39 +181,43 @@ async function loadSavedSecondaryConditions() {
       card.appendChild(header);
 
       const ul = document.createElement('ul');
-  item.results.forEach(cond => {
-    const li = document.createElement('li');
-    li.textContent = cond.disability + ': ' + (cond.conditions.join(', ') || 'None');
-    ul.appendChild(li);
-  });
-  card.appendChild(ul);
+      item.results.forEach(cond => {
+        const li = document.createElement('li');
+        li.textContent = cond.disability + ': ' + (cond.conditions.join(', ') || 'None');
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
 
-  // Delete button inside the loop
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = "Delete";
-  deleteBtn.className = "delete-btn";
-  deleteBtn.addEventListener('click', async () => {
-    if (confirm("Are you sure you want to delete this saved result?")) {
-      try {
-        const res = await fetch(`/delete-saved-result/${item.id}`, {
-          method: 'DELETE',
-          headers: { 'X-CSRF-Token': csrfToken },
-          credentials: 'same-origin'
-        });
-        const result = await res.json();
-        if (result.success) card.remove();
-        else alert("Failed to delete result.");
-      } catch (err) {
-        console.error(err);
-        alert("Error deleting result.");
-      }
-    }
-  });
-  card.appendChild(deleteBtn);
+      // Delete button inside the loop
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "delete-btn";
+      deleteBtn.addEventListener('click', async () => {
+        if (confirm("Are you sure you want to delete this saved result?")) {
+          try {
+            const res = await fetch(`/delete-saved-result/${item.id}`, {
+              method: 'DELETE',
+              headers: { 'X-CSRF-Token': csrfToken },
+              credentials: 'same-origin'
+            });
+            const result = await res.json();
+            if (result.success) card.remove();
+            else alert("Failed to delete result.");
+          } catch (err) {
+            console.error(err);
+            alert("Error deleting result.");
+          }
+        }
+      });
+      card.appendChild(deleteBtn);
 
-  container.appendChild(card);
-});
-//////////////////////////////////////////////////////////////
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error('Error loading saved secondary conditions:', err);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedResults();
@@ -248,33 +249,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-
-// Delete button
-const deleteBtn = document.createElement('button');
-deleteBtn.textContent = "Delete";
-deleteBtn.className = "delete-btn";
-deleteBtn.addEventListener('click', async () => {
-  if (confirm("Are you sure you want to delete this saved result?")) {
-    try {
-      const res = await fetch(`/delete-saved-result/${item.id}`, {
-        method: 'DELETE',
-        credentials: 'same-origin'
-      });
-
-      const result = await res.json();
-      if (result.success) {
-        card.remove(); // remove card from DOM
-      } else {
-        alert("Failed to delete result.");
-      }
-    } catch (err) {
-      console.error("Error deleting result:", err);
-      alert("Error deleting result.");
-    }
-  }
-});
-card.appendChild(deleteBtn);
-
-// Finally add card to container
-container.appendChild(card);
-
