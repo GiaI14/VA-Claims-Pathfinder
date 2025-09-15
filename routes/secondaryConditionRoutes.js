@@ -43,7 +43,7 @@ router.post('/secondary-conditions', async (req, res) => {
 router.post('/secondary-conditions/save', async (req, res) => {
   if (!req.session.user) return res.status(401).json({ success: false, message: 'Not authenticated' });
 
-  const { results } = req.body; // Array of secondary conditions
+  const { results } = req.body; 
   if (!results || results.length === 0) {
     return res.status(400).json({ success: false, message: 'No secondary conditions provided.' });
   }
