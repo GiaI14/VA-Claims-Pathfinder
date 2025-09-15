@@ -9,12 +9,22 @@
     <%- include('includes/header', { nonce: nonce }) %>
 
 <h2>Your Saved Results</h2>
-<div class="record-section">
-    <button id="showResultsBtn">VA Disability Results</button>
 
-        <div id="saved-results" style="display:none;">
-        <h2 id="savedResultsTitle" style="display:none;">Your Saved VA Disabilities</h2>
-     <div id="saved-results-cards"></div>
+<div class="record-section">
+  <!-- Buttons -->
+  <div class="record-buttons">
+    <button id="showResultsBtn">VA Disability Results</button>
+    <button id="showSecondaryBtn">Secondary Conditions</button>
+  </div>
+
+  <!-- VA Disability results -->
+  <div id="saved-results" style="display:none;">
+    <div id="saved-results-cards"></div>
+  </div>
+
+  <!-- Secondary Conditions results -->
+  <div id="savedSecondaryContainer" style="display:none;">
+    <div id="saved-secondary-cards"></div>
   </div>
 </div>
 
