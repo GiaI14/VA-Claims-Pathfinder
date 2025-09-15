@@ -71,18 +71,32 @@ router.post('/secondary-conditions/save', async (req, res) => {
 router.get('/saved-secondary', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
-  const userId = req.session.user.id || null;
-  const googleUserId = req.session.user.google_id || null;
+  const userId = req.session.user.id;
+  const googleUserId = req.session.user.google_id;
 
   try {
     const db = getDb();
-    const [rows] = await db.execute(
-      `SELECT id, results_json, created_at
-       FROM saved_secondary
-       WHERE user_id = ? OR google_user_id = ?
-       ORDER BY created_at DESC`,
-      [userId, googleUserId]
-    );
+    
+    // Only include conditions for non-null IDs
+    let query = `SELECT id, results_json, created_at FROM saved_secondary WHERE `;
+    const params = [];
+
+    if (userId && googleUserId) {
+      query += `user_id = ? OR google_user_id = ? `;
+      params.push(userId, googleUserId);
+    } else if (userId) {
+      query += `user_id = ? `;
+      params.push(userId);
+    } else if (googleUserId) {
+      query += `google_user_id = ? `;
+      params.push(googleUserId);
+    } else {
+      return res.json([]); // No valid user identifiers
+    }
+
+    query += `ORDER BY created_at DESC`;
+
+    const [rows] = await db.execute(query, params);
 
     const parsed = rows.map(r => ({
       id: r.id,
