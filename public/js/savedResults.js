@@ -159,7 +159,7 @@ async function loadSavedSecondaryConditions() {
     });
     const data = await response.json();
 
-    const container = document.getElementById('savedSecondaryContainer');
+    const container = document.getElementById('saved-secondary-cards');
     container.innerHTML = '';
 
     if (!data || data.length === 0) {
