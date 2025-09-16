@@ -7,143 +7,92 @@
   <div class="page-wrapper">
     <%- include('includes/header', { nonce: nonce }) %>
    
-    <div id="disabilities-container">
-  <h1 class="main-heading" style="text-align: center; margin-top: 60px; font-size: 1.5rem;">
-   VA Disability Rating Calculator
-  </h1>
+    <div id="compensation-container">
+      <h1 class="main-heading" style="text-align: center; margin-top: 60px; font-size: 1.5rem;">
+        VA Compensation Estimator
+      </h1>
+
       <div class="three-column-layout">
         <!-- Column 1: Left -->
         <div class="column empty-left">
-          <h1>How is disability rating calculated?</h1>
+          <h1>How is VA Compensation Calculated?</h1>
           <p>
-            VA disability ratings are calculated using a non-additive method that accounts for the cumulative
-            impact of multiple conditions on a veteran’s overall health and functional capacity. Each
-            condition is assigned a percentage (in increments of 10) based on severity, as outlined in the
-            VA’s Schedule.<br>
-            Ratings are combined starting with the highest individual disability, then proceeding to the next
-            highest, and so on. This ensures the most impactful conditions are prioritized. The VA
-            calculates the combined rating by subtracting each disability’s impact from the remaining
-            “efficient” (non-disabled) percentage.<br>
-            The calculation begins at 100%, which represents a completely healthy person.
-            First, subtract the percentage of your highest-rated disability from that 100%.
-            Then, for each additional disability, subtract its percentage from whatever is left.
-            Each time, the percentage is taken from the remaining amount, not the original 100%.
+            VA disability compensation is determined based on your current VA rating and the number of dependents you have.
+            Each dependent can increase your monthly compensation. The VA provides a standard schedule for adding amounts
+            for spouses, children, and parents.
           </p>
         </div>
 
         <!-- Column 2: Center -->
         <div class="column center-content">
-          <div id="rating-buttons">
-            <h3>Select a Disability Rating:</h3>
-            <div class="button-grid">
-              <% for (let i = 0; i <= 100; i += 10) { %>
-                <button class="rating-btn" data-rating="<%= i %>">
-                  <%= i %>%
-                </button>
-              <% } %>
-            </div>
+          <!-- Current VA Rating Input -->
+          <div id="current-rating-container">
+            <label for="currentRating">Current VA Rating (%)</label>
+            <input type="number" id="currentRating" min="0" max="100" value="0">
           </div>
 
           <hr>
 
-          <div id="selected-ratings-container">
-            <div style="display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 10px; border-top: 1px solid #ccc; padding-top: 5px;">
-              <h4 style="margin: 0;">Selected Ratings:</h4>
-              <div id="selected-ratings" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
-            </div>
-
-            <!-- Disabilities will be appended here -->
-            <div id="disabilities"></div>
-
-            <button id="toggle-dependents">Add Dependents</button>
-            <div class="dependents-center-wrapper">
-              <div id="dependents-container" style="display: none;">
-                <h2>Dependents</h2>
-                <div class="dependents-row">
-                  <div class="dependent-field" style="flex:0 0 auto;">
-                    <label for="spouse">
-                      <input type="checkbox" id="spouse"> Spouse?
-                    </label>
-                  </div>
-                  <div class="parents-field">
-                    <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
-                    <select id="numParents">
-                      <option value="0">0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                    </select>
-                  </div>
+          <!-- Dependents Section -->
+          <button id="toggle-dependents">Add Dependents</button>
+          <div class="dependents-center-wrapper">
+            <div id="dependents-container" style="display: none;">
+              <h2>Dependents</h2>
+              <div class="dependents-row">
+                <div class="dependent-field" style="flex:0 0 auto;">
+                  <label for="spouse">
+                    <input type="checkbox" id="spouse"> Spouse?
+                  </label>
                 </div>
-                <div class="dependents-row">
-                  <div class="dependent-field">
-                    <label for="childrenUnder18">Number of Children Under 18:</label>
-                    <input type="number" id="childrenUnder18" min="0" value="0">
-                  </div>
-                  <div class="dependent-field">
-                    <label for="childrenOver18">Number of Children Over 18 (in school):</label>
-                    <input type="number" id="childrenOver18" min="0" value="0">
-                  </div>
+                <div class="parents-field">
+                  <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
+                  <select id="numParents">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </div>
+              </div>
+              <div class="dependents-row">
+                <div class="dependent-field">
+                  <label for="childrenUnder18">Number of Children Under 18:</label>
+                  <input type="number" id="childrenUnder18" min="0" value="0">
+                </div>
+                <div class="dependent-field">
+                  <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+                  <input type="number" id="childrenOver18" min="0" value="0">
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Honeypot Field -->
-            <input type="text" name="honeypot" style="display: none;">
+          <!-- Honeypot Field -->
+          <input type="text" name="honeypot" style="display: none;">
 
-            <div id="results-container">
-              <h2>Exact Combined Rating: <span id="exactRating">0%</span></h2>
-              <h2>VA Rounded Rating: <span id="roundedRating">0%</span></h2>
-              <h2>Estimated Compensation: <span id="result">$0</span></h2>
-            </div>
+          <!-- Results Section -->
+          <div id="results-container">
+            <h2>Exact VA Rating: <span id="exactRating">0%</span></h2>
+            <h2>Rounded VA Rating: <span id="roundedRating">0%</span></h2>
+            <h2>Estimated Compensation: <span id="result">$0</span></h2>
           </div>
         </div>
 
         <!-- Column 3: Right -->
         <div class="column empty-right">
-          <h1>VA Rating Calculation Example</h1>
+          <h1>VA Compensation Example</h1>
           <p>
-            Suppose a veteran has three disabilities: 50% (PTSD), 30% (back injury), and 10% (tinnitus).<br>
-            <b>First Disability (50%)</b><br>
-            Subtract 50% of 100% efficiency. <br> 100%-50%=50% remaining efficiency. <br> Current combined
-            rating: 50% <br>
-            <b>Second Disability (30%)</b><br>
-            Calculate 30% of the remaining 50% efficiency:<br> 30% * 50% = 15% <br>Subtract this from the
-            remaining efficiency:<br>50% - 15% = 35%<br>
-            Updated combined rating: 50% + 15% = 65%<br>
-            <b>Third Disability (10%)</b><br>
-            Calculate 10% of the remaining 35% efficiency:<br>
-            10% * 35% = 3.5%<br>
-            Subtract this from the remaining efficiency:<br>
-            35% - 3.5% = 31.5%<br>
-            <b>Final combined rating:</b> 65% + 3.5% = 68.5%<br>
-            <b>Rounding:</b> The VA rounds the final value to the nearest 10%.<br> In this case, 68.5%
-            rounds to 70%
+            Suppose a veteran has a 70% VA rating with a spouse and one child under 18.<br>
+            The base compensation for 70% is $1,500/month.<br>
+            Additional spouse allowance: $250<br>
+            Additional child allowance: $150<br>
+            <b>Total Estimated Compensation:</b> $1,900/month
           </p>
         </div>
       </div>
     </div>
 
+    <!-- Compensation JS -->
     <script src="/js/compensation.js" nonce="<%= nonce %>"></script>
-
-    <script nonce="<%= nonce %>">
-      document.addEventListener('DOMContentLoaded', function () {
-        const currentPage = window.location.pathname.split("/").pop();
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => {
-          if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-          } else {
-            link.classList.remove('active');
-          }
-        });
-
-        document.querySelectorAll('.rating-btn').forEach(button => {
-          button.addEventListener('click', () => {
-            button.classList.toggle('selected');
-          });
-        });
-      });
-    </script>
 
     <%- include('includes/footer') %>
   </div>
