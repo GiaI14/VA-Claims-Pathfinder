@@ -39,39 +39,41 @@ function vaRound(rating) {
 
 // Route: POST /compensation/calculate
 router.post("/calculate", (req, res) => {
-    let { currentRating, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
+    let { currentRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
-    // Validate input
-    currentRating = parseInt(currentRating);
-    if (isNaN(currentRating) || currentRating < 0 || currentRating > 100)
-        return res.json({ error: "Invalid current rating." });
+    // Validate input: must be an array of numbers
+    if (!Array.isArray(currentRatings) || currentRatings.length === 0) {
+        return res.json({ error: "currentRatings must be a non-empty array of numbers." });
+    }
+
+    currentRatings = currentRatings.map(r => parseFloat(r)).filter(r => r > 0);
 
     spouse = !!spouse;
     childrenUnder18 = childrenUnder18 || 0;
     childrenOver18 = childrenOver18 || 0;
     numParents = numParents || 0;
 
-    // Round current VA rating
-    const roundedRating = vaRound(currentRating);
+    // Calculate exact combined rating using VA sequential formula
+    let exactRating = 0;
+    let remaining = 100;
+    currentRatings.forEach(r => {
+        const add = (r * remaining) / 100;
+        exactRating += add;
+        remaining -= add;
+    });
 
-    // Calculate current compensation
+    // Round for VA compensation
+    const roundedRating = vaRound(Math.ceil(exactRating));
+
     const currentComp = calculateVACompensation(roundedRating, spouse, childrenUnder18, childrenOver18, numParents);
-
-    // Calculate 100% compensation
     const maxComp = calculateVACompensation(100, spouse, childrenUnder18, childrenOver18, numParents);
 
-    // Points missing to reach 100%
-    const missingPoints = 100 - roundedRating;
-
-    // Difference between max and current
-    const difference = maxComp - currentComp;
-
     res.json({
+        exactRating: exactRating.toFixed(2),
         roundedRating,
-        missingPoints,
         currentCompensation: currentComp.toFixed(2),
         maxCompensation: maxComp.toFixed(2),
-        difference: difference.toFixed(2),
+        difference: (maxComp - currentComp).toFixed(2)
     });
 });
 
