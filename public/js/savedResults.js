@@ -157,9 +157,7 @@ async function loadSavedSecondaryConditions() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-      },
-      credentials: 'same-origin'
+        credentials: 'same-origin'
     });
 
     if (!response.ok) throw new Error('Failed to fetch saved secondary conditions');
