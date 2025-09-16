@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %>
 
 <body>
   <div class="page-wrapper">
     <%- include('includes/header', { nonce: nonce }) %>
 
-    <h1 style="text-align:center; margin-top:40px;">Precise VA Disability Calculator</h1>
+    <h1 style="text-align:center; margin-top:40px;">VA Disability Compensation (Precise)</h1>
 
     <div id="calculator">
       <div id="rating-buttons">
@@ -24,9 +24,11 @@
         <label><input type="checkbox" id="spouse"> Spouse?</label>
         <label>Children Under 18: <input type="number" id="childrenUnder18" min="0" value="0"></label>
         <label>Children Over 18: <input type="number" id="childrenOver18" min="0" value="0"></label>
-        <label>Parents: 
+        <label>Parents:
           <select id="numParents">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
           </select>
         </label>
       </div>
@@ -37,7 +39,7 @@
     </div>
 
     <script nonce="<%= nonce %>">
-      async function calculatePrecise() {
+      async function calculateComp() {
         const ratings = [...document.querySelectorAll("#selected-ratings .rating-btn")]
           .map(btn => parseInt(btn.dataset.rating));
 
@@ -49,12 +51,17 @@
         const numParents = parseInt(document.getElementById("numParents").value) || 0;
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const res = await fetch("/api/calculate-disability-precise", {
+        const res = await fetch("/api/calculate-compensation", {
           method: "POST",
           headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken },
           body: JSON.stringify({ ratings, spouse, childrenUnder18, childrenOver18, numParents })
         });
         const data = await res.json();
+
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
 
         document.getElementById("exactRating").innerText = `${data.exactRating}%`;
         document.getElementById("roundedRating").innerText = `${data.roundedRating}%`;
@@ -69,15 +76,15 @@
             sel.className = "rating-btn selected";
             sel.dataset.rating = rating;
             sel.innerText = rating + "%";
-            sel.onclick = () => { sel.remove(); calculatePrecise(); };
+            sel.onclick = () => { sel.remove(); calculateComp(); };
             document.getElementById("selected-ratings").appendChild(sel);
-            calculatePrecise();
+            calculateComp();
           });
         });
 
         ["spouse","childrenUnder18","childrenOver18","numParents"].forEach(id => {
-          document.getElementById(id).addEventListener("change", calculatePrecise);
-          document.getElementById(id).addEventListener("input", calculatePrecise);
+          document.getElementById(id).addEventListener("change", calculateComp);
+          document.getElementById(id).addEventListener("input", calculateComp);
         });
       });
     </script>
