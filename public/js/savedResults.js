@@ -248,25 +248,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultsContainer = document.getElementById('saved-results');
   const secondaryContainer = document.getElementById('savedSecondaryContainer');
 
-  const showBtn = document.getElementById('showResultsBtn');
-  if (showBtn) {
-    showBtn.addEventListener('click', () => {
-      if (resultsContainer.style.display === 'none' || resultsContainer.style.display === '') {
+  const showResultsBtn = document.getElementById('showResultsBtn');
+  if (showResultsBtn) {
+    showResultsBtn.addEventListener('click', async () => {
+      if (resultsContainer.style.display === 'none' || !resultsContainer.style.display) {
         resultsContainer.style.display = 'block';
-        showBtn.textContent = "Hide VA Disability Results";
+        showResultsBtn.textContent = "Hide VA Disability Results";
+        await loadSavedResults(); // load only when button pressed
       } else {
         resultsContainer.style.display = 'none';
-        showBtn.textContent = "VA Disability Results";
+        showResultsBtn.textContent = "VA Disability Results";
       }
     });
   }
 
   const showSecondaryBtn = document.getElementById('showSecondaryBtn');
   if (showSecondaryBtn) {
-    showSecondaryBtn.addEventListener('click', () => {
-      if (secondaryContainer.style.display === 'none' || secondaryContainer.style.display === '') {
+    showSecondaryBtn.addEventListener('click', async () => {
+      if (secondaryContainer.style.display === 'none' || !secondaryContainer.style.display) {
         secondaryContainer.style.display = 'block';
         showSecondaryBtn.textContent = "Hide Secondary Conditions";
+        await loadSavedSecondaryConditions(); // load only when button pressed
       } else {
         secondaryContainer.style.display = 'none';
         showSecondaryBtn.textContent = "Show Secondary Conditions";
@@ -274,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 
 
 
