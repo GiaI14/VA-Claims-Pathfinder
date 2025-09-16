@@ -1,7 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+<link rel="stylesheet" href="/styles.folder/shared.css">
+
 <body>
   <div class="page-wrapper">
-    <%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
-<link rel="stylesheet" href="/styles.folder/shared.css">
+    <%- include('includes/header', { nonce: nonce }) %>
    
     <div id="disabilities-container">
       <h1 class="main-heading" style="text-align: center; margin-top: 60px; font-size: 1.5rem;">
@@ -88,3 +92,4 @@
     <%- include('includes/footer') %>
   </div>
 </body>
+</html>
