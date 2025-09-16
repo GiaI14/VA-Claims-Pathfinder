@@ -280,7 +280,10 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/compensation", (req, res) => {
-  res.render("compensation", { nonce: res.locals.nonce });
+  res.render("compensation", { 
+    nonce: res.locals.nonce, 
+    csrfToken: req.csrfToken()   // 🔹 add this
+  });
 });
 
 // Start server after DB connection
