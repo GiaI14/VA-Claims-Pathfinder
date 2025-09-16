@@ -249,31 +249,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const secondaryContainer = document.getElementById('savedSecondaryContainer');
 
   const showBtn = document.getElementById('showResultsBtn');
-const resultsContainer = document.getElementById('saved-results');
-if (showBtn) {
-  showBtn.addEventListener('click', () => {
-    if (resultsContainer.style.display === 'none') {
-      resultsContainer.style.display = 'block';
-      showBtn.textContent = "Hide VA Disability Results";
-    } else {
-      resultsContainer.style.display = 'none';
-      showBtn.textContent = "VA Disability Results";
-    }
-  });
-}
+  if (showBtn) {
+    showBtn.addEventListener('click', () => {
+      if (resultsContainer.style.display === 'none' || resultsContainer.style.display === '') {
+        resultsContainer.style.display = 'block';
+        showBtn.textContent = "Hide VA Disability Results";
+      } else {
+        resultsContainer.style.display = 'none';
+        showBtn.textContent = "VA Disability Results";
+      }
+    });
+  }
 
-const showSecondaryBtn = document.getElementById('showSecondaryBtn');
-const secondaryContainer = document.getElementById('savedSecondaryContainer');
-if (showSecondaryBtn) {
-  showSecondaryBtn.addEventListener('click', () => {
-    if (secondaryContainer.style.display === 'none') {
-      secondaryContainer.style.display = 'block';
-      showSecondaryBtn.textContent = "Hide Secondary Conditions";
-    } else {
-      secondaryContainer.style.display = 'none';
-      showSecondaryBtn.textContent = "Show Secondary Conditions";
-    }
-  });
-}
+  const showSecondaryBtn = document.getElementById('showSecondaryBtn');
+  if (showSecondaryBtn) {
+    showSecondaryBtn.addEventListener('click', () => {
+      if (secondaryContainer.style.display === 'none' || secondaryContainer.style.display === '') {
+        secondaryContainer.style.display = 'block';
+        showSecondaryBtn.textContent = "Hide Secondary Conditions";
+      } else {
+        secondaryContainer.style.display = 'none';
+        showSecondaryBtn.textContent = "Show Secondary Conditions";
+      }
+    });
+  }
+});
+
 
 
