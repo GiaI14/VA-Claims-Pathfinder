@@ -33,43 +33,44 @@ function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18
 }
 
 function vaRound(rating) {
-    if (rating % 10 >= 5) return Math.ceil(rating / 10) * 10;
-    return Math.floor(rating / 10) * 10;
+    return rating % 10 >= 5 ? Math.ceil(rating / 10) * 10 : Math.floor(rating / 10) * 10;
 }
 
 // Route: POST /compensation/calculate
 router.post("/calculate", (req, res) => {
     let { currentRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
-    // Validate input: must be an array of numbers
-    if (!Array.isArray(currentRatings) || currentRatings.length === 0) {
-        return res.json({ error: "currentRatings must be a non-empty array of numbers." });
+    // Validate ratings input
+    if (!Array.isArray(currentRatings) || currentRatings.length === 0 || currentRatings.some(r => typeof r !== 'number' || r < 0 || r > 100)) {
+        return res.json({ error: "Invalid or missing ratings input." });
     }
-
-    currentRatings = currentRatings.map(r => parseFloat(r)).filter(r => r > 0);
 
     spouse = !!spouse;
     childrenUnder18 = childrenUnder18 || 0;
     childrenOver18 = childrenOver18 || 0;
     numParents = numParents || 0;
 
-    // Calculate exact combined rating using VA sequential formula
-    let exactRating = 0;
+    // Sort ratings descending for VA combined rating logic
+    currentRatings.sort((a, b) => b - a);
+
+    // Calculate exact current combined rating
+    let exactCurrentRating = 0;
     let remaining = 100;
-    currentRatings.forEach(r => {
-        const add = (r * remaining) / 100;
-        exactRating += add;
+    for (const rating of currentRatings) {
+        const add = (rating / 100) * remaining;
+        exactCurrentRating += add;
         remaining -= add;
-    });
+    }
 
-    // Round for VA compensation
-    const roundedRating = vaRound(Math.ceil(exactRating));
+    // Rounded VA rating for compensation
+    const roundedRating = vaRound(Math.ceil(exactCurrentRating));
 
+    // Calculate current and max compensation
     const currentComp = calculateVACompensation(roundedRating, spouse, childrenUnder18, childrenOver18, numParents);
     const maxComp = calculateVACompensation(100, spouse, childrenUnder18, childrenOver18, numParents);
 
     res.json({
-        exactRating: exactRating.toFixed(2),
+        exactCurrentRating: exactCurrentRating.toFixed(2),   // decimal precise rating
         roundedRating,
         currentCompensation: currentComp.toFixed(2),
         maxCompensation: maxComp.toFixed(2),
