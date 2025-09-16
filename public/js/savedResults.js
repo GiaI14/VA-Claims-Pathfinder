@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadSavedSecondaryConditions(); // load only when button pressed
       } else {
         secondaryContainer.style.display = 'none';
-        showSecondaryBtn.textContent = "Show Secondary Conditions";
+        showSecondaryBtn.textContent = "Secondary Conditions";
       }
     });
   }
