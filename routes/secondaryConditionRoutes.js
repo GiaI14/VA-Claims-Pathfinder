@@ -110,6 +110,33 @@ router.get('/saved-secondary', async (req, res) => {
   }
 });
 
+router.delete('/delete-saved-secondary/:id', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Not authenticated' });
+
+  const id = req.params.id;
+  const userId = req.session.user.id;
+  const googleUserId = req.session.user.google_id;
+
+  try {
+    const db = getDb();
+    
+    // Delete only if the saved row belongs to this user
+    const [result] = await db.execute(
+      `DELETE FROM saved_secondary 
+       WHERE id = ? AND (user_id = ? OR google_user_id = ?)`,
+      [id, userId, googleUserId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Saved secondary condition not found' });
+    }
+
+    res.json({ success: true, message: 'Deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting saved secondary condition:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 
 
