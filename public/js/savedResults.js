@@ -152,7 +152,7 @@ async function loadSavedResults() {
 // =================== NEEDS DELETING ======================
 async function loadSavedSecondaryConditions() {
   try {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    
     const response = await fetch('/api/saved-secondary', { 
       method: 'GET',
       credentials: 'same-origin'
@@ -181,26 +181,28 @@ async function loadSavedSecondaryConditions() {
       const content = document.createElement('div');
       content.className = 'card-content';
 
-      item.results.forEach(entry => {
-        const disabilityDiv = document.createElement('div');
-        disabilityDiv.style.fontWeight = 'bold';
-        disabilityDiv.style.marginTop = '10px';
-        disabilityDiv.textContent = entry.disability || 'Unknown Disability';
-        content.appendChild(disabilityDiv);
+       item.results.forEach(entry => {
+        entry.conditions.forEach(condStr => {
+          // Split the saved string by "\nSecondary Conditions:" into condition_name and secondary_conditions
+          let [condition_name, secondary_conditions] = condStr.split('\nSecondary Conditions:');
+          if (!secondary_conditions) secondary_conditions = 'None';
+          if (!condition_name) condition_name = 'Unknown Condition';
 
-        if (entry.conditions && entry.conditions.length > 0) {
+          // Condition name
+          const titleDiv = document.createElement('div');
+          titleDiv.style.fontWeight = 'bold';
+          titleDiv.style.marginTop = '10px';
+          titleDiv.textContent = condition_name.trim();  // <-- show condition_name
+          content.appendChild(titleDiv);
+
+          // Secondary conditions list
           const ul = document.createElement('ul');
-          entry.conditions.forEach(cond => {
-            const li = document.createElement('li');
-            li.textContent = cond;
-            ul.appendChild(li);
-          });
+          const li = document.createElement('li');
+          li.textContent = secondary_conditions.trim(); // <-- show secondary_conditions
+          ul.appendChild(li);
           content.appendChild(ul);
-        } else {
-          content.innerHTML += '<p>No secondary conditions saved.</p>';
-        }
+        });
       });
-
       card.appendChild(content);
 
       // Delete button
