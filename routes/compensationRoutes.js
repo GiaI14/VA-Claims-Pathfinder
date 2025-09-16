@@ -1,7 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/calculate-disability-precise", (req, res) => {
+const basePay = {
+  10: 175.51,
+  20: 346.95,
+  30: 537.42,
+  40: 774.16,
+  50: 1102.04,
+  60: 1395.93,
+  70: 1759.19,
+  80: 2044.89,
+  90: 2297.96,
+  100: 3831.3,
+};
+
+// --- Example dependents table (copy your full one here) ---
+function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
+  // TODO: replace with your full dependent logic
+  return basePay[rating] || 0;
+}
+
+router.post("/calculate-compensation", (req, res) => {
   let { ratings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
   if (
@@ -34,17 +53,6 @@ router.post("/calculate-disability-precise", (req, res) => {
     exactRating % 10 >= 5
       ? Math.ceil(exactRating / 10) * 10
       : Math.floor(exactRating / 10) * 10;
-
-  // --- reuse your tables (can be imported or copied here) ---
-  const basePay = {
-    10: 175.51, 20: 346.95, 30: 537.42, 40: 774.16, 50: 1102.04,
-    60: 1395.93, 70: 1759.19, 80: 2044.89, 90: 2297.96, 100: 3831.3
-  };
-
-  function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
-    // keep your original function here
-    return basePay[rating] || 0;
-  }
 
   let totalCompensation = calculateVACompensation(
     roundedRating,
