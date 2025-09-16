@@ -282,7 +282,7 @@ app.use((err, req, res, next) => {
 app.get("/compensation", (req, res) => {
   res.render("compensation", { 
     nonce: res.locals.nonce, 
-    csrfToken: req.csrfToken()   // 🔹 add this
+    csrfToken: req.csrfToken() 
   });
 });
 
