@@ -119,13 +119,15 @@ router.delete('/delete-saved-secondary/:id', async (req, res) => {
 
   try {
     const db = getDb();
-    
-    // Delete only if the saved row belongs to this user
+    console.log('Deleting saved secondary:', { id, userId, googleUserId });
+
     const [result] = await db.execute(
       `DELETE FROM saved_secondary 
        WHERE id = ? AND (user_id = ? OR google_user_id = ?)`,
       [id, userId, googleUserId]
     );
+
+    console.log('Delete result:', result);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ success: false, message: 'Saved secondary condition not found' });
