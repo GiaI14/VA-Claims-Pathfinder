@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+
+<body>
+  <div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
+
+    <h1 style="text-align:center; margin-top:40px;">Precise VA Disability Calculator</h1>
+
+    <div id="calculator">
+      <div id="rating-buttons">
+        <h3>Select Ratings:</h3>
+        <div class="button-grid">
+          <% for (let i = 0; i <= 100; i += 10) { %>
+            <button class="rating-btn" data-rating="<%= i %>"><%= i %>%</button>
+          <% } %>
+        </div>
+      </div>
+
+      <div id="selected-ratings" style="margin: 10px 0;"></div>
+
+      <div>
+        <label><input type="checkbox" id="spouse"> Spouse?</label>
+        <label>Children Under 18: <input type="number" id="childrenUnder18" min="0" value="0"></label>
+        <label>Children Over 18: <input type="number" id="childrenOver18" min="0" value="0"></label>
+        <label>Parents: 
+          <select id="numParents">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+          </select>
+        </label>
+      </div>
+
+      <h2>Exact Combined Rating: <span id="exactRating">0%</span></h2>
+      <h2>Rounded VA Rating: <span id="roundedRating">0%</span></h2>
+      <h2>Estimated Compensation: <span id="result">$0</span></h2>
+    </div>
+
+    <script nonce="<%= nonce %>">
+      async function calculatePrecise() {
+        const ratings = [...document.querySelectorAll("#selected-ratings .rating-btn")]
+          .map(btn => parseInt(btn.dataset.rating));
+
+        if (ratings.length === 0) return;
+
+        const spouse = document.getElementById("spouse").checked;
+        const childrenUnder18 = parseInt(document.getElementById("childrenUnder18").value) || 0;
+        const childrenOver18 = parseInt(document.getElementById("childrenOver18").value) || 0;
+        const numParents = parseInt(document.getElementById("numParents").value) || 0;
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const res = await fetch("/api/calculate-disability-precise", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken },
+          body: JSON.stringify({ ratings, spouse, childrenUnder18, childrenOver18, numParents })
+        });
+        const data = await res.json();
+
+        document.getElementById("exactRating").innerText = `${data.exactRating}%`;
+        document.getElementById("roundedRating").innerText = `${data.roundedRating}%`;
+        document.getElementById("result").innerText = `$${data.totalCompensation}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".rating-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const rating = btn.dataset.rating;
+            const sel = document.createElement("button");
+            sel.className = "rating-btn selected";
+            sel.dataset.rating = rating;
+            sel.innerText = rating + "%";
+            sel.onclick = () => { sel.remove(); calculatePrecise(); };
+            document.getElementById("selected-ratings").appendChild(sel);
+            calculatePrecise();
+          });
+        });
+
+        ["spouse","childrenUnder18","childrenOver18","numParents"].forEach(id => {
+          document.getElementById(id).addEventListener("change", calculatePrecise);
+          document.getElementById(id).addEventListener("input", calculatePrecise);
+        });
+      });
+    </script>
+
+    <%- include('includes/footer') %>
+  </div>
+</body>
+</html>
