@@ -8,17 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Store selected ratings in an array
   let selectedRatings = [];
 
-  // Function to calculate VA-style combined rating (unrounded)
+  // Function to calculate VA-style combined rating (unrounded, in selection order)
   function calculateCombinedRating(ratings) {
     if (!ratings || ratings.length === 0) return 0;
-
-    // Sort descending
-    const sortedRatings = [...ratings].sort((a, b) => b - a);
 
     let remaining = 100;
     let combined = 0;
 
-    sortedRatings.forEach(rating => {
+    // Apply each rating sequentially, in the order chosen
+    ratings.forEach(rating => {
       const add = (rating * remaining) / 100;
       combined += add;
       remaining -= add;
