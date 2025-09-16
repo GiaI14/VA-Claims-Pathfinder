@@ -1,78 +1,75 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const currentPage = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
+document.addEventListener('DOMContentLoaded', () => {
+  const ratingButtons = document.querySelectorAll('.rating-btn');
+  const selectedRatingsContainer = document.getElementById('selected-ratings');
+  const currentRatingDisplay = document.getElementById('currentRating');
+  const desiredRatingInput = document.getElementById('desiredRating');
+  const pointsNeededDisplay = document.getElementById('pointsNeeded');
+
+  // Store selected ratings in an array
+  let selectedRatings = [];
+
+  // Function to calculate VA combined rating (unrounded)
+  function calculateCombinedRating(ratings) {
+    if (ratings.length === 0) return 0;
+
+    // Sort descending
+    ratings.sort((a, b) => b - a);
+
+    let remaining = 100;
+    let combined = 0;
+
+    ratings.forEach(rating => {
+      let add = (rating * remaining) / 100;
+      combined += add;
+      remaining -= add;
     });
 
-    // Current VA Rating input
-    const currentRatingInput = document.getElementById('currentRating');
+    return combined;
+  }
 
-    // Toggle Dependents Section
-    const toggleBtn = document.getElementById('toggle-dependents');
-    const dependentsContainer = document.getElementById('dependents-container');
+  // Function to update current rating display
+  function updateCurrentRating() {
+    const combined = calculateCombinedRating(selectedRatings);
+    currentRatingDisplay.textContent = combined.toFixed(1) + '%';
 
-    toggleBtn.addEventListener('click', () => {
-        const isVisible = dependentsContainer.style.display === 'block';
-        dependentsContainer.style.display = isVisible ? 'none' : 'block';
-        toggleBtn.textContent = isVisible ? 'Add Dependents' : 'Hide Dependents';
-    });
+    // Update points needed automatically if desired rating is set
+    const desired = parseFloat(desiredRatingInput.value) || 0;
+    const pointsNeeded = Math.max(0, desired - combined);
+    pointsNeededDisplay.textContent = pointsNeeded.toFixed(1);
+  }
 
-    // Dependents inputs
-    const spouse = document.getElementById("spouse");
-    const childrenUnder18 = document.getElementById("childrenUnder18");
-    const childrenOver18 = document.getElementById("childrenOver18");
-    const numParents = document.getElementById("numParents");
+  // Handle rating button clicks
+  ratingButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const rating = parseInt(button.dataset.rating);
 
-    [currentRatingInput, spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
-        el.addEventListener('input', calculateCompensation);
-        el.addEventListener('change', calculateCompensation);
-    });
-});
+      // Add button to selected list if not already
+      if (!selectedRatings.includes(rating)) {
+        selectedRatings.push(rating);
 
-async function calculateCompensation() {
-    const currentRating = parseInt(document.getElementById('currentRating').value) || 0;
-    const spouse = document.getElementById("spouse").checked;
-    const childrenUnder18 = parseInt(document.getElementById("childrenUnder18").value) || 0;
-    const childrenOver18 = parseInt(document.getElementById("childrenOver18").value) || 0;
-    const numParents = parseInt(document.getElementById("numParents").value) || 0;
+        // Create a removable button in selectedRatingsContainer
+        const selectedBtn = document.createElement('button');
+        selectedBtn.className = 'rating-btn selected';
+        selectedBtn.textContent = rating + '%';
+        selectedBtn.dataset.rating = rating;
 
-    try {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await fetch("/compensation/calculate-compensation", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
-            },
-            body: JSON.stringify({ 
-                ratings: [currentRating], 
-                spouse, 
-                childrenUnder18, 
-                childrenOver18, 
-                numParents 
-            })
+        selectedBtn.addEventListener('click', () => {
+          // Remove from array
+          selectedRatings = selectedRatings.filter(r => r !== rating);
+          selectedBtn.remove();
+          updateCurrentRating();
         });
 
-        const data = await response.json();
+        selectedRatingsContainer.appendChild(selectedBtn);
+      }
 
-        if (data.error) {
-            alert(`Error: ${data.error}`);
-            return;
-        }
+      updateCurrentRating();
+    });
+  });
 
-        const pointsMissing = 100 - parseFloat(data.exactRating);
+  // Update points needed when desired rating changes
+  desiredRatingInput.addEventListener('input', () => {
+    updateCurrentRating();
+  });
 
-        document.getElementById("exactRating").innerText = `${data.exactRating}%`;
-        document.getElementById("roundedRating").innerText = `${data.roundedRating}%`;
-        document.getElementById("pointsMissing").innerText = `${pointsMissing}%`;
-        document.getElementById("result").innerText = `$${data.totalCompensation}`;
-    } catch (error) {
-        alert("An error occurred while calculating VA compensation. Please try again.");
-        console.error("Error details:", error);
-    }
-}
+});
