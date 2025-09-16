@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function calculateCombinedRating(ratings) {
     if (ratings.length === 0) return 0;
 
-    // Sort descending
-    ratings.sort((a, b) => b - a);
-
     let remaining = 100;
     let combined = 0;
 
@@ -43,25 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => {
       const rating = parseInt(button.dataset.rating);
 
-      // Add button to selected list if not already
-      if (!selectedRatings.includes(rating)) {
-        selectedRatings.push(rating);
+      // Always add the rating (allow duplicates)
+      selectedRatings.push(rating);
 
-        // Create a removable button in selectedRatingsContainer
-        const selectedBtn = document.createElement('button');
-        selectedBtn.className = 'rating-btn selected';
-        selectedBtn.textContent = rating + '%';
-        selectedBtn.dataset.rating = rating;
+      // Create a removable button in selectedRatingsContainer
+      const selectedBtn = document.createElement('button');
+      selectedBtn.className = 'rating-btn selected';
+      selectedBtn.textContent = rating + '%';
+      selectedBtn.dataset.rating = rating;
 
-        selectedBtn.addEventListener('click', () => {
-          // Remove from array
-          selectedRatings = selectedRatings.filter(r => r !== rating);
-          selectedBtn.remove();
-          updateCurrentRating();
-        });
+      selectedBtn.addEventListener('click', () => {
+        // Remove this specific rating instance
+        const index = selectedRatings.indexOf(rating);
+        if (index > -1) selectedRatings.splice(index, 1);
+        selectedBtn.remove();
+        updateCurrentRating();
+      });
 
-        selectedRatingsContainer.appendChild(selectedBtn);
-      }
+      selectedRatingsContainer.appendChild(selectedBtn);
 
       updateCurrentRating();
     });
