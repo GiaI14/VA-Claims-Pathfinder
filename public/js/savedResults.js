@@ -245,30 +245,30 @@ async function loadSavedSecondaryConditions() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadSavedResults();
-  loadSavedSecondaryConditions();
-
-  const showBtn = document.getElementById('showResultsBtn');
   const resultsContainer = document.getElementById('saved-results');
-  if (showBtn) {
-    showBtn.addEventListener('click', () => {
-      if (resultsContainer.style.display === 'none') {
+  const secondaryContainer = document.getElementById('savedSecondaryContainer');
+
+  const showResultsBtn = document.getElementById('showResultsBtn');
+  if (showResultsBtn) {
+    showResultsBtn.addEventListener('click', async () => {
+      if (resultsContainer.style.display === 'none' || !resultsContainer.style.display) {
         resultsContainer.style.display = 'block';
-        showBtn.textContent = "Hide VA Disability Results";
+        showResultsBtn.textContent = "Hide VA Disability Results";
+        await loadSavedResults(); // load only when button pressed
       } else {
         resultsContainer.style.display = 'none';
-        showBtn.textContent = "VA Disability Results";
+        showResultsBtn.textContent = "VA Disability Results";
       }
     });
   }
 
   const showSecondaryBtn = document.getElementById('showSecondaryBtn');
-  const secondaryContainer = document.getElementById('savedSecondaryContainer');
   if (showSecondaryBtn) {
-    showSecondaryBtn.addEventListener('click', () => {
-      if (secondaryContainer.style.display === 'none') {
+    showSecondaryBtn.addEventListener('click', async () => {
+      if (secondaryContainer.style.display === 'none' || !secondaryContainer.style.display) {
         secondaryContainer.style.display = 'block';
         showSecondaryBtn.textContent = "Hide Secondary Conditions";
+        await loadSavedSecondaryConditions(); // load only when button pressed
       } else {
         secondaryContainer.style.display = 'none';
         showSecondaryBtn.textContent = "Show Secondary Conditions";
@@ -276,3 +276,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
