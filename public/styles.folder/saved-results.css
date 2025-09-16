@@ -26,12 +26,13 @@
 
 #saved-results h3,
 #savedSecondaryContainer h3 {
-  text-align: center;
+  text-align: center;  
   font-size: 18px;
   font-weight: bold;
   color: #1a73e8;
   margin-bottom: 15px;
 }
+
 /* Individual results containers */
 #saved-results,
 #savedSecondaryContainer {
