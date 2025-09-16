@@ -8,15 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Store selected ratings in an array
   let selectedRatings = [];
 
-  // Function to calculate VA combined rating (unrounded)
+  // Function to calculate VA-style combined rating (unrounded)
   function calculateCombinedRating(ratings) {
-    if (ratings.length === 0) return 0;
+    if (!ratings || ratings.length === 0) return 0;
+
+    // Sort descending
+    const sortedRatings = [...ratings].sort((a, b) => b - a);
 
     let remaining = 100;
     let combined = 0;
 
-    ratings.forEach(rating => {
-      let add = (rating * remaining) / 100;
+    sortedRatings.forEach(rating => {
+      const add = (rating * remaining) / 100;
       combined += add;
       remaining -= add;
     });
@@ -24,12 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Function to update current rating display
+  // Function to update current rating and points needed
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     currentRatingDisplay.textContent = combined.toFixed(1) + '%';
 
-    // Update points needed automatically if desired rating is set
     const desired = parseFloat(desiredRatingInput.value) || 0;
     const pointsNeeded = Math.max(0, desired - combined);
     pointsNeededDisplay.textContent = pointsNeeded.toFixed(1);
@@ -67,5 +69,4 @@ document.addEventListener('DOMContentLoaded', () => {
   desiredRatingInput.addEventListener('input', () => {
     updateCurrentRating();
   });
-
 });
