@@ -72,7 +72,8 @@ router.post('/secondary-conditions/save', async (req, res) => {
 
 router.get('/saved-secondary', async (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
-
+   console.log('Session user:', req.session.user);
+  
   const userId = req.session.user.id;
   const googleUserId = req.session.user.google_id;
 
@@ -99,7 +100,8 @@ router.get('/saved-secondary', async (req, res) => {
     query += `ORDER BY created_at DESC`;
 
     const [rows] = await db.execute(query, params);
-
+    console.log('Saved secondary results:', rows);
+    
     const parsed = rows.map(r => ({
       id: r.id,
       created_at: r.created_at,
