@@ -181,29 +181,31 @@ async function loadSavedSecondaryConditions() {
       const content = document.createElement('div');
       content.className = 'card-content';
 
-       item.results.forEach(entry => {
-  const conditionsArray = entry.conditions || []; // fallback to empty array
-  conditionsArray.forEach(condStr => {
-    // Split the string by "\nSecondary Conditions:" into condition_name and secondary_conditions
-    let [condition_name, secondary_conditions] = condStr.split('\nSecondary Conditions:');
-    if (!secondary_conditions) secondary_conditions = 'None';
-    if (!condition_name) condition_name = 'Unknown Condition';
+        item.results.forEach(entry => {
+        const conditionsArray = Array.isArray(entry.conditions) ? entry.conditions : [];
 
-    // Condition name
-    const titleDiv = document.createElement('div');
-    titleDiv.style.fontWeight = 'bold';
-    titleDiv.style.marginTop = '10px';
-    titleDiv.textContent = condition_name.trim();
-    content.appendChild(titleDiv);
+        conditionsArray.forEach(condStr => {
+          const div = document.createElement('div');
+          div.style.marginTop = '10px';
 
-    // Secondary conditions list
-    const ul = document.createElement('ul');
-    const li = document.createElement('li');
-    li.textContent = secondary_conditions.trim();
-    ul.appendChild(li);
-    content.appendChild(ul);
-  });
-});
+          // Display as "Disability: <condition_name>"
+          const disabilityDiv = document.createElement('div');
+          disabilityDiv.style.fontWeight = 'bold';
+          disabilityDiv.textContent = `Disability: ${condStr.split('\n')[0] || 'Unknown'}`;
+          div.appendChild(disabilityDiv);
+
+          // Display as "Secondary Conditions: ..."
+          const secondaryDiv = document.createElement('div');
+          const secondaryText = condStr.includes('\n')
+            ? condStr.split('\n')[1].replace('Secondary Conditions:', '').trim()
+            : 'None';
+          secondaryDiv.textContent = `Secondary Conditions: ${secondaryText}`;
+          div.appendChild(secondaryDiv);
+
+          content.appendChild(div);
+        });
+      });
+
       card.appendChild(content);
 
       // Delete button
