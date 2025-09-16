@@ -1,33 +1,59 @@
-#showResultsBtn {
-  display: inline-block;     /* keeps button width tight */
-    padding: 10px 20px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-bottom: 15px;       /* space below button */
-    transition: background-color 0.3s;
+/* Buttons */
+#showResultsBtn,
+#showSecondaryBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background-color 0.3s;
 }
 
-#showResultsBtn:hover {
+#showResultsBtn:hover,
+#showSecondaryBtn:hover {
   background-color: #0066cc;
 }
 
+/* Section wrapper */
 .record-section {
-    text-align: center; /* centers the button inside the section */
-    margin-bottom: 30px; /* space between different sections */
+  text-align: center;      /* center buttons */
+  margin-bottom: 30px;     /* space between sections */
 }
 
-/* Card container */
+/* Individual results containers */
+#saved-results,
+#savedSecondaryContainer {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Section titles */
+#saved-results h3,
+#savedSecondaryContainer h3 {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #1a73e8;
+}
+
+/* Individual cards */
 .result-card {
-  background-color: #f8f8f8;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px 15px;
   margin-bottom: 15px;
-  max-width: 600px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
@@ -38,20 +64,22 @@
   margin-bottom: 8px;
 }
 
-/* System name */
+/* System or condition content */
 .card-content > div {
   font-size: 13px;
   margin-bottom: 5px;
 }
 
-/* Table */
-.results-table td, .results-table th {
+/* Table inside cards */
+.results-table td,
+.results-table th {
   font-size: 13px;
   padding: 4px 6px;
   text-align: left;
   border-bottom: 1px solid #eee;
 }
 
+/* Delete button */
 .delete-btn {
   background-color: #e74c3c;
   color: white;
