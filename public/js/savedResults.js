@@ -39,7 +39,7 @@ async function loadSavedResults() {
     const response = await fetch('/get-saved-results', { credentials: 'same-origin' });
     const data = await response.json();
 
-    const container = document.getElementById('saved-results');
+    const container = document.getElementById('saved-results-cards');
     container.innerHTML = '';
 
     if (!data || data.length === 0) {
@@ -115,7 +115,7 @@ async function loadSavedResults() {
       });
 
       card.appendChild(content);
-
+////////////////////////////////////////////////////////////////////////////////////////////
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "delete-btn";
@@ -207,7 +207,7 @@ async function loadSavedSecondaryConditions() {
       });
 
       card.appendChild(content);
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
       // Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = "Delete";
