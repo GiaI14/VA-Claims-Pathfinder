@@ -279,6 +279,10 @@ app.use((err, req, res, next) => {
   res.status(500).send('An error occurred on the server');
 });
 
+app.get("/compensation", (req, res) => {
+  res.render("compensation", { nonce: res.locals.nonce });
+});
+
 // Start server after DB connection
 async function startServer() {
   try {
