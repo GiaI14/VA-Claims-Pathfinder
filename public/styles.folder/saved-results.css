@@ -24,8 +24,7 @@
   margin-bottom: 30px;     /* space between sections */
 }
 
-#saved-results h3,
-#savedSecondaryContainer h3 {
+h3 {
   text-align: center;
   margin-bottom: 15px;
   font-size: 18px;
