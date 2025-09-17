@@ -37,37 +37,30 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     const combined = calculateCombinedRating([...currentRatings]);
     if (combined >= targetBracket) return 0;
 
-    // Special handling for 90 -> 95 -> 100
+    // Special handling: 90+ → 95 → 100
     if (combined >= 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50;
+        return Math.ceil(rawPointsNeeded / 50) * 50; // VA rounds to 50
     }
 
-    // For all other cases, simulate adding points incrementally
-    let testRatings = [...currentRatings];
-    let pointsAdded = 0;
+    // Normal case
+    let nextBracket = targetBracket;
 
-    while (true) {
-        const remainingHealthy = 100 - calculateCombinedRating(testRatings);
-        // Add 1 point to simulate VA contribution
-        const increment = 1;
-        testRatings.push(increment);
-        pointsAdded += increment;
-
-        const newCombined = calculateCombinedRating(testRatings);
-        const roundedCombined = Math.ceil(newCombined / 5) * 5; // VA rounding
-
-        if (roundedCombined >= targetBracket) {
-            return pointsAdded;
-        }
-
-        // Safety to prevent infinite loops
-        if (pointsAdded > 1000) break;
+    // If next bracket is >= 95, adjust to 95 first
+    if (nextBracket >= 95) {
+        nextBracket = 95;
     }
 
-    return pointsAdded;
+    const remainingHealthy = 100 - combined;
+    const rawPointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
+
+    // Round to nearest 10 (VA increments)
+    const pointsNeeded = Math.ceil(rawPointsNeeded / 10) * 10;
+
+    return pointsNeeded;
 }
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
