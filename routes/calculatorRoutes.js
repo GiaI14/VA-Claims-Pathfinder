@@ -38,7 +38,7 @@ router.post('/calculate-disability', (req, res) => {
     remainingEfficiency -= decrement;
   }
 
-  exactRating = Math.ceil(exactRating);
+  exactRating = Math.floor(exactRating);
   console.log('Exact Rating after calculation:', exactRating);
 
   // VA rounding logic
