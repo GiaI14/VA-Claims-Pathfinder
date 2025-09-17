@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
  /////////////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
- function calculatePointsToTarget(currentRatings, targetBracket) {
+function calculatePointsToTarget(currentRatings, targetBracket) {
     const combined = calculateCombinedRating([...currentRatings]);
     if (combined >= targetBracket) return 0;
 
@@ -43,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Points needed to reach 95, rounded to 50 (VA rounds to 100)
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
+    }
+
+    // Handle combined rating above .5 bracket (15,25,35...) to next 10
+    const decimalPart = combined % 10;
+    if (decimalPart >= 5 && decimalPart < 10 && targetBracket < 95) {
+        // push to next 10-point bracket
+        const nextFullBracket = Math.ceil(combined / 10) * 10;
+        const remainingHealthy = 100 - combined;
+        const rawPointsNeeded = ((nextFullBracket - combined) * 100) / remainingHealthy;
+        return Math.ceil(rawPointsNeeded / 10) * 10;
     }
 
     // Adjust target for other brackets
