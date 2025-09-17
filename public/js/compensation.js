@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // VA brackets
   const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-  // Get next VA bracket above current
+  // Get next VA bracket based on current rating
   function getNextVaBracket(current) {
     for (let b of vaBrackets) {
       if (current < b) return b;
@@ -32,32 +32,43 @@ document.addEventListener('DOMContentLoaded', () => {
     return 100;
   }
 
-  // Calculate points needed to reach a target VA rating
-  function calculatePointsNeeded(currentCombined, target) {
-    if (currentCombined >= target) return 0;
+  // Calculate points needed using remaining healthy fraction
+  function calculatePointsToTarget(currentRatings, targetBracket) {
+    const combined = calculateCombinedRating([...currentRatings]);
+    if (combined >= targetBracket) return 0;
 
-    const remainingHealthy = 100 - currentCombined;
-    const rawPoints = ((target - currentCombined) / remainingHealthy) * 100;
+    // Adjust target for VA rounding
+    let target;
+    if (targetBracket >= 95) {
+        target = 100; // target = 100 when next bracket >= 95
+    } else {
+        target = targetBracket - 5; // next step below bracket
+    }
 
-    // Round up to nearest 5 points for VA increments
-    return Math.ceil(rawPoints / 5) * 5;
-  }
+    const remainingHealthy = 100 - combined;
+    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
-  // Update display
+    // VA awards points in multiples of 10 (except 95 bracket)
+    let pointsNeeded = Math.ceil(rawPointsNeeded / 10) * 10;
+
+    return pointsNeeded;
+}
+
+  
+  // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    const currentWhole = Math.floor(combined);
-    currentRatingDisplay.textContent = currentWhole + '%';
+    currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
     // Points to next VA bracket
-    const nextBracket = getNextVaBracket(currentWhole);
-    const pointsToNext = calculatePointsNeeded(combined, nextBracket);
+    const nextBracket = getNextVaBracket(combined);
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
     nextBracketDisplay.textContent = pointsToNext;
 
-    // Points needed to desired rating
+    // Points to desired rating (if entered)
     const desired = parseFloat(desiredRatingInput.value) || 0;
     if (desired > 0) {
-      const pointsNeeded = calculatePointsNeeded(combined, desired);
+      const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
       pointsNeededDisplay.textContent = pointsNeeded;
     } else {
       pointsNeededDisplay.textContent = '—';
