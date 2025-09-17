@@ -21,64 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Get the next VA bracket
+  // VA brackets
+  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
+
+  // Get next VA bracket based on current rating
   function getNextVaBracket(current) {
-    const brackets = [10,20,30,40,50,60,70,80,90,95,100];
-    for (let b of brackets) {
+    for (let b of vaBrackets) {
       if (current < b) return b;
     }
     return 100;
   }
 
-  // Calculate points to reach the next VA bracket
-  // Calculate points to reach next VA bracket
-function calculatePointsToNextBracket(currentRatings) {
-  const combined = calculateCombinedRating(currentRatings);
-  const currentWhole = Math.floor(combined);
-  const nextBracket = getNextVaBracket(currentWhole);
+  // Calculate points needed using remaining healthy fraction
+  function calculatePointsToTarget(currentRatings, target) {
+    let combined = calculateCombinedRating([...currentRatings]);
+    if (combined >= target) return 0;
 
-  if (combined >= nextBracket) return 0;
+    let remainingHealthy = 100 - combined;
+    // VA-style points needed formula
+    let pointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
-  const remainingHealthy = 100 - combined;
-  const pointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
-
-  // Round up to nearest 5 (VA increments)
-  return Math.ceil(pointsNeeded / 5) * 5;
-}
-
-// Calculate points needed to reach desired rating
-function calculatePointsNeededForDesired(currentRatings, desired) {
-  if (!desired || desired <= 0) return 0;
-  const combined = calculateCombinedRating(currentRatings);
-  if (combined >= desired) return 0;
-
-  const remainingHealthy = 100 - combined;
-  const pointsNeeded = ((desired - combined) * 100) / remainingHealthy;
-
-  // Round up to nearest 5 (VA increments)
-  return Math.ceil(pointsNeeded / 5) * 5;
-}
-
-  // Calculate points needed to reach desired rating
-  function calculatePointsNeededForDesired(currentRatings, desired) {
-    if (!desired || desired <= 0) return 0;
-    const combined = calculateCombinedRating([...currentRatings]);
-    if (combined >= desired) return 0;
-
-    let pointsNeeded = 0;
-    let testRatings = [...currentRatings];
-
-    while (true) {
-      pointsNeeded += 1;
-      const remaining = 100 - calculateCombinedRating(testRatings);
-      const increment = (1 * remaining) / 100;
-      testRatings.push(1); // simulate adding a single point
-      const newCombined = calculateCombinedRating(testRatings);
-
-      if (Math.ceil(newCombined / 5) * 5 >= desired) break;
-    }
-
-    return pointsNeeded;
+    // Round up to nearest 5 (VA increments)
+    return Math.ceil(pointsNeeded / 5) * 5;
   }
 
   // Update current rating and outputs
@@ -87,13 +51,14 @@ function calculatePointsNeededForDesired(currentRatings, desired) {
     currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
     // Points to next VA bracket
-    const pointsToNext = calculatePointsToNextBracket(selectedRatings);
+    const nextBracket = getNextVaBracket(combined);
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
     nextBracketDisplay.textContent = pointsToNext;
 
-    // Points to desired rating (if chosen)
+    // Points to desired rating (if entered)
     const desired = parseFloat(desiredRatingInput.value) || 0;
     if (desired > 0) {
-      const pointsNeeded = calculatePointsNeededForDesired(selectedRatings, desired);
+      const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
       pointsNeededDisplay.textContent = pointsNeeded;
     } else {
       pointsNeededDisplay.textContent = '—';
