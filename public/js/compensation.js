@@ -19,30 +19,37 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Calculate points needed to reach the desired VA rating
-  function calculatePointsNeeded(currentRatings, desired) {
-    if (!desired || desired <= 0) return 0;
-
-    const combined = calculateCombinedRating(currentRatings);
-
-    if (combined >= desired) return 0;
-
-    const remainingHealthy = 100 - combined;
-    const pointsNeeded = ((desired - combined) * 100) / remainingHealthy;
-
-    // Round up to nearest multiple of 5 (VA increments)
-    return Math.ceil(pointsNeeded / 5) * 5;
+ function getNextVaBracket(current) {
+  const brackets = [10,20,30,40,50,60,70,80,90,95,100];
+  for (let b of brackets) {
+    if (current < b) return b;
   }
+  return 100;
+}
+
+// Calculate points needed to reach the next VA bracket
+function calculatePointsNeeded(currentRatings) {
+  const combined = calculateCombinedRating(currentRatings);
+  const currentWhole = Math.floor(combined);
+
+  const nextBracket = getNextVaBracket(currentWhole);
+  if (currentWhole >= nextBracket) return 0;
+
+  const remainingHealthy = 100 - combined;
+  const pointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
+
+  // VA increments: round up to nearest 10
+  return Math.ceil(pointsNeeded / 10) * 10;
+}
 
   // Update current rating and points needed
-  function updateCurrentRating() {
-    const combined = calculateCombinedRating(selectedRatings);
-    currentRatingDisplay.textContent = Math.floor(combined) + '%';
+ function updateCurrentRating() {
+  const combined = calculateCombinedRating(selectedRatings);
+  currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-    const desired = parseFloat(desiredRatingInput.value) || 0;
-    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
-    pointsNeededDisplay.textContent = pointsNeeded;
-  }
+  const pointsNeeded = calculatePointsNeeded(selectedRatings);
+  pointsNeededDisplay.textContent = pointsNeeded;
+}
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
