@@ -60,7 +60,8 @@ router.post("/calculate", (req, res) => {
     remainingEfficiency -= decrement;
   }
 
-  // Ceiling to match VA exact rating logic
+ let exactDecimal = exactRating;
+ let exactWhole = Math.floor(exactDecimal);
   exactRating = Math.ceil(exactRating);
 
   // VA rounding for compensation
@@ -69,6 +70,9 @@ router.post("/calculate", (req, res) => {
       ? Math.ceil(exactRating / 10) * 10
       : Math.floor(exactRating / 10) * 10;
 
+ console.log("Current Exact Rating:", exactWhole + "%");
+ console.log("Rounded VA Rating:", roundedRating + "%"); 
+    
   // Calculate current compensation using rounded rating
   const currentComp = calculateVACompensation(roundedRating, spouse, childrenUnder18, childrenOver18, numParents);
 
