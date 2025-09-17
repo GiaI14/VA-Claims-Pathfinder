@@ -72,6 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
   pointsNeededDisplay.textContent = pointsNeeded;
 }
 
+  // Calculate points to desired VA rating if input exists
+  const desired = parseFloat(desiredRatingInput.value) || 0;
+  let pointsNeeded = '—';
+  if (desired > 0 && combined < desired) {
+    const remainingHealthy = 100 - combined;
+    pointsNeeded = Math.ceil(((desired - combined) * 100) / remainingHealthy);
+  }
+  pointsNeededDisplay.textContent = pointsNeeded;
+}
+
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
