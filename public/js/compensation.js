@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Points needed calculation uses the full decimal
   let pointsNeeded = 0;
   if (combined < desired) {
-    pointsNeeded = Math.ceil(desired - combined);
+     pointsNeeded = Math.ceil((100 * (desired - combined)) / (100 - combined));
   }
 
   pointsNeededDisplay.textContent = pointsNeeded;
