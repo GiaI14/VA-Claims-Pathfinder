@@ -26,14 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to update current rating and points needed
-  function updateCurrentRating() {
-    const combined = calculateCombinedRating(selectedRatings);
-    currentRatingDisplay.textContent = combined.toFixed(1) + '%';
+ function updateCurrentRating() {
+  const combined = calculateCombinedRating(selectedRatings);
 
-    const desired = parseFloat(desiredRatingInput.value) || 0;
-    const pointsNeeded = Math.max(0, desired - combined);
-    pointsNeededDisplay.textContent = pointsNeeded.toFixed(1);
-  }
+  // Truncate to whole number for display (current combined rating)
+  const combinedWhole = Math.floor(combined);
+
+  currentRatingDisplay.textContent = combinedWhole + '%';
+
+  const desired = parseFloat(desiredRatingInput.value) || 0;
+  const pointsNeeded = Math.max(0, desired - combinedWhole);
+  pointsNeededDisplay.textContent = pointsNeeded;
+}
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
