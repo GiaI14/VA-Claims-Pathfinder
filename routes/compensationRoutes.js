@@ -62,7 +62,7 @@ router.post("/calculate", (req, res) => {
 
   // VA rounding for compensation
   exactRating = Math.round(exactRating);
-    let roundedRating = let roundedRating = Math.round(exactRating / 10) * 10;
+    let roundedRating = Math.round(exactRating / 10) * 10;
       
 
   // Calculate current compensation using rounded rating
