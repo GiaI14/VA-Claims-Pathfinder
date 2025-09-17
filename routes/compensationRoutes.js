@@ -60,8 +60,6 @@ router.post("/calculate", (req, res) => {
     remainingEfficiency -= decrement;
   }
 
- let exactDecimal = exactRating;
-
   // VA rounding for compensation
   exactRating = Math.round(exactRating);
     let roundedRating =
