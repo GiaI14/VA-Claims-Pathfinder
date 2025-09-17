@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectedRatingsContainer = document.getElementById('selected-ratings');
   const currentRatingDisplay = document.getElementById('currentRating');
   const desiredRatingInput = document.getElementById('desiredRating');
+  const nextBracketDisplay = document.getElementById('nextBracketPoints');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
 
   let selectedRatings = [];
@@ -28,13 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return 100;
   }
 
-  // Calculate points needed
-  function calculatePointsNeeded(currentRatings, desired) {
+  // Calculate points needed for a target
+  function calculatePointsNeeded(currentRatings, target) {
     const combined = calculateCombinedRating(currentRatings);
-    const currentWhole = Math.floor(combined);
-
-    // If no desired chosen → use next VA bracket
-    const target = desired && desired > 0 ? desired : getNextVaBracket(currentWhole);
 
     if (combined >= target) return 0;
 
@@ -45,14 +42,25 @@ document.addEventListener('DOMContentLoaded', () => {
     return Math.ceil(rawPointsNeeded / 10) * 10;
   }
 
-  // Update current rating and points needed
+  // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    currentRatingDisplay.textContent = Math.floor(combined) + '%';
+    const currentWhole = Math.floor(combined);
+    currentRatingDisplay.textContent = currentWhole + '%';
 
+    // Always calculate next VA bracket points
+    const nextBracket = getNextVaBracket(currentWhole);
+    const pointsToNext = calculatePointsNeeded(selectedRatings, nextBracket);
+    nextBracketDisplay.textContent = pointsToNext;
+
+    // Only calculate desired if entered
     const desired = parseFloat(desiredRatingInput.value) || 0;
-    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
-    pointsNeededDisplay.textContent = pointsNeeded;
+    if (desired > 0) {
+      const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
+      pointsNeededDisplay.textContent = pointsNeeded;
+    } else {
+      pointsNeededDisplay.textContent = '—';
+    }
   }
 
   // Handle rating button clicks
