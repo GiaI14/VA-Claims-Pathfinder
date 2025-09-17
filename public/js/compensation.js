@@ -33,34 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
  /////////////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
-function calculatePointsToTarget(currentRatings, targetBracket) {
-    const combined = calculateCombinedRating([...currentRatings]);
-    if (combined >= targetBracket) return 0;
+function updateCurrentRating() {
+    const combined = calculateCombinedRating(selectedRatings);
+    currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-    // Special handling: 90+ → 95 → 100
-    if (combined >= 90 && targetBracket >= 95) {
-        const remainingHealthy = 100 - combined;
-        const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50; // VA rounds to 50
+    // Points to next VA bracket (VA math)
+    const nextBracket = getNextVaBracket(combined);
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    nextBracketDisplay.textContent = pointsToNext;
+
+    // Also calculate intuitive “raw points” to next bracket
+    let remaining = 100 - combined;
+    let rawPoints = nextBracket - combined;
+    // Round up to nearest 5% for display purposes
+    const displayPointsToNext = Math.ceil(rawPoints / 5) * 5;
+    document.getElementById('nextBracketPointsDisplay').textContent = displayPointsToNext;
+
+    // Points to desired rating (if entered)
+    const desired = parseFloat(desiredRatingInput.value) || 0;
+    if (desired > 0) {
+        const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+        pointsNeededDisplay.textContent = pointsNeeded;
+    } else {
+        pointsNeededDisplay.textContent = '—';
     }
-
-    // Normal case
-    let nextBracket = targetBracket;
-
-    // If next bracket is >= 95, adjust to 95 first
-    if (nextBracket >= 95) {
-        nextBracket = 95;
-    }
-
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
-
-    // Round to nearest 10 (VA increments)
-    const pointsNeeded = Math.ceil(rawPointsNeeded / 10) * 10;
-
-    return pointsNeeded;
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
