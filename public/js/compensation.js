@@ -37,21 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const combined = calculateCombinedRating([...currentRatings]);
     if (combined >= targetBracket) return 0;
 
-    // Special handling for 90% -> 95 (rounds to 100)
+    // Special handling: if current >= 90 and next bracket >= 95
     if (combined >= 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
+        // Points needed to reach 95, rounded to 50 (VA rounds to 100)
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // Determine the next VA bracket
-    let target = vaBrackets.find(b => b > combined);
-    if (!target) target = 100; // fallback if somehow not found
+    // Adjust target for other brackets
+    let target;
+    if (targetBracket >= 95) {
+        target = 100; 
+    } else {
+        target = targetBracket - 5;
+    }
 
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
-    // VA awards points in multiples of 10 (except special 90→95 handled above)
+    // VA awards points in multiples of 10
     return Math.ceil(rawPointsNeeded / 10) * 10;
 }
 
