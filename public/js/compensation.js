@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let selectedRatings = [];
 
-  // VA-style combined rating
+  // VA-style combined rating calculation
   function calculateCombinedRating(ratings) {
     let remaining = 100;
     let combined = 0;
@@ -19,30 +19,29 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Calculate points needed to reach desired rating
-  function calculatePointsNeeded(ratings) {
-    // VA increments (including 95)
-    const vaRatings = [10,20,30,40,50,60,70,80,90,95,100];
+  // Calculate points needed to reach the desired VA rating
+  function calculatePointsNeeded(currentRatings, desired) {
+    if (!desired || desired <= 0) return 0;
 
-    const combined = calculateCombinedRating(ratings);
+    const combined = calculateCombinedRating(currentRatings);
 
-    // Find the next VA rating
-    let nextVA = vaRatings.find(r => r > combined);
-    if (!nextVA) return 0; // Already at 100%
+    if (combined >= desired) return 0;
 
     const remainingHealthy = 100 - combined;
+    const pointsNeeded = ((desired - combined) * 100) / remainingHealthy;
 
-    // Points needed = fraction of remaining healthy to reach next VA
-    const pointsNeeded = ((nextVA - combined) / remainingHealthy) * 100;
-
-    return Math.ceil(pointsNeeded); // round up
+    // Round up to nearest multiple of 5 (VA increments)
+    return Math.ceil(pointsNeeded / 5) * 5;
   }
 
-  // Update display
+  // Update current rating and points needed
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     currentRatingDisplay.textContent = Math.floor(combined) + '%';
-    pointsNeededDisplay.textContent = calculatePointsNeeded(selectedRatings);
+
+    const desired = parseFloat(desiredRatingInput.value) || 0;
+    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
+    pointsNeededDisplay.textContent = pointsNeeded;
   }
 
   // Handle rating button clicks
