@@ -37,23 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const combined = calculateCombinedRating([...currentRatings]);
     if (combined >= targetBracket) return 0;
 
-    // Adjust target for VA rounding
-    let target;
-    if (targetBracket >= 95) {
-        target = 100; // target = 100 when next bracket >= 95
-    } else {
-        target = targetBracket - 5; // next step below bracket
+    const remainingHealthy = 100 - combined;
+    let adjustedTarget = targetBracket;
+
+    // Special VA rounding for 90→100
+    if (combined >= 90 && targetBracket >= 95) {
+        adjustedTarget = 95; // Calculate points needed to reach 95 first
     }
 
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
+    // Calculate raw points using remaining healthy fraction
+    let rawPointsNeeded = ((adjustedTarget - combined) * 100) / remainingHealthy;
 
-    // VA awards points in multiples of 10 (except 95 bracket)
-    let pointsNeeded = Math.ceil(rawPointsNeeded / 10) * 10;
+    // VA increments: multiples of 10 for most, 50 for 90→100
+    if (combined >= 90 && targetBracket >= 95) {
+        rawPointsNeeded = Math.ceil(rawPointsNeeded / 50) * 50;
+    } else if (adjustedTarget === 95) {
+        rawPointsNeeded = Math.ceil(rawPointsNeeded / 5) * 5;
+    } else {
+        rawPointsNeeded = Math.ceil(rawPointsNeeded / 10) * 10;
+    }
 
-    return pointsNeeded;
+    return rawPointsNeeded;
 }
-
   
   // Update current rating and outputs
   function updateCurrentRating() {
