@@ -62,12 +62,9 @@ router.post("/calculate", (req, res) => {
 
   // VA rounding for compensation
   exactRating = Math.round(exactRating);
-    let roundedRating =
-      exactRating % 10 >= 5
-        ? Math.ceil(exactRating / 10) * 10
-        : Math.floor(exactRating / 10) * 10;
+    let roundedRating = let roundedRating = Math.round(exactRating / 10) * 10;
+      
 
-    
   // Calculate current compensation using rounded rating
   const currentComp = calculateVACompensation(roundedRating, spouse, childrenUnder18, childrenOver18, numParents);
 
