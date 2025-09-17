@@ -35,7 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
   currentRatingDisplay.textContent = combinedWhole + '%';
 
   const desired = parseFloat(desiredRatingInput.value) || 0;
-  const pointsNeeded = Math.max(0, desired - combinedWhole);
+    let remainingEfficiency = 100;
+  selectedRatings.forEach(r => {
+    remainingEfficiency -= (r / 100) * remainingEfficiency;
+  });
+
+  let pointsNeeded = 0;
+  if (desired > combined) {
+    // desired remaining efficiency fraction
+    const desiredRemaining = 100 - desired;
+    pointsNeeded = Math.ceil(remainingEfficiency - desiredRemaining);
+  }
+  // -------------------------------------------
+
   pointsNeededDisplay.textContent = pointsNeeded;
 }
 
