@@ -35,19 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update display
  function updateCurrentRating() {
   const combined = calculateCombinedRating(selectedRatings);
+  currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-  // Display truncated for current rating
-  const combinedDisplay = Math.floor(combined);
-  currentRatingDisplay.textContent = combinedDisplay + '%';
-
-  const desired = parseFloat(desiredRatingInput.value) || 0;
-
-  // Points needed calculation uses the full decimal
-  let pointsNeeded = 0;
-  if (combined < desired) {
-     pointsNeeded = Math.ceil((100 * (desired - combined)) / (100 - combined));
-  }
-
+  const pointsNeeded = calculatePointsNeeded(selectedRatings);
   pointsNeededDisplay.textContent = pointsNeeded;
 }
 
