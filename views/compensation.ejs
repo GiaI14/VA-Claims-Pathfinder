@@ -42,11 +42,16 @@
 
           <!-- Current and Desired Ratings -->
           <div id="ratings-inputs">
-            <label>Current Combined Rating: <span id="currentRating">0%</span></label><br><br>
-            <label for="desiredRating">Desired VA Rating (%):</label>
-            <input type="number" id="desiredRating" min="0" max="100" value="0">
-          </div>
+  <label>Current Combined Rating: <span id="currentRating">0%</span></label><br><br>
 
+  <label for="desiredRating">Desired VA Rating (%):</label>
+  <select id="desiredRating">
+    <option value="">Select rating</option>
+    <% for (let i = 10; i <= 100; i += 10) { %>
+      <option value="<%= i %>"><%= i %>%</option>
+    <% } %>
+  </select>
+</div>
           <hr>
 
           <!-- Dependents Section -->
