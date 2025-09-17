@@ -20,20 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Calculate points needed to reach desired rating
- function calculatePointsNeeded(currentRatings, desired) {
-    if (!desired || desired <= 0) return 0;
+ function calculatePointsNeeded(currentRatings) {
+  const combined = calculateCombinedRating(currentRatings);
 
-    const combined = calculateCombinedRating(currentRatings);
-    if (combined >= desired) return 0;
+  // VA rounds 95+ to 100, so calculate points needed to reach 95
+  if (combined >= 95) return 0;
 
-    const remainingEfficiency = 100 - combined;
+  const remainingEfficiency = 100 - combined;
+  const pointsNeeded = (95 - combined) * 100 / remainingEfficiency;
 
-    // VA-style points needed
-    const pointsNeeded = (100 * (desired - combined)) / remainingEfficiency;
-
-    return Math.ceil(pointsNeeded);
+  return Math.ceil(pointsNeeded);
 }
-
 
   // Update display
  function updateCurrentRating() {
