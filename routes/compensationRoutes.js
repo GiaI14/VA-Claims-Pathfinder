@@ -61,17 +61,14 @@ router.post("/calculate", (req, res) => {
   }
 
  let exactDecimal = exactRating;
- let exactWhole = Math.floor(exactDecimal);
 
   // VA rounding for compensation
-  let roundedRating =
-    exactWhole % 10 >= 5
-      ? Math.ceil(exactWhole / 10) * 10
-      : Math.floor(exactWhole / 10) * 10;
+  exactRating = Math.round(exactRating);
+    let roundedRating =
+      exactRating % 10 >= 5
+        ? Math.ceil(exactRating / 10) * 10
+        : Math.floor(exactRating / 10) * 10;
 
-console.log("Exact Rating (decimal):", exactDecimal.toFixed(1) + "%");
-console.log("Exact Rating (VA whole):", exactWhole + "%");
-console.log("Rounded VA Rating:", roundedRating + "%");
     
   // Calculate current compensation using rounded rating
   const currentComp = calculateVACompensation(roundedRating, spouse, childrenUnder18, childrenOver18, numParents);
