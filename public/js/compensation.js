@@ -8,11 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let selectedRatings = [];
 
-  // VA-style combined rating calculation
+  // VA-style combined rating calculation (highest first)
   function calculateCombinedRating(ratings) {
+    const sorted = [...ratings].sort((a, b) => b - a); // highest first
     let remaining = 100;
     let combined = 0;
-    ratings.forEach(r => {
+    sorted.forEach(r => {
       const add = (r * remaining) / 100;
       combined += add;
       remaining -= add;
@@ -20,38 +21,78 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // VA brackets
+  // Get the next VA bracket
   function getNextVaBracket(current) {
-    const brackets = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100];
+    const brackets = [10,20,30,40,50,60,70,80,90,95,100];
     for (let b of brackets) {
       if (current < b) return b;
     }
     return 100;
   }
 
+  // Calculate points to reach the next VA bracket
+  function calculatePointsToNextBracket(currentRatings) {
+    const combined = calculateCombinedRating([...currentRatings]);
+    const nextBracket = getNextVaBracket(combined);
+
+    let pointsNeeded = 0;
+    let testRatings = [...currentRatings];
+
+    while (true) {
+      pointsNeeded += 1;
+      const remaining = 100 - calculateCombinedRating(testRatings);
+      const increment = (1 * remaining) / 100;
+      testRatings.push(1); // simulate adding a single point
+      const newCombined = calculateCombinedRating(testRatings);
+
+      // Stop when VA rounding reaches the next bracket
+      if (Math.ceil(newCombined / 5) * 5 >= nextBracket) {
+        break;
+      }
+    }
+
+    return pointsNeeded;
+  }
+
+  // Calculate points needed to reach desired rating
+  function calculatePointsNeededForDesired(currentRatings, desired) {
+    if (!desired || desired <= 0) return 0;
+    const combined = calculateCombinedRating([...currentRatings]);
+    if (combined >= desired) return 0;
+
+    let pointsNeeded = 0;
+    let testRatings = [...currentRatings];
+
+    while (true) {
+      pointsNeeded += 1;
+      const remaining = 100 - calculateCombinedRating(testRatings);
+      const increment = (1 * remaining) / 100;
+      testRatings.push(1); // simulate adding a single point
+      const newCombined = calculateCombinedRating(testRatings);
+
+      if (Math.ceil(newCombined / 5) * 5 >= desired) break;
+    }
+
+    return pointsNeeded;
+  }
+
   // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    const currentWhole = Math.floor(combined);
-    currentRatingDisplay.textContent = currentWhole + '%';
+    currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
     // Points to next VA bracket
-    const nextBracket = getNextVaBracket(currentWhole);
-    let pointsToNext = 0;
-    if (combined < nextBracket) {
-      const remainingHealthy = 100 - combined;
-      pointsToNext = Math.ceil(((nextBracket - combined) * 100) / remainingHealthy);
-    }
-    nextBracketDisplay.textContent = pointsToNext > 0 ? pointsToNext : 0;
+    const pointsToNext = calculatePointsToNextBracket(selectedRatings);
+    nextBracketDisplay.textContent = pointsToNext;
 
-    // Points to desired rating
+    // Points to desired rating (if chosen)
     const desired = parseFloat(desiredRatingInput.value) || 0;
-    let pointsNeeded = '—';
-    if (desired > 0 && combined < desired) {
-      const remainingHealthy = 100 - combined;
-      pointsNeeded = Math.ceil(((desired - combined) * 100) / remainingHealthy);
+    if (desired > 0) {
+      const pointsNeeded = calculatePointsNeededForDesired(selectedRatings, desired);
+      pointsNeededDisplay.textContent = pointsNeeded;
+    } else {
+      pointsNeededDisplay.textContent = '—';
     }
-    pointsNeededDisplay.textContent = pointsNeeded;
   }
 
   // Handle rating button clicks
@@ -77,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Update points when desired rating input changes
+  // Update when desired rating changes
   desiredRatingInput.addEventListener('input', () => {
     updateCurrentRating();
   });
