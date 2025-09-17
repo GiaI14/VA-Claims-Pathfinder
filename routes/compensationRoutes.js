@@ -56,8 +56,8 @@ router.post("/calculate", (req, res) => {
 
   for (const rating of ratings) {
     const decrement = (rating / 100) * remainingEfficiency;
-    exactRating += Math.floor(decrement);
-    remainingEfficiency -= Math.floor(decrement);
+    exactRating += decrement;
+    remainingEfficiency -= decrement;
   }
 
   // Ceiling to match VA exact rating logic
