@@ -42,10 +42,10 @@ function calculatePointsNeeded(currentRatings, desired) {
   const combined = calculateCombinedRating(selectedRatings);
   currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-  const pointsNeeded = calculatePointsNeeded(selectedRatings);
+  const desired = parseFloat(desiredRatingInput.value) || 0;
+  const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
   pointsNeededDisplay.textContent = pointsNeeded;
 }
-
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
