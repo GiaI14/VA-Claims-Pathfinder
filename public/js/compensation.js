@@ -39,18 +39,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const remainingHealthy = 100 - combined;
 
-    // Special handling for 90 → 95/100
+    // Special case: 90 → 95 / 100
     if (combined >= 90 && targetBracket >= 95) {
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50; // rounds to 50 points → 100%
+        return 50; // VA rounds 90+ to 100 after adding 50 points
     }
 
-    // Normal case: push to next VA bracket using remaining healthy
+    // Normal case
     const rawPointsNeeded = ((targetBracket - combined) * 100) / remainingHealthy;
 
-    // VA awards points in multiples of 10
+    // Only round up if > 0
+    if (rawPointsNeeded <= 10) return 10;
     return Math.ceil(rawPointsNeeded / 10) * 10;
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
