@@ -30,18 +30,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Calculate points needed for a target
-  function calculatePointsNeeded(currentRatings, target) {
-    const combined = calculateCombinedRating(currentRatings);
+  function calculatePointsNeeded(currentRatings, desired) {
+  const combined = calculateCombinedRating([...currentRatings]);
+  if (combined >= desired) return 0;
 
-    if (combined >= target) return 0;
+  let pointsTried = 0;
+  let testRatings = [...currentRatings];
 
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
+  // Keep adding points in 10% increments until target reached
+  while (true) {
+    pointsTried += 10;
+    testRatings.push(10); // simulate adding a 10% disability
+    const newCombined = calculateCombinedRating([...testRatings]);
 
-    // Round up to nearest 10 (VA increments)
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+    if (newCombined >= desired) {
+      return pointsTried;
+    }
   }
-
+}
   // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
