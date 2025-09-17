@@ -33,18 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Calculate points needed using remaining healthy fraction
-  function calculatePointsToTarget(currentRatings, target) {
-    let combined = calculateCombinedRating([...currentRatings]);
-    if (combined >= target) return 0;
+  function calculatePointsToTarget(currentRatings, targetBracket) {
+    const combined = calculateCombinedRating([...currentRatings]);
+    if (combined >= targetBracket) return 0;
 
-    let remainingHealthy = 100 - combined;
-    // VA-style points needed formula
-    let pointsNeeded = ((target - combined) * 100) / remainingHealthy;
+    // For VA rounding, need only 0.5 below the next bracket
+    const target = targetBracket === 100 ? 100 : targetBracket - 5;
+
+    const remainingHealthy = 100 - combined;
+    const pointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
     // Round up to nearest 5 (VA increments)
     return Math.ceil(pointsNeeded / 5) * 5;
-  }
-
+}
   // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
