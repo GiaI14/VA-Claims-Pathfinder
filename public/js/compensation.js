@@ -38,14 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Update display
-  function updateCurrentRating() {
-    const combined = calculateCombinedRating(selectedRatings);
-    currentRatingDisplay.textContent = combined.toFixed(1) + '%';
+ function updateCurrentRating() {
+  const combined = calculateCombinedRating(selectedRatings);
 
-    const desired = parseFloat(desiredRatingInput.value) || 0;
-    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
-    pointsNeededDisplay.textContent = pointsNeeded;
+  // Display truncated for current rating
+  const combinedDisplay = Math.floor(combined);
+  currentRatingDisplay.textContent = combinedDisplay + '%';
+
+  const desired = parseFloat(desiredRatingInput.value) || 0;
+
+  // Points needed calculation uses the full decimal
+  let pointsNeeded = 0;
+  if (combined < desired) {
+    pointsNeeded = Math.ceil(desired - combined);
   }
+
+  pointsNeededDisplay.textContent = pointsNeeded;
+}
+
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
