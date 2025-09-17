@@ -185,13 +185,14 @@ router.post("/calculate", (req, res) => {
   const difference = maxComp - currentComp;
 
   res.json({
-    exactDecimal: exactDecimal.toFixed(2) + "%", // 66.40%
-    exactWhole: exactWhole + "%",                // 66%
-    roundedRating: roundedRating + "%",          // 70%
-    currentCompensation: currentComp.toFixed(2),
-    maxCompensation: maxComp.toFixed(2),
-    missingPoints,
-    difference: difference.toFixed(2),
+  exactDecimal: exactDecimal.toFixed(2) + "%", // 66.40%
+  exactWhole: exactWhole + "%",                // 66%
+  roundedRating: roundedRating + "%",          // 70%
+  currentCombinedRating: exactWhole + "%",     // 👈 use this for frontend display
+  currentCompensation: currentComp.toFixed(2),
+  maxCompensation: maxComp.toFixed(2),
+  missingPoints,
+  difference: difference.toFixed(2),
   });
 });
 
