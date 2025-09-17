@@ -37,37 +37,36 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     const combined = calculateCombinedRating([...currentRatings]);
     if (combined >= targetBracket) return 0;
 
-    // Special handling: if current >= 90 and next bracket >= 95
+    // Special handling for 90 -> 95 -> 100
     if (combined >= 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
-        // Points needed to reach 95, rounded to 50 (VA rounds to 100)
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // Handle combined rating above .5 bracket (15,25,35...) to next 10
-    const decimalPart = combined % 10;
-    if (decimalPart >= 5 && decimalPart < 10 && targetBracket < 95) {
-        // push to next 10-point bracket
-        const nextFullBracket = Math.ceil(combined / 10) * 10;
-        const remainingHealthy = 100 - combined;
-        const rawPointsNeeded = ((nextFullBracket - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 10) * 10;
+    // For all other cases, simulate adding points incrementally
+    let testRatings = [...currentRatings];
+    let pointsAdded = 0;
+
+    while (true) {
+        const remainingHealthy = 100 - calculateCombinedRating(testRatings);
+        // Add 1 point to simulate VA contribution
+        const increment = 1;
+        testRatings.push(increment);
+        pointsAdded += increment;
+
+        const newCombined = calculateCombinedRating(testRatings);
+        const roundedCombined = Math.ceil(newCombined / 5) * 5; // VA rounding
+
+        if (roundedCombined >= targetBracket) {
+            return pointsAdded;
+        }
+
+        // Safety to prevent infinite loops
+        if (pointsAdded > 1000) break;
     }
 
-    // Adjust target for other brackets
-    let target;
-    if (targetBracket >= 95) {
-        target = 100; 
-    } else {
-        target = targetBracket - 5;
-    }
-
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
-
-    // VA awards points in multiples of 10
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+    return pointsAdded;
 }
 
 
