@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentRatingDisplay = document.getElementById('currentRating');
   const desiredRatingInput = document.getElementById('desiredRating');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
-  const nextPercentDisplay = document.getElementById('nextPercentNeeded'); // new line
 
   let selectedRatings = [];
 
@@ -20,29 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Calculate points needed to reach a specific target
-  function calculatePointsNeeded(currentRatings, target) {
-    if (!target || target <= 0) return 0;
+  // VA brackets
+  function getNextVaBracket(current) {
+    const brackets = [10,20,30,40,50,60,70,80,90,95,100];
+    for (let b of brackets) {
+      if (current < b) return b;
+    }
+    return 100;
+  }
 
+  // Calculate points needed
+  function calculatePointsNeeded(currentRatings, desired) {
     const combined = calculateCombinedRating(currentRatings);
+    const currentWhole = Math.floor(combined);
+
+    // If no desired chosen → use next VA bracket
+    const target = desired && desired > 0 ? desired : getNextVaBracket(currentWhole);
+
     if (combined >= target) return 0;
 
     const remainingHealthy = 100 - combined;
-    const pointsNeeded = ((target - combined) * 100) / remainingHealthy;
+    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
-    return Math.ceil(pointsNeeded / 5) * 5; // VA increments
-  }
-
-  // Calculate points needed to reach the next % increase
-  function calculatePointsToNextPercent(currentRatings) {
-    const combined = calculateCombinedRating(currentRatings);
-    const nextPercent = Math.floor(combined) + 1;
-    if (nextPercent > 100) return 0;
-
-    const remainingHealthy = 100 - combined;
-    const pointsNeeded = ((nextPercent - combined) * 100) / remainingHealthy;
-
-    return Math.ceil(pointsNeeded / 5) * 5;
+    // Round up to nearest 10 (VA increments)
+    return Math.ceil(rawPointsNeeded / 10) * 10;
   }
 
   // Update current rating and points needed
@@ -50,18 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const combined = calculateCombinedRating(selectedRatings);
     currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-    // Always show points to next percent
-    const nextPoints = calculatePointsToNextPercent(selectedRatings);
-    nextPercentDisplay.textContent = nextPoints;
-
-    // Only show desired rating points if entered
     const desired = parseFloat(desiredRatingInput.value) || 0;
-    if (desired > 0) {
-      const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
-      pointsNeededDisplay.textContent = pointsNeeded;
-    } else {
-      pointsNeededDisplay.textContent = '—';
-    }
+    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
+    pointsNeededDisplay.textContent = pointsNeeded;
   }
 
   // Handle rating button clicks
