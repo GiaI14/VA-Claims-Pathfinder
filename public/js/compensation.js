@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ratingButtons = document.querySelectorAll('.rating-btn');
   const selectedRatingsContainer = document.getElementById('selected-ratings');
   const currentRatingDisplay = document.getElementById('currentRating');
+  const desiredRatingInput = document.getElementById('desiredRating');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
 
   let selectedRatings = [];
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return combined;
   }
 
-  // Find next VA bracket (10,20,...,90,95,100)
+  // VA brackets
   function getNextVaBracket(current) {
     const brackets = [10,20,30,40,50,60,70,80,90,95,100];
     for (let b of brackets) {
@@ -27,27 +28,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return 100;
   }
 
-  // Calculate points needed to reach the next VA bracket
-  function calculatePointsNeeded(currentRatings) {
+  // Calculate points needed
+  function calculatePointsNeeded(currentRatings, desired) {
     const combined = calculateCombinedRating(currentRatings);
     const currentWhole = Math.floor(combined);
 
-    const nextBracket = getNextVaBracket(currentWhole);
-    if (currentWhole >= nextBracket) return 0;
+    // If no desired chosen → use next VA bracket
+    const target = desired && desired > 0 ? desired : getNextVaBracket(currentWhole);
+
+    if (combined >= target) return 0;
 
     const remainingHealthy = 100 - combined;
-    const pointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
+    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
 
-    // VA increments: round up to nearest 10
-    return Math.ceil(pointsNeeded / 10) * 10;
+    // Round up to nearest 10 (VA increments)
+    return Math.ceil(rawPointsNeeded / 10) * 10;
   }
 
-  // Update current rating + points needed
+  // Update current rating and points needed
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     currentRatingDisplay.textContent = Math.floor(combined) + '%';
 
-    const pointsNeeded = calculatePointsNeeded(selectedRatings);
+    const desired = parseFloat(desiredRatingInput.value) || 0;
+    const pointsNeeded = calculatePointsNeeded(selectedRatings, desired);
     pointsNeededDisplay.textContent = pointsNeeded;
   }
 
@@ -72,5 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedRatingsContainer.appendChild(selectedBtn);
       updateCurrentRating();
     });
+  });
+
+  // Update when desired rating changes
+  desiredRatingInput.addEventListener('input', () => {
+    updateCurrentRating();
   });
 });
