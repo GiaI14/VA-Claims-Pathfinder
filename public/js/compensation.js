@@ -34,29 +34,52 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    const combined = calculateCombinedRating([...currentRatings]);
+  const combined = calculateCombinedRating([...currentRatings]); // raw combined %
 
-    // Find the next ".5 step" that rounds up to the targetBracket
-    let effectiveTarget = targetBracket - 5;
+  // quick clamp
+  if (combined >= 100) return { points: 0, rawPercentNeeded: 0, effectiveRawTarget: 100, effectiveRoundTarget: 100 };
 
-    if (combined >= effectiveTarget) {
-        effectiveTarget += 10;
-    }
+  // Treat requested targets >=95 as a request for the "100" rounded bracket
+  const requestedRoundTarget = targetBracket >= 95 ? 100 : targetBracket;
 
-    if (combined >= effectiveTarget) return 0;
+  // Current VA-displayed rounded rating (multiples of 10)
+  const currentRounded = Math.round(combined / 10) * 10;
 
-    // Special handling ONLY if exactly at 90 → need to hit 95 (rounds to 100)
-    if (Math.floor(combined) === 90 && targetBracket >= 95) {
-        const remainingHealthy = 100 - combined;
-        const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 10) * 10;
-    }
+  // If display already meets/exceeds requested target, aim for the next rounded bracket
+  let effectiveRoundTarget = requestedRoundTarget;
+  if (currentRounded >= requestedRoundTarget) {
+    effectiveRoundTarget = Math.min(requestedRoundTarget + 10, 100);
+  }
 
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
+  // The RAW % that will round to effectiveRoundTarget:
+  // - to be rounded to N (10,20,...,90) you must reach N-5 (e.g. 70 <- 65)
+  // - to be rounded to 100 you must reach 95
+  const effectiveRawTarget = (effectiveRoundTarget === 100) ? 95 : (effectiveRoundTarget - 5);
 
-    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
+  // How many raw % points are needed
+  const rawPercentNeeded = Math.max(0, effectiveRawTarget - combined);
+  if (rawPercentNeeded === 0) return { points: 0, rawPercentNeeded: 0, effectiveRawTarget, effectiveRoundTarget };
+
+  // Your original "points" formula (keeps current behavior):
+  const remainingHealthy = 100 - combined;
+  const rawPointsNeeded = (rawPercentNeeded * 100) / remainingHealthy;
+  const points = Math.ceil(rawPointsNeeded / 10) * 10; // returned in multiples of 10
+
+  // ---- OPTIONAL ALTERNATE POINTS MAPPING ----
+  // If you prefer "1 raw % => 10 points" (so 94 -> 95 becomes exactly 10 points),
+  // uncomment the next line and return `pointsByPercent` instead of `points`.
+  //
+  // const pointsByPercent = Math.ceil(rawPercentNeeded) * 10;
+
+  return {
+    points,                    // current-formula points (multiples of 10)
+    //pointsByPercent: pointsByPercent, // optional alternate mapping
+    rawPercentNeeded,          // e.g. 1 for 94 -> 95
+    effectiveRawTarget,        // raw threshold being aimed for (e.g. 95)
+    effectiveRoundTarget       // rounded bracket (e.g. 100)
+  };
 }
+
 
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
