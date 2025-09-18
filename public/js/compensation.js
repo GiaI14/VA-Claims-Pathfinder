@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    const combined = calculateCombinedRating([...currentRatings]);
+    const combinedRaw = calculateCombinedRating([...currentRatings]);
+    
+    // FIX: round decimals properly
+    const combined = Math.round(combinedRaw);
 
     // VA rounded rating
     const vaRounded = Math.round(combined / 10) * 10;
