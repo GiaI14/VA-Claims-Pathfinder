@@ -73,10 +73,11 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
   // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    currentRatingDisplay.textContent = Math.floor(combined) + '%';
+    const roundedCombined = Math.round(combined);
+    currentRatingDisplay.textContent = roundedCombined + '%';
 
     // Points to next VA bracket
-    const nextBracket = getNextVaBracket(combined);
+    const nextBracket = getNextVaBracket(roundedCombined);
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
     nextBracketDisplay.textContent = pointsToNext;
 
