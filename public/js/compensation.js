@@ -39,18 +39,17 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     // Find the next ".5 step" that rounds up to the targetBracket
     let effectiveTarget = targetBracket - 5;
 
-    // If we're already at/above that .5 mark, bump to the next one
     if (combined >= effectiveTarget) {
         effectiveTarget += 10;
     }
 
     if (combined >= effectiveTarget) return 0;
 
-    // Special handling: 90 -> 95 (rounds to 100)
-    if (combined >= 90 && targetBracket >= 95) {
+    // Special handling ONLY if exactly at 90 → need to hit 95 (rounds to 100)
+    if (Math.floor(combined) === 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50;
+        return Math.ceil(rawPointsNeeded / 10) * 10;
     }
 
     const remainingHealthy = 100 - combined;
