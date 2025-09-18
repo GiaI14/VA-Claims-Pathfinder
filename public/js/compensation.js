@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    // Calculate raw combined rating
-    let combined = calculateCombinedRating([...currentRatings]);
+    // FIX: calculate combined rating and preserve decimals
+    let combined = calculateCombinedRating([...currentRatings]); // ensure this returns raw decimal
 
-    // FIX: round combined to nearest whole number (VA rounding)
+    // Round combined to nearest whole number for VA
     combined = Math.round(combined); // 92.8 -> 93
 
-    // VA rounded rating for display (multiples of 10)
+    // VA rounded rating (multiples of 10)
     const vaRounded = Math.round(combined / 10) * 10;
 
     // If VA rounded already meets or exceeds target, no points needed
