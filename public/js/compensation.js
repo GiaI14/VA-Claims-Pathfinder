@@ -34,10 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    const combinedRaw = calculateCombinedRating([...currentRatings]); // raw combined rating
-    const combined = combinedRaw; // use raw combined for calculations
+    const combined = calculateCombinedRating([...currentRatings]);
 
-    // VA rounded rating for display
+    // VA rounded rating
     const vaRounded = Math.round(combined / 10) * 10;
 
     // If VA rounded already meets or exceeds target, no points needed
@@ -51,21 +50,19 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         effectiveTarget += 10;
     }
 
-    // If already at or above effective target, 0 points
     if (combined >= effectiveTarget) return 0;
 
     // Special handling: 90 -> 95 (rounds to 100)
-    if (combined >= 90 && targetBracket >= 95 && combined < 95) {
+    if (combined >= 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in multiples of 10
+        return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // General case for all other brackets
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
 
-    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in multiples of 10
+    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
 
 //////////////////////////////////////////////////////////////////////////
