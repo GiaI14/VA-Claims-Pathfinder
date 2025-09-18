@@ -34,9 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    const combined = calculateCombinedRating([...currentRatings]);
+    const combinedRaw = calculateCombinedRating([...currentRatings]); // raw combined rating
+    const combined = Math.round(combinedRaw); // VA rounds to nearest whole number
 
-    // VA rounded rating
+    // VA rounded rating for display
     const vaRounded = Math.round(combined / 10) * 10;
 
     // If VA rounded already meets or exceeds target, no points needed
@@ -46,23 +47,23 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     let effectiveTarget = targetBracket - 5;
 
     // If we're already at/above that .5 mark, bump to the next one
-    if (combined >= effectiveTarget) {
+    if (combinedRaw >= effectiveTarget) {
         effectiveTarget += 10;
     }
 
-    if (combined >= effectiveTarget) return 0;
+    if (combinedRaw >= effectiveTarget) return 0;
 
     // Special handling: 90 -> 95 (rounds to 100)
-    if (combined >= 90 && targetBracket >= 95) {
-        const remainingHealthy = 100 - combined;
-        const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50;
+    if (combinedRaw >= 90 && targetBracket >= 95 && combinedRaw < 95) {
+        const remainingHealthy = 100 - combinedRaw;
+        const rawPointsNeeded = ((95 - combinedRaw) * 100) / remainingHealthy;
+        return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in multiples of 10
     }
 
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
+    const remainingHealthy = 100 - combinedRaw;
+    const rawPointsNeeded = ((effectiveTarget - combinedRaw) * 100) / remainingHealthy;
 
-    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
+    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in multiples of 10
 }
 
 //////////////////////////////////////////////////////////////////////////
