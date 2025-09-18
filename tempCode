@@ -36,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function calculatePointsToTarget(currentRatings, targetBracket) {
     const combined = calculateCombinedRating([...currentRatings]);
 
+    // VA rounded rating
+    const vaRounded = Math.round(combined / 10) * 10;
+
+    // If VA rounded already meets or exceeds target, no points needed
+    if (vaRounded >= targetBracket) return 0;
+
     // Find the next ".5 step" that rounds up to the targetBracket
     let effectiveTarget = targetBracket - 5;
 
