@@ -33,33 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Calculate points needed using remaining healthy fraction
-  function calculatePointsToTarget(currentRatings, targetBracket) {
+ function calculatePointsToTarget(currentRatings, targetBracket) {
     const combined = calculateCombinedRating([...currentRatings]);
-    if (combined >= targetBracket) return 0;
 
-    // Special handling: if current >= 90 and next bracket >= 95
+    // Find the next ".5 step" that rounds up to the targetBracket
+    let effectiveTarget = targetBracket - 5;
+
+    // If we're already at/above that .5 mark, bump to the next one
+    if (combined >= effectiveTarget) {
+        effectiveTarget += 10;
+    }
+
+    if (combined >= effectiveTarget) return 0;
+
+    // Special handling: 90 -> 95 (rounds to 100)
     if (combined >= 90 && targetBracket >= 95) {
         const remainingHealthy = 100 - combined;
-        // Points needed to reach 95, rounded to 50 (VA rounds to 100)
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // Adjust target for other brackets
-    let target;
-    if (targetBracket >= 95) {
-        target = 100; 
-    } else {
-        target = targetBracket - 5;
-    }
-
     const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((target - combined) * 100) / remainingHealthy;
+    const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
 
-    // VA awards points in multiples of 10
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
-
 
   // Update current rating and outputs
   function updateCurrentRating() {
