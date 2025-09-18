@@ -59,8 +59,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
 
-
-
   // Update current rating and outputs
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
