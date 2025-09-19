@@ -35,16 +35,16 @@ function getNextVaBracket(current) {
     
     // Find the index of the current bracket
     const currentIndex = vaBrackets.indexOf(currentVaBracket);
-    if (currentIndex === -1) return 100; // shouldn't happen
+    if (currentIndex === -1) return 100;
     
-    // Calculate minimum rating needed for current bracket
+    // Calculate minimum rating needed for current bracket - FIXED!
     let minRatingForCurrentBracket;
     if (currentVaBracket === 100) {
-        minRatingForCurrentBracket = 95.5;
+        minRatingForCurrentBracket = 95; // Need ≥95% for 100% bracket
     } else if (currentVaBracket === 95) {
-        minRatingForCurrentBracket = 90.0; // Special case: 90+ rounds to 95
+        minRatingForCurrentBracket = 90; // Need ≥90% for "95%" display
     } else {
-        minRatingForCurrentBracket = currentVaBracket - 5 + 0.5;
+        minRatingForCurrentBracket = currentVaBracket - 5; // Normal case: X bracket requires ≥(X-5)%
     }
     
     // Check if current rating is high enough to achieve current bracket
@@ -97,17 +97,21 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 }
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
- function updateCurrentRating() {
+function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
+    console.log('Combined rating:', combined);
+    
     const roundedCombined = Math.round(combined);
-    currentRatingDisplay.textContent = roundedCombined + '%'; // only for display
+    currentRatingDisplay.textContent = roundedCombined + '%';
 
-    // Use exact combined value for next bracket calculation
-    const nextBracket = getNextVaBracket(combined); // <-- use combined, not rounded
+    const nextBracket = getNextVaBracket(combined);
+    console.log('Next bracket:', nextBracket);
+    
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    console.log('Points to next:', pointsToNext);
+    
     nextBracketDisplay.textContent = pointsToNext;
 
-    // Points to desired rating (if entered)
     const desired = parseFloat(desiredRatingInput.value) || 0;
     if (desired > 0) {
       const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
