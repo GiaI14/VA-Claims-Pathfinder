@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function calculatePointsToTarget(currentRatings, targetBracket) {
     let combined = calculateCombinedRating([...currentRatings]); // keep decimals
 
-    // Round combined to nearest whole number for display purposes
-    const combinedRounded = Math.round(combined);
-
     // VA rounded rating (multiples of 10)
     const vaRounded = Math.round(combined / 10) * 10;
+
+    // If VA rounded already meets or exceeds target AND combined >= target, 0 points
+    if (vaRounded >= targetBracket && combined >= targetBracket) return 0;
 
     // Special handling: 90 -> 95 (rounds to 100)
     if (combined >= 90 && targetBracket >= 95) {
@@ -49,19 +49,13 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // If VA rounded already meets or exceeds target, but combined < next bracket,
-    // we need to go to next bracket instead of returning 0
-    if (vaRounded >= targetBracket && combined < targetBracket) {
-        targetBracket = vaRounded + 10;
+    // Effective target includes fractional step (0.5–0.9)
+    let effectiveTarget = targetBracket;
+    if (combined % 1 >= 0.5) {
+        effectiveTarget = targetBracket; // ensures it counts fractional gap
     }
 
-    // Calculate effective target
-    let effectiveTarget = targetBracket - 5;
-    if ((combined % 1) >= 0.5) {
-        effectiveTarget = targetBracket; // include .5–.9 gap
-    }
-
-    // Only return 0 if truly at or above next bracket
+    // Only return 0 if combined really reaches or exceeds target
     if (combined >= targetBracket) return 0;
 
     const remainingHealthy = 100 - combined;
