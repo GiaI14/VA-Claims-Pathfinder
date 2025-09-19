@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    let combined = calculateCombinedRating([...currentRatings]); // keep decimals
+    // Keep combined rating as decimal
+    let combined = calculateCombinedRating([...currentRatings]);
 
     // VA rounded rating (multiples of 10)
     const vaRounded = Math.round(combined / 10) * 10;
@@ -49,10 +50,12 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // Effective target includes fractional step (0.5–0.9)
+    // Effective target: always use targetBracket but ensure fractional decimals count
     let effectiveTarget = targetBracket;
-    if (combined % 1 >= 0.5) {
-        effectiveTarget = targetBracket; // ensures it counts fractional gap
+
+    // If combined has decimal >0.5 but less than next bracket, count the gap
+    if (combined < targetBracket && (combined % 1 >= 0.5)) {
+        effectiveTarget = targetBracket;
     }
 
     // Only return 0 if combined really reaches or exceeds target
@@ -61,7 +64,8 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
 
-    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
+    // VA awards points in multiples of 10
+    return Math.ceil(rawPointsNeeded / 10) * 10;
 }
 
 //////////////////////////////////////////////////////////////////////////
