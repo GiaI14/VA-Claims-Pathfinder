@@ -33,39 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
-function calculatePointsToTarget(currentRatings, targetBracket) {
-    // Keep combined rating as decimal
-    let combined = calculateCombinedRating([...currentRatings]);
-
-    // VA rounded rating (multiples of 10)
-    const vaRounded = Math.round(combined / 10) * 10;
-
-    // If VA rounded already meets or exceeds target AND combined >= target, 0 points
-    if (vaRounded >= targetBracket && combined >= targetBracket) return 0;
+function calculatePointsToTarget(currentRatings) {
+    const combined = calculateCombinedRating([...currentRatings]); // e.g., 86
+    const nextBracket = getNextVaBracket(combined); // get next bracket from decimal, e.g., 100
 
     // Special handling: 90 -> 95 (rounds to 100)
-    if (combined >= 90 && targetBracket >= 95) {
+    if (combined >= 90 && nextBracket === 100) {
         const remainingHealthy = 100 - combined;
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
-    // Effective target: always use targetBracket but ensure fractional decimals count
-    let effectiveTarget = targetBracket;
-
-    // If combined has decimal >0.5 but less than next bracket, count the gap
-    if (combined < targetBracket && (combined % 1 >= 0.5)) {
-        effectiveTarget = targetBracket;
-    }
-
-    // Only return 0 if combined really reaches or exceeds target
-    if (combined >= targetBracket) return 0;
-
     const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
+    const rawPointsNeeded = ((nextBracket - combined) * 100) / remainingHealthy;
 
-    // VA awards points in multiples of 10
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+    return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
 
 //////////////////////////////////////////////////////////////////////////
