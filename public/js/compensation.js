@@ -26,35 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get next VA bracket based on current rating
 function getNextVaBracket(current) {
-    // First, calculate what VA bracket the current rating would round to
-    const roundedIndividual = Math.round(current);
-    const currentVaBracket = Math.round(roundedIndividual / 10) * 10;
+    // Calculate what individual rating this would round to
+    const individualRounded = Math.round(current);
+    
+    // Calculate current VA bracket
+    let currentBracket;
+    if (individualRounded >= 90 && individualRounded <= 94) {
+        currentBracket = 95;
+    } else {
+        currentBracket = Math.round(individualRounded / 10) * 10;
+    }
     
     // If already at 100%, return 100
-    if (currentVaBracket >= 100) return 100;
+    if (currentBracket >= 100) return 100;
     
-    // Find the index of the current bracket
-    const currentIndex = vaBrackets.indexOf(currentVaBracket);
-    if (currentIndex === -1) return 100;
-    
-    // Calculate minimum rating needed for current bracket - FIXED!
-    let minRatingForCurrentBracket;
-    if (currentVaBracket === 100) {
-        minRatingForCurrentBracket = 95; // Need ≥95% for 100% bracket
-    } else if (currentVaBracket === 95) {
-        minRatingForCurrentBracket = 90; // Need ≥90% for "95%" display
-    } else {
-        minRatingForCurrentBracket = currentVaBracket - 5; // Normal case: X bracket requires ≥(X-5)%
-    }
-    
-    // Check if current rating is high enough to achieve current bracket
-    if (current >= minRatingForCurrentBracket) {
-        // Already rounding to current bracket, so target next one
-        return vaBrackets[currentIndex + 1] || 100;
-    }
-    
-    // Otherwise, target the current bracket
-    return currentVaBracket;
+    // Always target the next bracket (simpler approach)
+    const currentIndex = vaBrackets.indexOf(currentBracket);
+    return vaBrackets[currentIndex + 1] || 100;
 }
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
