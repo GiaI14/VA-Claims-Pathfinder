@@ -60,38 +60,40 @@ function getNextVaBracket(current) {
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
     let combined = calculateCombinedRating([...currentRatings]);
-    const currentBracket = Math.round(Math.round(combined) / 10) * 10;
+    const individualRounded = Math.round(combined);
+    
+    // Calculate current VA bracket
+    let currentBracket;
+    if (individualRounded >= 90 && individualRounded <= 94) {
+        currentBracket = 95;
+    } else {
+        currentBracket = Math.round(individualRounded / 10) * 10;
+    }
 
     if (currentBracket >= targetBracket) return 0;
 
+    // Calculate minimum rating needed for target bracket
     let minRatingForTarget;
-    
     if (targetBracket === 100) {
-        minRatingForTarget = 95.5;
+        minRatingForTarget = 95.5; // Need ≥95.5 to round to 100
     } else if (targetBracket === 95) {
-        // For 95% bracket, we need to reach exactly 95% combined rating
-        minRatingForTarget = 95.0;
+        minRatingForTarget = 90.0; // Need ≥90.0 to get "95%" display
     } else {
         minRatingForTarget = targetBracket - 5 + 0.5;
     }
 
-    // If already at/above the minimum for target, go to next bracket
+    // Special case: if already qualifying for current bracket but want next
     if (combined >= minRatingForTarget) {
         const nextIndex = vaBrackets.indexOf(targetBracket) + 1;
         const nextBracket = vaBrackets[nextIndex] || 100;
-        if (nextBracket > 100) return 0;
         return calculatePointsToTarget(currentRatings, nextBracket);
     }
 
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
     
-    // Use different rounding based on target bracket
-    if (targetBracket === 95 || targetBracket === 100) {
-        return Math.ceil(rawPointsNeeded / 50) * 50;
-    } else {
-        return Math.ceil(rawPointsNeeded / 10) * 10;
-    }
+    // FIXED: Always round to nearest 10 for all brackets
+    return Math.ceil(rawPointsNeeded / 10) * 10;
 }
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
