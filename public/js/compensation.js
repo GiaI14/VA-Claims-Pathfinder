@@ -34,35 +34,42 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    // FIX: calculate combined rating and preserve decimals
-    let combined = calculateCombinedRating([...currentRatings]); // ensure this returns raw decimal
+    // Calculate combined rating and preserve decimals
+    let combined = calculateCombinedRating([...currentRatings]);
 
     // Round combined to nearest whole number for VA
-    combined = Math.round(combined); // 92.8 -> 93
+    const vaRounded = Math.round(combined); // 92.8 -> 93
 
     // VA rounded rating (multiples of 10)
-    const vaRounded = Math.round(combined / 10) * 10;
+    const vaBracket = Math.round(vaRounded / 10) * 10;
 
     // If VA rounded already meets or exceeds target, no points needed
-    if (vaRounded >= targetBracket) return 0;
+    if (vaBracket >= targetBracket) return 0;
 
-    // Find the next ".5 step" that rounds up to the targetBracket
-    let effectiveTarget = targetBracket - 5;
-  
-     if ((combined % 1) >= 0.5) {
-        effectiveTarget = targetBracket;
+    // Calculate what raw combined rating would round to the target bracket
+    let effectiveTarget;
+    
+    // For the target bracket to be achieved, the rounded value must be >= targetBracket
+    // This happens when the raw combined rating is >= targetBracket - 0.5
+    if (targetBracket === 100) {
+        // Special case for 100% - need at least 95.5 to round to 100
+        effectiveTarget = 95.5;
+    } else {
+        effectiveTarget = targetBracket - 5 + 0.5; // e.g., for 90%, need >= 85.5
     }
 
-  
-    // If we're already at/above that .5 mark, bump to the next one
+    // If we're already at/above the effective target, we need to go to next bracket
     if (combined >= effectiveTarget) {
-        effectiveTarget += 10;
+        if (targetBracket === 100) {
+            // Already at 100%, can't go higher
+            return 0;
+        }
+        // Calculate points needed for next bracket
+        return calculatePointsToTarget(currentRatings, targetBracket + 10);
     }
-
-    if (combined >= effectiveTarget) return 0;
 
     // Special handling: 90 -> 95 (rounds to 100)
-    if (combined >= 90 && targetBracket >= 95) {
+    if (combined >= 90 && targetBracket === 100) {
         const remainingHealthy = 100 - combined;
         const rawPointsNeeded = ((95 - combined) * 100) / remainingHealthy;
         return Math.ceil(rawPointsNeeded / 50) * 50;
@@ -73,7 +80,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 
     return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
-
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
  function updateCurrentRating() {
