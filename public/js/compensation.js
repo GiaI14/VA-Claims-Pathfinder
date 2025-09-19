@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    let combined = calculateCombinedRating([...currentRatings]); 
+    // FIX: calculate combined rating and preserve decimals
+    let combined = calculateCombinedRating([...currentRatings]); // ensure this returns raw decimal
 
     // Round combined to nearest whole number for VA
     combined = Math.round(combined); // 92.8 -> 93
@@ -47,11 +48,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 
     // Find the next ".5 step" that rounds up to the targetBracket
     let effectiveTarget = targetBracket - 5;
-
-    // Special fix: if combined ends in .5–.9, don’t skip the current bracket
-    if ((combined % 10) >= 5 && (combined % 10) <= 9) {
-        effectiveTarget = targetBracket; 
-    }
 
     // If we're already at/above that .5 mark, bump to the next one
     if (combined >= effectiveTarget) {
@@ -72,7 +68,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 
     return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
-
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
   function updateCurrentRating() {
