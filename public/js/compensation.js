@@ -72,8 +72,21 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         minRatingForTarget = targetBracket - 5; // Normal case: X bracket requires ≥(X-5)%
     }
 
-    // If already at/above target threshold, return 0
-    if (combined >= minRatingForTarget) return 0;
+    // If already at/above target threshold, calculate for NEXT bracket
+    if (combined >= minRatingForTarget) {
+        // Determine next bracket
+        let nextBracket;
+        if (targetBracket === 95) {
+            nextBracket = 100; // After 95% comes 100%
+        } else if (targetBracket === 100) {
+            return 0; // Can't go higher than 100%
+        } else {
+            nextBracket = targetBracket + 10; // Normal progression
+        }
+        
+        // Recursively calculate for next bracket
+        return calculatePointsToTarget(currentRatings, nextBracket);
+    }
 
     // Calculate points needed using remaining healthy percentage
     const remainingHealthy = 100 - combined;
