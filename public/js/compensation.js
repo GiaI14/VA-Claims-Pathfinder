@@ -75,13 +75,13 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 }
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
-  function updateCurrentRating() {
+ function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     const roundedCombined = Math.round(combined);
-    currentRatingDisplay.textContent = roundedCombined + '%';
+    currentRatingDisplay.textContent = roundedCombined + '%'; // only for display
 
-    // Points to next VA bracket
-    const nextBracket = getNextVaBracket(roundedCombined);
+    // Use exact combined value for next bracket calculation
+    const nextBracket = getNextVaBracket(combined); // <-- use combined, not rounded
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
     nextBracketDisplay.textContent = pointsToNext;
 
@@ -93,7 +93,7 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     } else {
       pointsNeededDisplay.textContent = '—';
     }
-  }
+}
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
