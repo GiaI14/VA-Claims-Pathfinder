@@ -49,9 +49,10 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     // Find the next ".5 step" that rounds up to the targetBracket
     let effectiveTarget = targetBracket - 5;
   
-    if ((combined % 1) >= 0.5 && (combined % 1) < 1) {
-    effectiveTarget = targetBracket;
+     if ((combined % 1) >= 0.5) {
+        effectiveTarget = targetBracket;
     }
+
   
     // If we're already at/above that .5 mark, bump to the next one
     if (combined >= effectiveTarget) {
