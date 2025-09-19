@@ -71,11 +71,6 @@ async function calculateDisability() {
         .map(btn => parseInt(btn.dataset.rating) || 0)
         .filter(r => r > 0);
 
-    if (ratings.length === 0) {
-        alert("Please enter at least one disability rating.");
-        return;
-    }
-
     const spouse = document.getElementById("spouse").checked;
     const childrenUnder18 = parseInt(document.getElementById("childrenUnder18").value) || 0;
     const childrenOver18 = parseInt(document.getElementById("childrenOver18").value) || 0;
