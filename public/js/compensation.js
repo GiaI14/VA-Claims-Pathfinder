@@ -34,32 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
-    // FIX: calculate combined rating and preserve decimals
-    let combined = calculateCombinedRating([...currentRatings]); // ensure this returns raw decimal
+    let combined = calculateCombinedRating([...currentRatings]); // keep decimals
 
-    // Round combined to nearest whole number for VA
-    combined = Math.round(combined); // 92.8 -> 93
+    // Round combined to nearest whole number for display purposes
+    const combinedRounded = Math.round(combined);
 
     // VA rounded rating (multiples of 10)
     const vaRounded = Math.round(combined / 10) * 10;
-
-    // If VA rounded already meets or exceeds target, no points needed
-    if (vaRounded >= targetBracket) return 0;
-
-    // Find the next ".5 step" that rounds up to the targetBracket
-    let effectiveTarget = targetBracket - 5;
-  
-     if ((combined % 1) >= 0.5) {
-        effectiveTarget = targetBracket;
-    }
-
-  
-    // If we're already at/above that .5 mark, bump to the next one
-    if (combined >= effectiveTarget) {
-        effectiveTarget += 10;
-    }
-
-    if (combined >= effectiveTarget) return 0;
 
     // Special handling: 90 -> 95 (rounds to 100)
     if (combined >= 90 && targetBracket >= 95) {
@@ -68,11 +49,27 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         return Math.ceil(rawPointsNeeded / 50) * 50;
     }
 
+    // If VA rounded already meets or exceeds target, but combined < next bracket,
+    // we need to go to next bracket instead of returning 0
+    if (vaRounded >= targetBracket && combined < targetBracket) {
+        targetBracket = vaRounded + 10;
+    }
+
+    // Calculate effective target
+    let effectiveTarget = targetBracket - 5;
+    if ((combined % 1) >= 0.5) {
+        effectiveTarget = targetBracket; // include .5–.9 gap
+    }
+
+    // Only return 0 if truly at or above next bracket
+    if (combined >= targetBracket) return 0;
+
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((effectiveTarget - combined) * 100) / remainingHealthy;
 
     return Math.ceil(rawPointsNeeded / 10) * 10; // VA adds in 10s
 }
+
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
  function updateCurrentRating() {
