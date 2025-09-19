@@ -25,12 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
   // Get next VA bracket based on current rating
-  function getNextVaBracket(current) {
-    for (let b of vaBrackets) {
-      if (current < b) return b;
+function getNextVaBracket(current) {
+    // First, calculate what VA bracket the current rating would round to
+    const currentVaBracket = Math.round(Math.round(current) / 10) * 10;
+    
+    // If already at 100%, return 100
+    if (currentVaBracket >= 100) return 100;
+    
+    // Find the index of the current bracket
+    const currentIndex = vaBrackets.indexOf(currentVaBracket);
+    
+    // If current rating is high enough to already round to this bracket,
+    // we need to target the NEXT bracket
+    let minRatingForCurrentBracket;
+    if (currentVaBracket === 100) {
+        minRatingForCurrentBracket = 95.5;
+    } else {
+        minRatingForCurrentBracket = currentVaBracket - 5 + 0.5;
     }
-    return 100;
-  }
+    
+    if (current >= minRatingForCurrentBracket) {
+        // Already rounding to current bracket, so target next one
+        return vaBrackets[currentIndex + 1] || 100;
+    }
+    
+    // Otherwise, target the current bracket
+    return currentVaBracket;
+}
 ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
 function calculatePointsToTarget(currentRatings, targetBracket) {
