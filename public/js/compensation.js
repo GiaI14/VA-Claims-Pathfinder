@@ -69,7 +69,8 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     if (targetBracket === 100) {
         minRatingForTarget = 95.5;
     } else if (targetBracket === 95) {
-        minRatingForTarget = 90.0; // Special case for 95% bracket
+        // For 95% bracket, we need to reach exactly 95% combined rating
+        minRatingForTarget = 95.0;
     } else {
         minRatingForTarget = targetBracket - 5 + 0.5;
     }
@@ -82,16 +83,15 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
         return calculatePointsToTarget(currentRatings, nextBracket);
     }
 
-    // Special handling for 95% target (different calculation)
-    if (targetBracket === 95) {
-        const remainingHealthy = 100 - combined;
-        const rawPointsNeeded = ((90 - combined) * 100) / remainingHealthy;
-        return Math.ceil(rawPointsNeeded / 50) * 50;
-    }
-
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+    
+    // Use different rounding based on target bracket
+    if (targetBracket === 95 || targetBracket === 100) {
+        return Math.ceil(rawPointsNeeded / 50) * 50;
+    } else {
+        return Math.ceil(rawPointsNeeded / 10) * 10;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
   // Update current rating and outputs
