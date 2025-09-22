@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBracketDisplay = document.getElementById('nextBracketPoints');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
   const vaRoundedDisplay = document.getElementById('vaRoundedRating');
-  
+  const desiredRatingInput = document.getElementById('desiredRatingInput');
+
   let selectedRatings = [];
 
   // VA-style combined rating calculation (highest first)
@@ -96,38 +97,49 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 }
 //////////////////////////////////////////////////////////////////////////
 function updateCurrentRating() {
-    const combined = calculateCombinedRating(selectedRatings);
-    
-    const roundedCombined = Math.round(combined);
-    currentRatingDisplay.textContent = roundedCombined + '%';
+  const combined = calculateCombinedRating(selectedRatings);
 
-    const vaRoundedRating = vaRound(combined);
-    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
-  
-    const nextBracket = getNextVaBracket(combined);
-    console.log('Next bracket:', nextBracket);
-    
-    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-    console.log('Points to next:', pointsToNext);
-    
-    nextBracketDisplay.textContent = pointsToNext;
+  // Normal rounded combined rating
+  const roundedCombined = Math.round(combined);
+  currentRatingDisplay.textContent = roundedCombined + '%';
 
-    const desired = parseFloat(desiredRatingInput.value) || 0;
-     if (desired > 0) {
-        if (desired <= vaRoundedRating) {
-            // Block invalid choice
-            pointsNeededDisplay.textContent = "—";
-            alert("Desired rating must be higher than your current VA rating.");
-            desiredRatingInput.value = "";
-        } else {
-            const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
-            pointsNeededDisplay.textContent = pointsNeeded;
-        }
-    } else {
-        pointsNeededDisplay.textContent = '—';
-    }
+  // VA rounded rating
+  const vaRounded = vaRound(combined);
+  vaRoundedDisplay.textContent = vaRounded + '%';
+
+  // Update desired rating dropdown to only show higher values
+  updateDesiredRatingOptions(vaRounded);
+
+  // Recalculate bracket + points if desired rating is still valid
+  const nextBracket = getNextVaBracket(combined);
+  nextBracketDisplay.textContent = calculatePointsToTarget(selectedRatings, nextBracket);
+
+  const desired = parseFloat(desiredRatingInput.value) || 0;
+  if (desired > vaRounded) {
+    const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+    pointsNeededDisplay.textContent = pointsNeeded;
+  } else {
+    pointsNeededDisplay.textContent = '—';
+  }
 }
 
+function updateDesiredRatingOptions(currentVaRating) {
+  // Define allowed VA ratings
+  const allowedRatings = [10,20,30,40,50,60,70,80,90,100];
+  
+  // Clear current options
+  desiredRatingInput.innerHTML = '';
+
+  // Only add values greater than current rating
+  allowedRatings.forEach(r => {
+    if (r > currentVaRating) {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = r + '%';
+      desiredRatingInput.appendChild(opt);
+    }
+  });
+}
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
