@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBracketDisplay = document.getElementById('nextBracketPoints');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
   const vaRoundedDisplay = document.getElementById('vaRoundedRating');
-  const desiredRatingInput = document.getElementById('desiredRatingInput');
 
   let selectedRatings = [];
 
