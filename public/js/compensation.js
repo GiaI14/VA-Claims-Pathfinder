@@ -113,14 +113,14 @@ function updateCurrentRating() {
     nextBracketDisplay.textContent = pointsToNext;
 
     const desired = parseFloat(desiredRatingInput.value) || 0;
-     if (desired > 0) {
-            const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
-            pointsNeededDisplay.textContent = pointsNeeded;
-        }
+    if (desired > 0) {
+        const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+        pointsNeededDisplay.textContent = pointsNeeded;
     } else {
         pointsNeededDisplay.textContent = '—';
     }
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
   // Handle rating button clicks
