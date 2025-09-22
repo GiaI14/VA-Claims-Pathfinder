@@ -96,7 +96,7 @@ function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     console.log('Combined rating:', combined);
     
-    const roundedCombined = Math.round(combined);
+    const roundedCombined = vaRounded(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
     const nextBracket = getNextVaBracket(combined);
