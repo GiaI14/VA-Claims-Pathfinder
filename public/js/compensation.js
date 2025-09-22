@@ -114,6 +114,11 @@ function updateCurrentRating() {
 
     const desired = parseFloat(desiredRatingInput.value) || 0;
     if (desired > 0) {
+      if (desired <= roundedCombined){
+        pointsNeededDisplay.textContent = "_";
+        alert("Desired rating must be higher than your current combined rating.");
+        desiredRatingInput.value = "";
+      }else{
       const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
       pointsNeededDisplay.textContent = pointsNeeded;
     } else {
