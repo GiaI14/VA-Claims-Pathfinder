@@ -9,13 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let selectedRatings = [];
 
-  function vaRound(rating) {
-    const truncated = Math.floor(rating); 
-    return truncated % 10 >= 5
-      ? Math.ceil(truncated / 10) * 10
-      : Math.floor(truncated / 10) * 10;
-  }
-  
   // VA-style combined rating calculation (highest first)
   function calculateCombinedRating(ratings) {
     const sorted = [...ratings].sort((a, b) => b - a); // highest first
@@ -28,11 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     return combined;
   }
+  
+  function vaRound(combined) {
+    const whole = combined % 1 >= 0.5 ? Math.ceil(combined) : Math.floor(combined);
+    const remainder = whole % 10;
+    const base = whole - remainder;
+    
+    if (remainder >= 5) {
+        return base + 10;
+    } else {
+        return base;
+    }
+}
+  
+const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-  // VA brackets
-  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
-
-  // Get next VA bracket based on current rating
 function getNextVaBracket(current) {
     // Calculate what individual rating this would round to
     const individualRounded = Math.round(current);
@@ -95,13 +98,12 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
   // Update current rating and outputs
 function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    console.log('Combined rating:', combined);
     
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
     const vaRoundedRating = vaRound(combined);
-    vaRoundedDisplay.textContent = roundedCombined + '%'; 
+    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
   
     const nextBracket = getNextVaBracket(combined);
     console.log('Next bracket:', nextBracket);
