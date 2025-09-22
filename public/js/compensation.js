@@ -115,12 +115,6 @@ function updateCurrentRating() {
 
     const desired = parseFloat(desiredRatingInput.value) || 0;
      if (desired > 0) {
-        if (desired <= vaRoundedRating) {
-            // Block invalid choice
-            pointsNeededDisplay.textContent = "—";
-            alert("Desired rating must be higher than your current VA rating.");
-            desiredRatingInput.value = "";
-        } else {
             const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
             pointsNeededDisplay.textContent = pointsNeeded;
         }
