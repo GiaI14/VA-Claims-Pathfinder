@@ -98,50 +98,35 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 //////////////////////////////////////////////////////////////////////////
 // add this helper (use your existing variable names - desiredRatingInput is already defined)
 function updateDesiredRatingOptions(currentVaRating) {
-  if (!desiredRatingInput) return;
+  if (!desiredRatingInput || desiredRatingInput.tagName !== 'SELECT') return;
 
-  // If it's not a SELECT, set min for number input and return
-  if (desiredRatingInput.tagName !== 'SELECT') {
-    // keep behavior for number input type (optional)
-    // set min to next available bracket > currentVaRating
-    const next = (function () {
-      for (let i = 10; i <= 100; i += 10) if (i > currentVaRating) return i;
-      return 100;
-    })();
-    desiredRatingInput.min = next;
-    // if current value is invalid, clear it
-    if (desiredRatingInput.value && Number(desiredRatingInput.value) <= currentVaRating) {
-      desiredRatingInput.value = '';
-    }
-    return;
-  }
+  // Save current selection
+  const prev = desiredRatingInput.value;
 
-  // It's a SELECT: rebuild options so only values > currentVaRating are available
-  const prev = desiredRatingInput.value;            // preserve previous selection if valid
-  // keep the placeholder option (if you had one)
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = 'Select rating';
-  // clear and re-add
+  // Allowed VA ratings
+  const allowedRatings = [10,20,30,40,50,60,70,80,90,100];
+
+  // Clear dropdown
   desiredRatingInput.innerHTML = '';
-  desiredRatingInput.appendChild(placeholder);
 
-  for (let i = 10; i <= 100; i += 10) {
-    if (i > currentVaRating) {
+  // Rebuild only with options higher than current VA rating
+  allowedRatings.forEach(r => {
+    if (r > currentVaRating) {
       const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = i + '%';
+      opt.value = r;
+      opt.textContent = r + '%';
       desiredRatingInput.appendChild(opt);
     }
-  }
+  });
 
-  // restore previous value if it still exists and is > currentVaRating
+  // Restore previous selection if still valid
   if (prev && Number(prev) > currentVaRating) {
-    const exists = Array.from(desiredRatingInput.options).some(o => o.value === prev);
-    if (exists) desiredRatingInput.value = prev;
+    desiredRatingInput.value = prev;
   } else {
-    // leave placeholder selected
-    desiredRatingInput.value = '';
+    // otherwise, select the first available option (if any)
+    if (desiredRatingInput.options.length > 0) {
+      desiredRatingInput.selectedIndex = 0;
+    }
   }
 }
 
