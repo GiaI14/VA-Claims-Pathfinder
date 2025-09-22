@@ -97,37 +97,29 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 //////////////////////////////////////////////////////////////////////////
 function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-
-    // Current Combined Rating
+    
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
-    // VA Rounded Rating
-    const vaRoundedRating = vaRounding(combined);
+    const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
-
-    // Next VA Bracket
+  
     const nextBracket = getNextVaBracket(combined);
     console.log('Next bracket:', nextBracket);
-
-    // Points to next VA bracket (use combined for calculation)
+    
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    console.log('Points to next:', pointsToNext);
+    
     nextBracketDisplay.textContent = pointsToNext;
 
-    // Points to desired rating
     const desired = parseFloat(desiredRatingInput.value) || 0;
-    let pointsNeeded = '—';
     if (desired > 0) {
-        pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+      const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+      pointsNeededDisplay.textContent = pointsNeeded;
     } else {
-        // If next bracket > VA rounded, make sure points match
-        if (nextBracket > vaRoundedRating) {
-            pointsNeeded = pointsToNext;
-        }
+      pointsNeededDisplay.textContent = '—';
     }
-    pointsNeededDisplay.textContent = pointsNeeded;
 }
-
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
