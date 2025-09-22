@@ -100,7 +100,7 @@ function updateCurrentRating() {
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
-    const vaRoundedRating = vaRounded(combined);
+    const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = roundedCombined + '%'; 
   
     const nextBracket = getNextVaBracket(combined);
