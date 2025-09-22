@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let selectedRatings = [];
 
+  function vaRound(rating) {
+    const truncated = Math.floor(rating); // drop decimals
+    return truncated % 10 >= 5
+      ? Math.ceil(truncated / 10) * 10
+      : Math.floor(truncated / 10) * 10;
+  }
+  
   // VA-style combined rating calculation (highest first)
   function calculateCombinedRating(ratings) {
     const sorted = [...ratings].sort((a, b) => b - a); // highest first
