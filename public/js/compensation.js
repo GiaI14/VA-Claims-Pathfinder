@@ -96,38 +96,99 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     return Math.ceil(rawPointsNeeded / 10) * 10;
 }
 //////////////////////////////////////////////////////////////////////////
+// add this helper (use your existing variable names - desiredRatingInput is already defined)
+function updateDesiredRatingOptions(currentVaRating) {
+  if (!desiredRatingInput) return;
+
+  // If it's not a SELECT, set min for number input and return
+  if (desiredRatingInput.tagName !== 'SELECT') {
+    // keep behavior for number input type (optional)
+    // set min to next available bracket > currentVaRating
+    const next = (function () {
+      for (let i = 10; i <= 100; i += 10) if (i > currentVaRating) return i;
+      return 100;
+    })();
+    desiredRatingInput.min = next;
+    // if current value is invalid, clear it
+    if (desiredRatingInput.value && Number(desiredRatingInput.value) <= currentVaRating) {
+      desiredRatingInput.value = '';
+    }
+    return;
+  }
+
+  // It's a SELECT: rebuild options so only values > currentVaRating are available
+  const prev = desiredRatingInput.value;            // preserve previous selection if valid
+  // keep the placeholder option (if you had one)
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Select rating';
+  // clear and re-add
+  desiredRatingInput.innerHTML = '';
+  desiredRatingInput.appendChild(placeholder);
+
+  for (let i = 10; i <= 100; i += 10) {
+    if (i > currentVaRating) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = i + '%';
+      desiredRatingInput.appendChild(opt);
+    }
+  }
+
+  // restore previous value if it still exists and is > currentVaRating
+  if (prev && Number(prev) > currentVaRating) {
+    const exists = Array.from(desiredRatingInput.options).some(o => o.value === prev);
+    if (exists) desiredRatingInput.value = prev;
+  } else {
+    // leave placeholder selected
+    desiredRatingInput.value = '';
+  }
+}
+
+// Replace your existing updateCurrentRating() with this (uses your exact var names)
 function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    
+
+    // keep current roundedCombined behavior intact
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
-    const vaRoundedRating = vaRound(combined);
-    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
-  
+    // determine VA rounded value using whichever function exists (vaRounding or vaRound)
+    const vaRoundedRating = (typeof vaRounding === 'function')
+      ? vaRounding(combined)
+      : (typeof vaRound === 'function' ? vaRound(combined)
+         // fallback: safe VA-style rounding inline
+         : (function(c){
+             const whole = c % 1 >= 0.5 ? Math.ceil(c) : Math.floor(c);
+             const rem = whole % 10;
+             return rem >= 5 ? (whole - rem + 10) : (whole - rem);
+           })(combined));
+
+    // display VA rounded
+    vaRoundedDisplay.textContent = vaRoundedRating + '%';
+
+    // update the desired-rating control to only expose options higher than current VA rounded
+    updateDesiredRatingOptions(vaRoundedRating);
+
+    // Next bracket & points to next (unchanged)
     const nextBracket = getNextVaBracket(combined);
-    console.log('Next bracket:', nextBracket);
-    
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-    console.log('Points to next:', pointsToNext);
-    
     nextBracketDisplay.textContent = pointsToNext;
 
+    // Points needed to reach chosen desired rating (only if valid and > VA rounded)
     const desired = parseFloat(desiredRatingInput.value) || 0;
-     if (desired > 0) {
-        if (desired <= vaRoundedRating) {
-            // Block invalid choice
-            pointsNeededDisplay.textContent = "—";
-            alert("Desired rating must be higher than your current VA rating.");
-            desiredRatingInput.value = "";
-        } else {
-            const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
-            pointsNeededDisplay.textContent = pointsNeeded;
-        }
-    } else {
+    if (desired > 0) {
+      if (desired <= vaRoundedRating) {
         pointsNeededDisplay.textContent = '—';
+      } else {
+        const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+        pointsNeededDisplay.textContent = pointsNeeded;
+      }
+    } else {
+      pointsNeededDisplay.textContent = '—';
     }
 }
+///////////////////////////////////////////////////////////////////////////////////////////////
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
