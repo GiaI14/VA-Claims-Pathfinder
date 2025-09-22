@@ -5,11 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const desiredRatingInput = document.getElementById('desiredRating');
   const nextBracketDisplay = document.getElementById('nextBracketPoints');
   const pointsNeededDisplay = document.getElementById('pointsNeeded');
-
+  const vaRoundedDisplay = document.getElementById('vaRoundedRating');
+  
   let selectedRatings = [];
 
   function vaRound(rating) {
-    const truncated = Math.floor(rating); // drop decimals
+    const truncated = Math.floor(rating); 
     return truncated % 10 >= 5
       ? Math.ceil(truncated / 10) * 10
       : Math.floor(truncated / 10) * 10;
@@ -99,6 +100,9 @@ function updateCurrentRating() {
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
+    const vaRoundedRating = vaRounded(combined);
+    vaRoundedDisplay.textContent = roundedCombined + '%'; 
+  
     const nextBracket = getNextVaBracket(combined);
     console.log('Next bracket:', nextBracket);
     
