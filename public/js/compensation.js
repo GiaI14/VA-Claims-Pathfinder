@@ -96,83 +96,39 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     return Math.ceil(rawPointsNeeded / 10) * 10;
 }
 //////////////////////////////////////////////////////////////////////////
-// add this helper (use your existing variable names - desiredRatingInput is already defined)
-function updateDesiredRatingOptions(currentVaRating) {
-  if (!desiredRatingInput || desiredRatingInput.tagName !== 'SELECT') return;
-
-  // Save current selection
-  const prev = desiredRatingInput.value;
-
-  // Allowed VA ratings
-  const allowedRatings = [10,20,30,40,50,60,70,80,90,100];
-
-  // Clear dropdown
-  desiredRatingInput.innerHTML = '';
-
-  // Rebuild only with options higher than current VA rating
-  allowedRatings.forEach(r => {
-    if (r > currentVaRating) {
-      const opt = document.createElement('option');
-      opt.value = r;
-      opt.textContent = r + '%';
-      desiredRatingInput.appendChild(opt);
-    }
-  });
-
-  // Restore previous selection if still valid
-  if (prev && Number(prev) > currentVaRating) {
-    desiredRatingInput.value = prev;
-  } else {
-    // otherwise, select the first available option (if any)
-    if (desiredRatingInput.options.length > 0) {
-      desiredRatingInput.selectedIndex = 0;
-    }
-  }
-}
-
-// Replace your existing updateCurrentRating() with this (uses your exact var names)
 function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-
-    // keep current roundedCombined behavior intact
+    
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
-    // determine VA rounded value using whichever function exists (vaRounding or vaRound)
-    const vaRoundedRating = (typeof vaRounding === 'function')
-      ? vaRounding(combined)
-      : (typeof vaRound === 'function' ? vaRound(combined)
-         // fallback: safe VA-style rounding inline
-         : (function(c){
-             const whole = c % 1 >= 0.5 ? Math.ceil(c) : Math.floor(c);
-             const rem = whole % 10;
-             return rem >= 5 ? (whole - rem + 10) : (whole - rem);
-           })(combined));
-
-    // display VA rounded
-    vaRoundedDisplay.textContent = vaRoundedRating + '%';
-
-    // update the desired-rating control to only expose options higher than current VA rounded
-    updateDesiredRatingOptions(vaRoundedRating);
-
-    // Next bracket & points to next (unchanged)
+    const vaRoundedRating = vaRound(combined);
+    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
+  
     const nextBracket = getNextVaBracket(combined);
+    console.log('Next bracket:', nextBracket);
+    
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    console.log('Points to next:', pointsToNext);
+    
     nextBracketDisplay.textContent = pointsToNext;
 
-    // Points needed to reach chosen desired rating (only if valid and > VA rounded)
     const desired = parseFloat(desiredRatingInput.value) || 0;
-    if (desired > 0) {
-      if (desired <= vaRoundedRating) {
-        pointsNeededDisplay.textContent = '—';
-      } else {
-        const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
-        pointsNeededDisplay.textContent = pointsNeeded;
-      }
+     if (desired > 0) {
+        if (desired <= vaRoundedRating) {
+            // Block invalid choice
+            pointsNeededDisplay.textContent = "—";
+            alert("Desired rating must be higher than your current VA rating.");
+            desiredRatingInput.value = "";
+        } else {
+            const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
+            pointsNeededDisplay.textContent = pointsNeeded;
+        }
     } else {
-      pointsNeededDisplay.textContent = '—';
+        pointsNeededDisplay.textContent = '—';
     }
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
   // Handle rating button clicks
   ratingButtons.forEach(button => {
