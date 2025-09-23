@@ -143,9 +143,9 @@ router.post("/calculate", (req, res) => {
   let { currentRating, bilateralRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
   spouse = !!spouse;
-  childrenUnder18 = childrenUnder18 || 0;
-  childrenOver18 = childrenOver18 || 0;
-  numParents = numParents || 0;
+  childrenUnder18 = parseInt(childrenUnder18) || 0;
+  childrenOver18 = parseInt(childrenOver18) || 0;
+  numParents = parseInt(numParents) || 0;
 
   let ratings = Array.isArray(currentRating)
     ? currentRating.map(Number)
@@ -157,12 +157,12 @@ router.post("/calculate", (req, res) => {
     : [];
   bilaterals = bilaterals.filter((r) => !isNaN(r) && r > 0);
 
-  // Calculate combined rating
-  const exactDecimal = calculateVACombinedRating(ratings, bilaterals); // e.g., 66.4
-  const exactWhole = Math.floor(exactDecimal); // truncate, e.g., 66
-  const roundedRating = vaRound(exactWhole); // nearest 10, e.g., 70
+  // Combined rating
+  const exactDecimal = calculateVACombinedRating(ratings, bilaterals); 
+  const exactWhole = Math.floor(exactDecimal); 
+  const roundedRating = vaRound(exactWhole);
 
-  // Compensation
+  // Current compensation
   const currentComp = calculateVACompensation(
     roundedRating,
     spouse,
@@ -170,27 +170,31 @@ router.post("/calculate", (req, res) => {
     childrenOver18,
     numParents
   );
-  const maxComp = calculateVACompensation(
-    100,
+
+  // Next VA bracket compensation
+  const nextBracket = getNextVaBracket(roundedRating);
+  const nextBracketComp = calculateVACompensation(
+    nextBracket,
     spouse,
     childrenUnder18,
     childrenOver18,
     numParents
   );
 
-  const missingPoints = 100 - roundedRating;
-  const difference = maxComp - currentComp;
+  const difference = nextBracketComp - currentComp;
+  const missingPoints = nextBracket - roundedRating;
 
   res.json({
-  exactDecimal: exactDecimal.toFixed(2) + "%", // 66.40%
-  exactWhole: exactWhole + "%",                // 66%
-  roundedRating: roundedRating + "%",          // 70%
-  currentCombinedRating: exactWhole + "%",     // frontend display
-  currentCompensation: currentComp.toFixed(2),
-  maxCompensation: maxComp.toFixed(2),
-  missingPoints,
-  difference: difference.toFixed(2),
+    exactDecimal: exactDecimal.toFixed(2) + "%",  
+    exactWhole: exactWhole + "%",                 
+    roundedRating: roundedRating + "%",          
+    nextBracket: nextBracket + "%",              
+    currentCompensation: currentComp.toFixed(2),
+    nextBracketCompensation: nextBracketComp.toFixed(2),
+    missingPoints,
+    difference: difference.toFixed(2),
   });
 });
+
 
 module.exports = router;
