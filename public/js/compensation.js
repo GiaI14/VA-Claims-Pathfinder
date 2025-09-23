@@ -92,29 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
-    
+
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
     const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
-  
-    // 🔹 If already at 100% (VA rounded), no next bracket
+
+    // 🔹 Next VA bracket
     if (vaRoundedRating === 100) {
         nextBracketDisplay.textContent = "Already at maximum 100%";
-        return;
+    } else {
+        const nextBracket = getNextVaBracket(combined);
+        const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+
+        nextBracketDisplay.textContent = 
+          pointsToNext > 0 
+            ? `${pointsToNext} points to reach ${nextBracket}%` 
+            : `Already at max bracket`;
     }
 
-    const nextBracket = getNextVaBracket(combined);
-    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-
-    nextBracketDisplay.textContent = 
-      pointsToNext > 0 
-        ? `${pointsToNext} points to reach ${nextBracket}%` 
-        : `Already at max bracket`;
-}
-
-   fetch('/calculate', {
+    // 🔹 Fetch compensation from backend
+    fetch('/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -128,13 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(res => res.json())
     .then(data => {
-        // Update HTML with calculated compensation
         document.getElementById('currentComp').textContent = data.currentCompensation;
         document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation;
         document.getElementById('payDifference').textContent = data.difference;
     });
 }
-                          
+                      
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -166,8 +164,6 @@ toggleBtn.addEventListener('click', () => {
 
   [spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
     el.addEventListener('change', () => {
-      // call your update function here if needed, e.g. updateCurrentRating() or your compensation calc
-      console.log('Dependents changed'); 
-    });
+      updateCurrentRating();
   });
 });
