@@ -30,12 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         return base;
     }
-}
+  }
   
-const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
+  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-function getNextVaBracket(current) {
-    // Calculate what individual rating this would round to
+  function getNextVaBracket(current) {
     const individualRounded = Math.round(current);
     
     let currentBracket;
@@ -49,48 +48,42 @@ function getNextVaBracket(current) {
 
     const currentIndex = vaBrackets.indexOf(currentBracket);
     return vaBrackets[currentIndex + 1] || 100;
-}
-////////////////////////////////////////////////////////////////////////////
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
   // Calculate points needed using remaining healthy fraction
-function calculatePointsToTarget(currentRatings, targetBracket) {
-    // Calculate combined rating and preserve decimals
+  function calculatePointsToTarget(currentRatings, targetBracket) {
     let combined = calculateCombinedRating([...currentRatings]);
 
-    // Calculate minimum rating needed for target bracket
     let minRatingForTarget;
     if (targetBracket === 100) {
         minRatingForTarget = 95; // Need ≥95% for 100% bracket
     } else if (targetBracket === 95) {
         minRatingForTarget = 90; // Need ≥90% for "95%" display
     } else {
-        minRatingForTarget = targetBracket - 5; // Normal case: X bracket requires ≥(X-5)%
+        minRatingForTarget = targetBracket - 5; // Normal case
     }
 
-    // If already at/above target threshold, calculate for NEXT bracket
     if (combined >= minRatingForTarget) {
-        // Determine next bracket
         let nextBracket;
         if (targetBracket === 95) {
-            nextBracket = 100; // After 95% comes 100%
+            nextBracket = 100;
         } else if (targetBracket === 100) {
-            return 0; // Can't go higher than 100%
+            return 0; 
         } else {
-            nextBracket = targetBracket + 10; // Normal progression
+            nextBracket = targetBracket + 10;
         }
-        
-        // Recursively calculate for next bracket
         return calculatePointsToTarget(currentRatings, nextBracket);
     }
 
-    // Calculate points needed using remaining healthy percentage
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
 
-    // Always round up to nearest 10 points
     return Math.ceil(rawPointsNeeded / 10) * 10;
-}
-//////////////////////////////////////////////////////////////////////////
-function updateCurrentRating() {
+  }
+  //////////////////////////////////////////////////////////////////////////
+
+  function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
     
     const roundedCombined = Math.round(combined);
@@ -100,16 +93,15 @@ function updateCurrentRating() {
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
   
     const nextBracket = getNextVaBracket(combined);
-    console.log('Next bracket:', nextBracket);
-    
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-    console.log('Points to next:', pointsToNext);
-    
-    nextBracketDisplay.textContent = pointsToNext;
-}
 
+    // 🔹 Display the result on the page (instead of console.log)
+    nextBracketDisplay.textContent = 
+      pointsToNext > 0 
+        ? `${pointsToNext} points to reach ${nextBracket}%` 
+        : `Already at max bracket`;
+  }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
