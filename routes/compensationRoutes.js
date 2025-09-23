@@ -141,8 +141,9 @@ function calculateVACombinedRating(ratings, bilateralRatings = []) {
 
 router.post("/calculate", (req, res) => {
   try{
-  console.log(req.body);
+  console.log("Request body:", req.body);
   let { currentRating, bilateralRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
+  console.log(currentRating, bilateralRatings, spouse, childrenUnder18, childrenOver18, numParents);
 
   spouse = !!spouse;
   childrenUnder18 = parseInt(childrenUnder18) || 0;
