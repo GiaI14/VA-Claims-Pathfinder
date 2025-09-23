@@ -139,6 +139,23 @@ function calculateVACombinedRating(ratings, bilateralRatings = []) {
   return combinedRating;
 }
 
+function getNextVaBracket(current) {
+  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
+  const individualRounded = Math.round(current);
+
+  let currentBracket;
+  if (individualRounded >= 90 && individualRounded <= 94) {
+    currentBracket = 95;
+  } else {
+    currentBracket = Math.round(individualRounded / 10) * 10;
+  }
+
+  if (currentBracket >= 100) return 100;
+
+  const currentIndex = vaBrackets.indexOf(currentBracket);
+  return vaBrackets[currentIndex + 1] || 100;
+}
+
 router.post("/calculate", (req, res) => {
   try{
   console.log("Request body:", req.body);
