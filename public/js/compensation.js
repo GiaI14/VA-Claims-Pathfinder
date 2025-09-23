@@ -92,15 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
   
+    // 🔹 If already at 100% (VA rounded), no next bracket
+    if (vaRoundedRating === 100) {
+        nextBracketDisplay.textContent = "Already at maximum 100%";
+        return;
+    }
+
     const nextBracket = getNextVaBracket(combined);
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
 
-    // 🔹 Display the result on the page (instead of console.log)
     nextBracketDisplay.textContent = 
       pointsToNext > 0 
         ? `${pointsToNext} points to reach ${nextBracket}%` 
         : `Already at max bracket`;
-  }
+}
 
   // Handle rating button clicks
   ratingButtons.forEach(button => {
