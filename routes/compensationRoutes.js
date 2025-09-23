@@ -11,12 +11,6 @@ const childOver18Pay = { 30: 102, 40: 137, 50: 171, 60: 205, 70: 239, 80: 274, 9
 const OneParent = { 30: 51, 40: 68, 50: 85, 60: 102, 70: 120, 80: 137, 90: 154, 100: 171.44 };
 const TwoParents = { 30: 102, 40: 136, 50: 170, 60: 204, 70: 240, 80: 274, 90: 308, 100: 342.88 };
 
-// -- Calculate VA Compensation --
-const express = require("express");
-const router = express.Router();
-
-// Make sure your basePay, compensationWithSpouse, compensationWithChildAndSpouse, compensationWithChildOnly, childUnder18Pay, childOver18Pay, OneParent, TwoParents are defined above this
-
 // VA Compensation function
 function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
   let baseCompensation = 0;
