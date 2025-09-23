@@ -114,6 +114,27 @@ document.addEventListener('DOMContentLoaded', () => {
         : `Already at max bracket`;
 }
 
+   fetch('/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            currentRating: selectedRatings,
+            bilateralRatings: [], // add if needed
+            spouse: spouse.checked,
+            childrenUnder18: parseInt(childrenUnder18.value),
+            childrenOver18: parseInt(childrenOver18.value),
+            numParents: parseInt(numParents.value)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Update HTML with calculated compensation
+        document.getElementById('currentComp').textContent = data.currentCompensation;
+        document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation;
+        document.getElementById('payDifference').textContent = data.difference;
+    });
+}
+                          
   // Handle rating button clicks
   ratingButtons.forEach(button => {
     button.addEventListener('click', () => {
