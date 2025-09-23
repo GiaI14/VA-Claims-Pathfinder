@@ -90,7 +90,11 @@
       </div>
     </div>
 
-    <script src="/js/compensation.js" nonce="<%= nonce %>"></script>
+    <script nonce="<%= nonce %>">
+  const csrfToken = '<%= csrfToken %>';
+</script>
+<script src="/js/compensation.js" nonce="<%= nonce %>"></script>
+
     <%- include('includes/footer') %>
   </div>
 </body>
