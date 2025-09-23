@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   //////////////////////////////////////////////////////////////////////////
 
-  function updateCurrentRating() {
+ function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
 
     const roundedCombined = Math.round(combined);
@@ -112,27 +112,30 @@ document.addEventListener('DOMContentLoaded', () => {
             : `Already at max bracket`;
     }
 
-   fetch('/calculate', {
-    method: 'POST',
-    headers: { 
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-    },
-    body: JSON.stringify({
-        currentRating: selectedRatings,
-        bilateralRatings: [],
-        spouse: spouse.checked,
-        childrenUnder18: parseInt(childrenUnder18.value),
-        childrenOver18: parseInt(childrenOver18.value),
-        numParents: parseInt(numParents.value)
+    // 🔹 Fetch compensation from backend
+    fetch('/calculate', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken // Make sure csrfToken variable exists
+        },
+        body: JSON.stringify({
+            currentRating: selectedRatings,
+            bilateralRatings: [],
+            spouse: spouse.checked,
+            childrenUnder18: parseInt(childrenUnder18.value),
+            childrenOver18: parseInt(childrenOver18.value),
+            numParents: parseInt(numParents.value)
+        })
     })
-})
-.then(res => res.json())
-.then(data => {
-    document.getElementById('currentComp').textContent = data.currentCompensation;
-    document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation;
-    document.getElementById('payDifference').textContent = data.difference;
-});
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('currentComp').textContent = data.currentCompensation;
+        document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation;
+        document.getElementById('payDifference').textContent = data.difference;
+    })
+    .catch(err => console.error('Error fetching compensation:', err));
+}
 
                       
   // Handle rating button clicks
