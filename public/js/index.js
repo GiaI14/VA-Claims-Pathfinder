@@ -76,6 +76,13 @@ async function calculateDisability() {
     const childrenOver18 = parseInt(document.getElementById("childrenOver18").value) || 0;
     const numParents = parseInt(document.getElementById("numParents").value) || 0;
 
+    if(ratings.length === 0) {
+        document.getElementById("exactRating").innerText = "";
+        document.getElementById("roundedRating").innerText = "";
+        document.getElementById("result").innerText = "";
+        return;
+    }
+
     try {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const response = await fetch("/api/calculate-disability", {
@@ -90,7 +97,9 @@ async function calculateDisability() {
         const data = await response.json();
 
         if (data.error) {
-            alert(`Error: ${data.error}`);
+            document.getElementById("exactRating").innerText = "";
+            document.getElementById("roundedRating").innerText = "";
+            document.getElementById("result").innerText = "";
             return;
         }
 
