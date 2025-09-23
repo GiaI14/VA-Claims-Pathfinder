@@ -169,3 +169,4 @@ toggleBtn.addEventListener('click', () => {
         updateCurrentRating();
     });
 });
+});
