@@ -115,7 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔹 Fetch compensation from backend
     fetch('/calculate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+                 'CSRF-Token': csrfToken
+                 },
         body: JSON.stringify({
             currentRating: selectedRatings,
             bilateralRatings: [], // add if needed
