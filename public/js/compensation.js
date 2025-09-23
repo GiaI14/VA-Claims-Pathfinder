@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 
           'Content-Type': 'application/json',
           'CSRF-Token': csrfToken
-      }
+      },
         body: JSON.stringify({
             currentRating: selectedRatings,
             bilateralRatings: [],
