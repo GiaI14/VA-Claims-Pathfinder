@@ -2,16 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const ratingButtons = document.querySelectorAll('.rating-btn');
   const selectedRatingsContainer = document.getElementById('selected-ratings');
   const currentRatingDisplay = document.getElementById('currentRating');
-  const desiredRatingInput = document.getElementById('desiredRating');
   const nextBracketDisplay = document.getElementById('nextBracketPoints');
-  const pointsNeededDisplay = document.getElementById('pointsNeeded');
   const vaRoundedDisplay = document.getElementById('vaRoundedRating');
 
   let selectedRatings = [];
 
   // VA-style combined rating calculation (highest first)
   function calculateCombinedRating(ratings) {
-    const sorted = [...ratings].sort((a, b) => b - a); // highest first
+    const sorted = [...ratings].sort((a, b) => b - a); 
     let remaining = 100;
     let combined = 0;
     sorted.forEach(r => {
@@ -40,18 +38,15 @@ function getNextVaBracket(current) {
     // Calculate what individual rating this would round to
     const individualRounded = Math.round(current);
     
-    // Calculate current VA bracket
     let currentBracket;
     if (individualRounded >= 90 && individualRounded <= 94) {
         currentBracket = 95;
     } else {
         currentBracket = Math.round(individualRounded / 10) * 10;
     }
-    
-    // If already at 100%, return 100
+   
     if (currentBracket >= 100) return 100;
-    
-    // Always target the next bracket (simpler approach)
+
     const currentIndex = vaBrackets.indexOf(currentBracket);
     return vaBrackets[currentIndex + 1] || 100;
 }
@@ -111,14 +106,6 @@ function updateCurrentRating() {
     console.log('Points to next:', pointsToNext);
     
     nextBracketDisplay.textContent = pointsToNext;
-
-    const desired = parseFloat(desiredRatingInput.value) || 0;
-    if (desired > 0) {
-        const pointsNeeded = calculatePointsToTarget(selectedRatings, desired);
-        pointsNeededDisplay.textContent = pointsNeeded;
-    } else {
-        pointsNeededDisplay.textContent = '—';
-    }
 }
 
 
@@ -144,10 +131,5 @@ function updateCurrentRating() {
       selectedRatingsContainer.appendChild(selectedBtn);
       updateCurrentRating();
     });
-  });
-
-  // Update when desired rating changes
-  desiredRatingInput.addEventListener('input', () => {
-    updateCurrentRating();
   });
 });
