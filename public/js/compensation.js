@@ -164,6 +164,6 @@ toggleBtn.addEventListener('click', () => {
 
   [spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
     el.addEventListener('change', () => {
-      updateCurrentRating();
-  });
+        updateCurrentRating();
+    });
 });
