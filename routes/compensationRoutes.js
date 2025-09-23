@@ -130,7 +130,7 @@ router.post("/calculate", (req, res) => {
 
   } catch (err) {
     console.error("Error in /calculate:", err.message);
-    res.status(200).json({ error: err.message });
+    res.status(200).json({ error: err.message || "Unknown server error" });
   }
 });
 
