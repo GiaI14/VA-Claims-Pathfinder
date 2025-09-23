@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// VA Compensation Tables
 const basePay = {
   10: 175.51,
   20: 346.95,
@@ -140,7 +139,6 @@ function calculateVACombinedRating(ratings, bilateralRatings = []) {
   return combinedRating;
 }
 
-// Route: POST /compensation/calculate
 router.post("/calculate", (req, res) => {
   let { currentRating, bilateralRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
@@ -149,7 +147,6 @@ router.post("/calculate", (req, res) => {
   childrenOver18 = childrenOver18 || 0;
   numParents = numParents || 0;
 
-  // Ratings array
   let ratings = Array.isArray(currentRating)
     ? currentRating.map(Number)
     : [Number(currentRating)];
@@ -188,7 +185,7 @@ router.post("/calculate", (req, res) => {
   exactDecimal: exactDecimal.toFixed(2) + "%", // 66.40%
   exactWhole: exactWhole + "%",                // 66%
   roundedRating: roundedRating + "%",          // 70%
-  currentCombinedRating: exactWhole + "%",     // 👈 use this for frontend display
+  currentCombinedRating: exactWhole + "%",     // frontend display
   currentCompensation: currentComp.toFixed(2),
   maxCompensation: maxComp.toFixed(2),
   missingPoints,
