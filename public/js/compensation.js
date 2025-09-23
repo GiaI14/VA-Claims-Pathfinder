@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 🔹 Fetch compensation from backend
-    fetch('/api/calculate', {
+    fetch('/compensation/calculate', {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
