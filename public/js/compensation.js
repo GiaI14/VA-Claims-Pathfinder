@@ -4,7 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentRatingDisplay = document.getElementById('currentRating');
   const nextBracketDisplay = document.getElementById('nextBracketPoints');
   const vaRoundedDisplay = document.getElementById('vaRoundedRating');
+  const toggleBtn = document.getElementById('toggle-dependents');
+  const dependentsContainer = document.getElementById('dependents-container');
 
+  const spouse = document.getElementById("spouse");
+  const childrenUnder18 = document.getElementById("childrenUnder18");
+  const childrenOver18 = document.getElementById("childrenOver18");
+  const numParents = document.getElementById("numParents");
+  
   let selectedRatings = [];
 
   // VA-style combined rating calculation (highest first)
@@ -127,6 +134,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       selectedRatingsContainer.appendChild(selectedBtn);
       updateCurrentRating();
+    });
+  });
+
+toggleBtn.addEventListener('click', () => {
+    const isVisible = dependentsContainer.style.display === 'block';
+    dependentsContainer.style.display = isVisible ? 'none' : 'block';
+    toggleBtn.textContent = isVisible ? 'Add Dependents' : 'Hide Dependents';
+  });
+
+  [spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
+    el.addEventListener('change', () => {
+      // call your update function here if needed, e.g. updateCurrentRating() or your compensation calc
+      console.log('Dependents changed'); 
     });
   });
 });
