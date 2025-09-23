@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  },
         body: JSON.stringify({
             currentRating: selectedRatings,
-            bilateralRatings: [], // add if needed
+            bilateralRatings: [],
             spouse: spouse.checked,
             childrenUnder18: parseInt(childrenUnder18.value),
             childrenOver18: parseInt(childrenOver18.value),
