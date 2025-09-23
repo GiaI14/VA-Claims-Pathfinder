@@ -140,6 +140,7 @@ function calculateVACombinedRating(ratings, bilateralRatings = []) {
 }
 
 router.post("/calculate", (req, res) => {
+  try{
   console.log(req.body);
   let { currentRating, bilateralRatings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
 
@@ -186,15 +187,19 @@ router.post("/calculate", (req, res) => {
   const missingPoints = nextBracket - roundedRating;
 
   res.json({
-    exactDecimal: exactDecimal.toFixed(2) + "%",  
-    exactWhole: exactWhole + "%",                 
-    roundedRating: roundedRating + "%",          
-    nextBracket: nextBracket + "%",              
-    currentCompensation: currentComp.toFixed(2),
-    nextBracketCompensation: nextBracketComp.toFixed(2),
-    missingPoints,
-    difference: difference.toFixed(2),
-  });
+      exactDecimal: exactDecimal.toFixed(2) + "%",  
+      exactWhole: exactWhole + "%",                 
+      roundedRating: roundedRating + "%",          
+      nextBracket: nextBracket + "%",              
+      currentCompensation: currentComp.toFixed(2),
+      nextBracketCompensation: nextBracketComp.toFixed(2),
+      missingPoints,
+      difference: difference.toFixed(2),
+    });
+  } catch (err) {
+    console.error("Error in /calculate:", err);
+    res.status(500).json({ error: "An error occurred while calculating VA compensation" });
+  }
 });
 
 
