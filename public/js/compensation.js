@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  
   const ratingButtons = document.querySelectorAll('.rating-btn');
   const selectedRatingsContainer = document.getElementById('selected-ratings');
   const currentRatingDisplay = document.getElementById('currentRating');
