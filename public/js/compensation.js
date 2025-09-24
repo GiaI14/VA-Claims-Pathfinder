@@ -109,19 +109,20 @@ function updateCurrentRating() {
     const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
 
-    // Next VA bracket
-    if (vaRoundedRating === 100) {
+    // Determine next VA bracket
+    let nextBracket;
+    if (vaRoundedRating >= 100) {
         nextBracketDisplay.textContent = "Already at maximum 100%";
+        nextBracket = 100;
     } else {
-        const nextBracket = getNextVaBracket(combined);
+        nextBracket = getNextVaBracket(vaRoundedRating); // Use VA rounded rating
         const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-
         nextBracketDisplay.textContent = pointsToNext > 0 
             ? `${pointsToNext} points to reach ${nextBracket}%` 
             : `Already at max bracket`;
     }
 
-    // Fetch compensation only if ratings exist
+    // Send VA rounded rating to backend for current compensation
     fetch('/compensation/calculate', {
         method: 'POST',
         headers: { 
@@ -129,7 +130,8 @@ function updateCurrentRating() {
             'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({
-            currentRating: selectedRatings,
+            currentRating: [vaRoundedRating], // use rounded rating here
+            nextBracketRating: nextBracket,   // also send next bracket
             spouse: spouse.checked,
             childrenUnder18: parseInt(childrenUnder18.value),
             childrenOver18: parseInt(childrenOver18.value),
