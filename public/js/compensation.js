@@ -115,11 +115,11 @@ function updateCurrentRating() {
         nextBracketDisplay.textContent = "Already at maximum 100%";
         nextBracket = 100;
     } else {
-        nextBracket = getNextVaBracket(vaRoundedRating); // Use VA rounded rating
-        const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-        nextBracketDisplay.textContent = pointsToNext > 0 
-            ? `${pointsToNext} points to reach ${nextBracket}%` 
-            : `Already at max bracket`;
+        nextBracket = getNextVaBracket(combined); // ✅ use raw combined
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    nextBracketDisplay.textContent = pointsToNext > 0 
+        ? `${pointsToNext} points to reach ${nextBracket}%` 
+        : `Already at max bracket`;
     }
 
     // Send VA rounded rating to backend for current compensation
