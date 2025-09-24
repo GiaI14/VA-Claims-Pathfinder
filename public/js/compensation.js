@@ -43,16 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-  // Returns the NEXT VA bracket after the current VA rounded bracket
 function getNextVaBracket(currentCombined) {
-  // vaRound() is your existing function that returns the VA rounded bracket.
   const currentBracket = vaRound(currentCombined);
   const idx = vaBrackets.indexOf(currentBracket);
   return vaBrackets[idx + 1] || 100;
 }
 
-// Brute-force search for smallest 10-point rating that will bump VA rounded output
-// to (>=) the targetBracket. Uses the same combine formula as your calculator.
 function calculatePointsToTarget(currentRatings, targetBracket) {
   const combined = calculateCombinedRating([...currentRatings]);
 
@@ -60,7 +56,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
   const currentVa = vaRound(combined);
   if (currentVa >= targetBracket) return 0;
 
-  // test 0,10,20,...100 — return first that achieves targetBracket when added
   for (let add = 0; add <= 100; add += 10) {
     const newCombined = combined + (add * (100 - combined) / 100);
     const newVa = vaRound(newCombined);
@@ -69,7 +64,6 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
     }
   }
 
-  // fallback
   return 100;
 }
 
@@ -98,8 +92,13 @@ function updateCurrentRating() {
         nextBracketDisplay.textContent = "Already at maximum 100%";
         nextBracket = 100;
     } else {
-        nextBracket = getNextVaBracket(combined); // ✅ use raw combined
+        nextBracket = getNextVaBracket(combined); 
     const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+      
+    let displayBracket = nextBracket;
+    if (nextBracket === 95 && vaRoundedRating >= 90) {
+        displayBracket = 100;
+    }
     nextBracketDisplay.textContent = pointsToNext > 0 
         ? `${pointsToNext} points to reach ${nextBracket}%` 
         : `Already at max bracket`;
