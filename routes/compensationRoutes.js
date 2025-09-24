@@ -65,6 +65,46 @@ function getNextVaBracket(current) {
   return vaBrackets[currentIndex + 1] || 100;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
+function calculatePointsToTarget(currentRatings, targetBracket) {
+  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
+
+  function calculateCombinedRating(ratings) {
+    const sorted = [...ratings].sort((a, b) => b - a); 
+    let remaining = 100;
+    let combined = 0;
+    sorted.forEach(r => {
+      const add = (r * remaining) / 100;
+      combined += add;
+      remaining -= add;
+    });
+    return combined;
+  }
+
+  let combined = calculateCombinedRating([...currentRatings]);
+
+  let minRatingForTarget;
+  if (targetBracket === 100) {
+      minRatingForTarget = 95;
+  } else if (targetBracket === 95) {
+      minRatingForTarget = 90;
+  } else {
+      minRatingForTarget = targetBracket - 5;
+  }
+
+  if (combined >= minRatingForTarget) {
+      let nextBracket;
+      if (targetBracket === 95) nextBracket = 100;
+      else if (targetBracket === 100) return 0;
+      else nextBracket = targetBracket + 10;
+      return calculatePointsToTarget(currentRatings, nextBracket);
+  }
+
+  const remainingHealthy = 100 - combined;
+  const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
+
+  return Math.ceil(rawPointsNeeded / 10) * 10;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.post("/calculate", (req, res) => {
   try {
     console.log("Received body:", req.body);
