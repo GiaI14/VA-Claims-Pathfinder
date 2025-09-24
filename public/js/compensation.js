@@ -93,12 +93,12 @@ function updateCurrentRating() {
         nextBracket = 100;
     } else {
         nextBracket = getNextVaBracket(combined); 
-    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-      
-    let displayBracket = nextBracket;
+
+      let displayBracket = nextBracket;
     if (nextBracket === 95 && vaRoundedRating >= 90) {
         displayBracket = 100;
     }
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
     nextBracketDisplay.textContent = pointsToNext > 0 
         ? `${pointsToNext} points to reach ${nextBracket}%` 
         : `Already at max bracket`;
