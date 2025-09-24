@@ -112,20 +112,20 @@ function updateCurrentRating() {
             : `Already at max bracket`;
     }
 
-    // 🔹 Fetch compensation from backend
-    fetch('/compensation/calculate', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            currentRating: selectedRatings,
-            spouse: spouse.checked,
-            childrenUnder18: parseInt(childrenUnder18.value),
-            childrenOver18: parseInt(childrenOver18.value),
-            numParents: parseInt(numParents.value)
-        })
+  fetch('/compensation/calculate', {
+    method: 'POST',
+    headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({
+        currentRating: selectedRatings,
+        spouse: spouse.checked,
+        childrenUnder18: parseInt(childrenUnder18.value),
+        childrenOver18: parseInt(childrenOver18.value),
+        numParents: parseInt(numParents.value)
     })
+})
     .then(res => res.json())
     .then(data => {
         // Match server response keys
