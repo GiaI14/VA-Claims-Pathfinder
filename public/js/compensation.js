@@ -116,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/compensation/calculate', {
         method: 'POST',
         headers: { 
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken // Make sure csrfToken variable exists
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             currentRating: selectedRatings,
