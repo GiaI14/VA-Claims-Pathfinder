@@ -47,50 +47,36 @@ function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18
   return parseFloat(baseCompensation.toFixed(2));
 }
 
-// POST /calculate route
 router.post("/calculate", (req, res) => {
   try {
+    console.log("Received body:", req.body);
     const { currentRating, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
-
-    // Parse and sanitize input
+    
+    // Parse inputs
     const roundedRating = Math.round(Array.isArray(currentRating) ? Number(currentRating[0]) : Number(currentRating));
     const hasSpouse = !!spouse;
     const under18 = parseInt(childrenUnder18) || 0;
     const over18 = parseInt(childrenOver18) || 0;
     const parents = parseInt(numParents) || 0;
 
-    
-    // Calculate total compensation
+    // Calculate compensation
     const totalCompensation = calculateVACompensation(roundedRating, hasSpouse, under18, over18, parents);
 
-    console.log(`Total Compensation: $${totalCompensation.toFixed(2)}`);
-
-     const nextBracket = getNextVaBracket(roundedRating);
-
-    // Calculate next bracket compensation
+    // Next bracket
+    const nextBracket = getNextVaBracket(roundedRating);
     let nextBracketCompensation = null;
     if (nextBracket && nextBracket <= 100) {
-      nextBracketCompensation = calculateVACompensation(
-        nextBracket,
-        hasSpouse,
-        under18,
-        over18,
-        parents
-      );
-      console.log(`Next Bracket Compensation (${nextBracket}%): $${nextBracketCompensation.toFixed(2)}`);
+      nextBracketCompensation = calculateVACompensation(nextBracket, hasSpouse, under18, over18, parents);
     }
 
-    // Points to next bracket
     const pointsToNext = calculatePointsToTarget([roundedRating], nextBracket);
 
-    
+    // Send JSON
     res.json({
       roundedRating: roundedRating + "%",
       totalCompensation: totalCompensation.toFixed(2),
       nextBracket: nextBracket ? nextBracket + "%" : null,
-      nextBracketCompensation: nextBracketCompensation
-        ? nextBracketCompensation.toFixed(2)
-        : null,
+      nextBracketCompensation: nextBracketCompensation ? nextBracketCompensation.toFixed(2) : null,
       pointsToNext
     });
 
@@ -99,6 +85,7 @@ router.post("/calculate", (req, res) => {
     res.status(500).json({ error: "An error occurred while calculating VA compensation" });
   }
 });
+
 
 module.exports = router;
 
