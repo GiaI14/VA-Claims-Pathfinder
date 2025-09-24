@@ -95,7 +95,7 @@ function updateCurrentRating() {
     if (selectedRatings.length === 0) {
         currentRatingDisplay.textContent = "0%";
         vaRoundedDisplay.textContent = "0%";
-        nextBracketDisplay.textContent = "10 points to reach 10%";
+        nextBracketDisplay.textContent = "";
         document.getElementById('currentComp').textContent = "$0.00";
         document.getElementById('nextBracketComp').textContent = "$0.00";
         document.getElementById('payDifference').textContent = "$0.00";
