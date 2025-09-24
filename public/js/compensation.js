@@ -99,17 +99,17 @@ function updateCurrentRating() {
         document.getElementById('currentComp').textContent = "$0.00";
         document.getElementById('nextBracketComp').textContent = "$0.00";
         document.getElementById('payDifference').textContent = "$0.00";
-        return; // Stop here, no fetch
+        return; // Stop function here
     }
-
     const combined = calculateCombinedRating(selectedRatings);
+
     const roundedCombined = Math.round(combined);
     currentRatingDisplay.textContent = roundedCombined + '%';
 
     const vaRoundedRating = vaRound(combined);
     vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
 
-    // Next VA bracket
+    // 🔹 Next VA bracket
     if (vaRoundedRating === 100) {
         nextBracketDisplay.textContent = "Already at maximum 100%";
     } else {
@@ -121,28 +121,33 @@ function updateCurrentRating() {
             : `Already at max bracket`;
     }
 
-    // Fetch compensation only if ratings exist
-    fetch('/compensation/calculate', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken
-        },
-        body: JSON.stringify({
-            currentRating: selectedRatings,
-            spouse: spouse.checked,
-            childrenUnder18: parseInt(childrenUnder18.value),
-            childrenOver18: parseInt(childrenOver18.value),
-            numParents: parseInt(numParents.value)
-        })
+  fetch('/compensation/calculate', {
+    method: 'POST',
+    headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({
+        currentRating: selectedRatings,
+        spouse: spouse.checked,
+        childrenUnder18: parseInt(childrenUnder18.value),
+        childrenOver18: parseInt(childrenOver18.value),
+        numParents: parseInt(numParents.value)
     })
+})
     .then(res => res.json())
     .then(data => {
-        document.getElementById('currentComp').textContent = `$${data.totalCompensation || '0.00'}`;
-        document.getElementById('nextBracketComp').textContent = `$${data.nextBracketCompensation || '0.00'}`;
+        // Match server response keys
+        document.getElementById('currentComp').textContent = data.totalCompensation || '0.00';
+        document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation || '0.00';
 
-        const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
-        document.getElementById('payDifference').textContent = `$${difference}`;
+        // Optional: calculate difference if both exist
+        if (data.totalCompensation && data.nextBracketCompensation) {
+            const difference = parseFloat(data.nextBracketCompensation) - parseFloat(data.totalCompensation);
+            document.getElementById('payDifference').textContent = difference.toFixed(2);
+        } else {
+            document.getElementById('payDifference').textContent = '0.00';
+        }
     })
     .catch(err => console.error('Error fetching compensation:', err));
 }
