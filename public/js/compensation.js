@@ -139,11 +139,11 @@ function updateCurrentRating() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('currentComp').textContent = `$${data.totalCompensation || '0.00'}`;
-        document.getElementById('nextBracketComp').textContent = `$${data.nextBracketCompensation || '0.00'}`;
+        document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
+        document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
 
         const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
-        document.getElementById('payDifference').textContent = `$${difference}`;
+        document.getElementById('payDifference').textContent = `${difference}`;
     })
     .catch(err => console.error('Error fetching compensation:', err));
 }
