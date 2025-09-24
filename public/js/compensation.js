@@ -92,17 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   //////////////////////////////////////////////////////////////////////////
 function updateCurrentRating() {
-    if (selectedRatings.length === 0) {
-        // Reset all displays
-        currentRatingDisplay.textContent = "0%";
-        vaRoundedDisplay.textContent = "0%";
-        nextBracketDisplay.textContent = "";
-        document.getElementById('currentComp').textContent = "$0.00";
-        document.getElementById('nextBracketComp').textContent = "$0.00";
-        document.getElementById('payDifference').textContent = "$0.00";
-        return;
-    }
-
     const combined = calculateCombinedRating(selectedRatings);
 
     const roundedCombined = Math.round(combined);
@@ -118,8 +107,7 @@ function updateCurrentRating() {
         const nextBracket = getNextVaBracket(combined);
         const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
 
-        nextBracketDisplay.textContent = 
-          pointsToNext > 0 
+        nextBracketDisplay.textContent = pointsToNext > 0 
             ? `${pointsToNext} points to reach ${nextBracket}%` 
             : `Already at max bracket`;
     }
@@ -140,15 +128,21 @@ function updateCurrentRating() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('currentComp').textContent = "$" + data.totalCompensation;
-        document.getElementById('nextBracketComp').textContent = "$" + (data.nextBracketCompensation || "0.00");
-        const difference = data.nextBracketCompensation 
-            ? (data.nextBracketCompensation - data.totalCompensation).toFixed(2)
-            : "0.00";
-        document.getElementById('payDifference').textContent = "$" + difference;
+        // Match server response keys
+        document.getElementById('currentComp').textContent = data.totalCompensation || '0.00';
+        document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation || '0.00';
+
+        // Optional: calculate difference if both exist
+        if (data.totalCompensation && data.nextBracketCompensation) {
+            const difference = parseFloat(data.nextBracketCompensation) - parseFloat(data.totalCompensation);
+            document.getElementById('payDifference').textContent = difference.toFixed(2);
+        } else {
+            document.getElementById('payDifference').textContent = '0.00';
+        }
     })
     .catch(err => console.error('Error fetching compensation:', err));
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////               
   // Handle rating button clicks
   ratingButtons.forEach(button => {
