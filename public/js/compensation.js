@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   //////////////////////////////////////////////////////////////////////////
 
- function updateCurrentRating() {
+function updateCurrentRating() {
     const combined = calculateCombinedRating(selectedRatings);
 
     const roundedCombined = Math.round(combined);
@@ -106,33 +106,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextBracket = getNextVaBracket(combined);
         const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
 
-        nextBracketDisplay.textContent = 
-          pointsToNext > 0 
+        nextBracketDisplay.textContent = pointsToNext > 0 
             ? `${pointsToNext} points to reach ${nextBracket}%` 
             : `Already at max bracket`;
     }
 
-  fetch('/compensation/calculate', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    currentRating: selectedRatings,
-    spouse: spouse.checked,
-    childrenUnder18: parseInt(childrenUnder18.value),
-    childrenOver18: parseInt(childrenOver18.value),
-    numParents: parseInt(numParents.value)
-  })
-})
-.then(res => {
-  if (!res.ok) throw new Error("Server returned " + res.status);
-  return res.json();
-})
-.then(data => {
-  document.getElementById('currentComp').textContent = data.totalCompensation;
-  document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation;
-})
-.catch(err => console.error('Error fetching compensation:', err));
+    // 🔹 Fetch compensation from backend
+    fetch('/compensation/calculate', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            currentRating: selectedRatings,
+            spouse: spouse.checked,
+            childrenUnder18: parseInt(childrenUnder18.value),
+            childrenOver18: parseInt(childrenOver18.value),
+            numParents: parseInt(numParents.value)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Match server response keys
+        document.getElementById('currentComp').textContent = data.totalCompensation || '0.00';
+        document.getElementById('nextBracketComp').textContent = data.nextBracketCompensation || '0.00';
 
+        // Optional: calculate difference if both exist
+        if (data.totalCompensation && data.nextBracketCompensation) {
+            const difference = parseFloat(data.nextBracketCompensation) - parseFloat(data.totalCompensation);
+            document.getElementById('payDifference').textContent = difference.toFixed(2);
+        } else {
+            document.getElementById('payDifference').textContent = '0.00';
+        }
+    })
+    .catch(err => console.error('Error fetching compensation:', err));
+}
 
                       
   // Handle rating button clicks
