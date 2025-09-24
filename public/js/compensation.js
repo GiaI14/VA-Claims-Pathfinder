@@ -43,52 +43,36 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-  function getNextVaBracket(current) {
-    const individualRounded = Math.round(current);
-    
-    let currentBracket;
-    if (individualRounded >= 90 && individualRounded <= 94) {
-        currentBracket = 95;
-    } else {
-        currentBracket = Math.round(individualRounded / 10) * 10;
-    }
-   
-    if (currentBracket >= 100) return 100;
+  // Returns the NEXT VA bracket after the current VA rounded bracket
+function getNextVaBracket(currentCombined) {
+  // vaRound() is your existing function that returns the VA rounded bracket.
+  const currentBracket = vaRound(currentCombined);
+  const idx = vaBrackets.indexOf(currentBracket);
+  return vaBrackets[idx + 1] || 100;
+}
 
-    const currentIndex = vaBrackets.indexOf(currentBracket);
-    return vaBrackets[currentIndex + 1] || 100;
+// Brute-force search for smallest 10-point rating that will bump VA rounded output
+// to (>=) the targetBracket. Uses the same combine formula as your calculator.
+function calculatePointsToTarget(currentRatings, targetBracket) {
+  const combined = calculateCombinedRating([...currentRatings]);
+
+  // Already at-or-above the target bracket
+  const currentVa = vaRound(combined);
+  if (currentVa >= targetBracket) return 0;
+
+  // test 0,10,20,...100 — return first that achieves targetBracket when added
+  for (let add = 0; add <= 100; add += 10) {
+    const newCombined = combined + (add * (100 - combined) / 100);
+    const newVa = vaRound(newCombined);
+    if (newVa >= targetBracket) {
+      return add;
+    }
   }
 
-  ////////////////////////////////////////////////////////////////////////////
-  // Calculate points needed using remaining healthy fraction
-  function calculatePointsToTarget(currentRatings, targetBracket) {
-    let combined = calculateCombinedRating([...currentRatings]);
-
-    let minRatingForTarget;
-    if (targetBracket === 100) {
-        minRatingForTarget = 95; // Need ≥95% for 100% bracket
-    } else if (targetBracket === 95) {
-        minRatingForTarget = 90; // Need ≥90% for "95%" display
-    } else {
-        minRatingForTarget = targetBracket - 5; // Normal case
-    }
-
-    // ✅ Fix: do NOT recurse when we're in the 90+ special ranges
-    if (combined >= minRatingForTarget) {
-        if (targetBracket === 95 || targetBracket === 100) {
-            return 0; // already qualifies
-        }
-        // Otherwise, move to next bracket
-        const nextBracket = targetBracket + 10;
-        return calculatePointsToTarget(currentRatings, nextBracket);
-    }
-
-    const remainingHealthy = 100 - combined;
-    const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
-
-    // Round up to nearest 10
-    return Math.ceil(rawPointsNeeded / 10) * 10;
+  // fallback
+  return 100;
 }
+
   //////////////////////////////////////////////////////////////////////////
 function updateCurrentRating() {
     if (selectedRatings.length === 0) {
