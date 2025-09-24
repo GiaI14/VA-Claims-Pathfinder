@@ -73,23 +73,22 @@ document.addEventListener('DOMContentLoaded', () => {
         minRatingForTarget = targetBracket - 5; // Normal case
     }
 
+    // ✅ Fix: do NOT recurse when we're in the 90+ special ranges
     if (combined >= minRatingForTarget) {
-        let nextBracket;
-        if (targetBracket === 95) {
-            nextBracket = 100;
-        } else if (targetBracket === 100) {
-            return 0; 
-        } else {
-            nextBracket = targetBracket + 10;
+        if (targetBracket === 95 || targetBracket === 100) {
+            return 0; // already qualifies
         }
+        // Otherwise, move to next bracket
+        const nextBracket = targetBracket + 10;
         return calculatePointsToTarget(currentRatings, nextBracket);
     }
 
     const remainingHealthy = 100 - combined;
     const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
 
+    // Round up to nearest 10
     return Math.ceil(rawPointsNeeded / 10) * 10;
-  }
+}
   //////////////////////////////////////////////////////////////////////////
 function updateCurrentRating() {
     if (selectedRatings.length === 0) {
