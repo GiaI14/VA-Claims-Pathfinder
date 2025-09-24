@@ -52,13 +52,15 @@
           <button id="toggle-dependents">Add Dependents</button>
           <div class="dependents-center-wrapper">
             <div id="dependents-container" style="display:none;">
+              <h2>Dependents</h2>
               <div class="dependents-row">
-                <label>
+                <div class="dependent-field" style="flex:0 0 auto;">
+                <label for="spouse">
                   <input type="checkbox" id="spouse"> Spouse?
                 </label>
               </div>
-              <div class="dependents-row">
-                <label for="numParents">Number of Parents:</label>
+              <div class="parents-field">
+                <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
                 <select id="numParents">
                   <option value="0">0</option>
                   <option value="1">1</option>
@@ -66,12 +68,14 @@
                 </select>
               </div>
               <div class="dependents-row">
-                <label for="childrenUnder18">Number of Children Under 18:</label>
-                <input type="number" id="childrenUnder18" min="0" value="0">
+               <div class="dependent-field">
+                    <label for="childrenUnder18">Number of Children Under 18:</label>
+                    <input type="number" id="childrenUnder18" min="0" value="0">
               </div>
-              <div class="dependents-row">
-                <label for="childrenOver18">Number of Children Over 18 (in school):</label>
-                <input type="number" id="childrenOver18" min="0" value="0">
+               <div class="dependent-field">
+                    <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+                    <input type="number" id="childrenOver18" min="0" value="0">
+                  </div>
               </div>
             </div>
           </div>
