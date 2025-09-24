@@ -1,7 +1,29 @@
- } else {
-        nextBracket = getNextVaBracket(vaRoundedRating);
-        const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-        nextBracketDisplay.textContent = pointsToNext > 0 
-            ? `${pointsToNext} points to reach ${nextBracket}%` 
-            : `Already at max bracket`;
+ function calculatePointsToTarget(currentRatings, targetBracket) {
+    let combined = calculateCombinedRating([...currentRatings]);
+
+    let minRatingForTarget;
+    if (targetBracket === 100) {
+        minRatingForTarget = 95; // Need ≥95% for 100% bracket
+    } else if (targetBracket === 95) {
+        minRatingForTarget = 90; // Need ≥90% for "95%" display
+    } else {
+        minRatingForTarget = targetBracket - 5; // Normal case
     }
+
+    if (combined >= minRatingForTarget) {
+        let nextBracket;
+        if (targetBracket === 95) {
+            nextBracket = 100;
+        } else if (targetBracket === 100) {
+            return 0; 
+        } else {
+            nextBracket = targetBracket + 10;
+        }
+        return calculatePointsToTarget(currentRatings, nextBracket);
+    }
+
+    const remainingHealthy = 100 - combined;
+    const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
+
+    return Math.ceil(rawPointsNeeded / 10) * 10;
+  }
