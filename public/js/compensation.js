@@ -137,7 +137,7 @@ function updateCurrentRating() {
         // Update DOM
         document.getElementById('currentComp').textContent = `$${currentComp.toFixed(2)}`;
         document.getElementById('nextBracketComp').textContent = `$${nextComp.toFixed(2)}`;
-        document.getElementById('payDifference').textContent = `$${difference.toFixed(2)}`;
+        document.getElementById('payDifference').textContent = `$${difference.toFixed(2)}/month`;
     })
     .catch(err => console.error('Error fetching compensation:', err));
 }
