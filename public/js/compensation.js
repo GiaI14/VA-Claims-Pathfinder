@@ -94,17 +94,18 @@ function updateCurrentRating() {
     } else {
         nextBracket = getNextVaBracket(combined); 
 
-      let displayBracket = nextBracket;
-    if (nextBracket === 95 && vaRoundedRating >= 90) {
-        displayBracket = 100;
-    }
-    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-    nextBracketDisplay.textContent = pointsToNext > 0 
-        ? `${pointsToNext} points to reach ${nextBracket}%` 
-        : `Already at max bracket`;
+        let displayBracket = nextBracket;
+        if (nextBracket === 95 && vaRoundedRating >= 90) {
+            displayBracket = 100;
+        }
+
+        const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+        nextBracketDisplay.textContent = pointsToNext > 0 
+            ? `${pointsToNext} points to reach ${displayBracket}%` 
+            : `Already at max bracket`;
     }
 
-    // Send VA rounded rating to backend for current compensation
+    // Send to backend
     fetch('/compensation/calculate', {
         method: 'POST',
         headers: { 
@@ -112,8 +113,8 @@ function updateCurrentRating() {
             'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({
-            currentRating: [vaRoundedRating], // use rounded rating here
-            nextBracketRating: nextBracket,   // also send next bracket
+            currentRating: [vaRoundedRating], // send VA rounded
+            nextBracketRating: nextBracket,   // send next bracket
             spouse: spouse.checked,
             childrenUnder18: parseInt(childrenUnder18.value),
             childrenOver18: parseInt(childrenOver18.value),
@@ -121,16 +122,26 @@ function updateCurrentRating() {
         })
     })
     .then(res => res.json())
-     .then(data => {
-        
-        document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
-        document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
+    .then(data => {
+        // Parse safely
+        let currentComp = parseFloat(data.totalCompensation) || 0;
+        let nextComp = parseFloat(data.nextBracketCompensation) || 0;
 
-        const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
-        document.getElementById('payDifference').textContent = `${difference}`;
+        // Special case: if rating is 0%
+        if (vaRoundedRating === 0) {
+            currentComp = 0;
+        }
+
+        const difference = (nextComp - currentComp);
+
+        // Update DOM
+        document.getElementById('currentComp').textContent = `$${currentComp.toFixed(2)}`;
+        document.getElementById('nextBracketComp').textContent = `$${nextComp.toFixed(2)}`;
+        document.getElementById('payDifference').textContent = `$${difference.toFixed(2)}`;
     })
     .catch(err => console.error('Error fetching compensation:', err));
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////               
   // Handle rating button clicks
   ratingButtons.forEach(button => {
