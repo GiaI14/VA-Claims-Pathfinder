@@ -35,90 +35,93 @@
           </div>
 
           <!-- Column 2: Center -->
-          <div class="column center-content">
-            <!-- Rating Buttons -->
-            <div id="rating-buttons">
-              <h3>Select Disability Ratings:</h3>
-              <div class="button-grid">
-                <% for (let i = 0; i <= 100; i += 10) { %>
-                  <button class="rating-btn" data-rating="<%= i %>"><%= i %>%</button>
-                <% } %>
-              </div>
-            </div>
+          <!-- Column 2: Center -->
+<div class="column center-content">
+  <!-- Rating Buttons -->
+  <div id="rating-buttons">
+    <h3>Select Disability Ratings:</h3>
+    <div class="button-grid">
+      <% for (let i = 0; i <= 100; i += 10) { %>
+        <button class="rating-btn" data-rating="<%= i %>"><%= i %>%</button>
+      <% } %>
+    </div>
+  </div>
 
-            <hr>
+  <hr>
 
-            <!-- Selected Ratings -->
-            <div id="selected-ratings-container">
-              <h4>Selected Ratings:</h4>
-              <div id="selected-ratings" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
-            </div>
+  <!-- Selected Ratings -->
+  <div id="selected-ratings-container">
+    <h4>Selected Ratings:</h4>
+    <div id="selected-ratings" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+  </div>
 
-            <!-- Dependents Section -->
-            <button id="toggle-dependents">Add Dependents</button>
-            <div class="dependents-center-wrapper">
-            <div id="dependents-container" style="display:none;">
-              <h2>Dependents</h2>
-              <div class="dependents-row">
-              <div class="dependent-field" style="flex:0 0 auto;">
-                <label for="spouse">
-                  <input type="checkbox" id="spouse"> Spouse?
-                </label>
-              </div>
-              <div class="dependents-row">
-              <div class="parents-field">
-                <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
-                <select id="numParents">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                </select>
-               </div>
-              </div>
-              <div class="dependents-row">
-               <div class="dependent-field">
-                <label for="childrenUnder18">Number of Children Under 18:</label>
-                <input type="number" id="childrenUnder18" min="0" value="0">
-              </div>
-              <div class="dependent-field">
-                <label for="childrenOver18">Number of Children Over 18 (in school):</label>
-                <input type="number" id="childrenOver18" min="0" value="0">
-              </div>
-            </div>
-            </div>
-            </div>
-            <hr>
+  <!-- Dependents Section -->
+  <button id="toggle-dependents">Add Dependents</button>
+  <div class="dependents-center-wrapper">
+    <div id="dependents-container" style="display:none;">
+      <h2>Dependents</h2>
+      <div class="dependents-row">
+        <div class="dependent-field" style="flex:0 0 auto;">
+          <label for="spouse">
+            <input type="checkbox" id="spouse"> Spouse?
+          </label>
+        </div>
+      </div>
+      <div class="dependents-row">
+        <div class="parents-field">
+          <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
+          <select id="numParents">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+      </div>
+      <div class="dependents-row">
+        <div class="dependent-field">
+          <label for="childrenUnder18">Number of Children Under 18:</label>
+          <input type="number" id="childrenUnder18" min="0" value="0">
+        </div>
+        <div class="dependent-field">
+          <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+          <input type="number" id="childrenOver18" min="0" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
 
-            <!-- Output Section -->
-            <div id="results-container" class="results-card">
-              <h2>Results</h2>
-              <div class="result-row">
-                <span class="label">Current Combined Rating:</span>
-                <span id="currentRating" class="value">0%</span>
-              </div>
-              <div class="result-row">
-                <span class="label">VA Rounded Rating:</span>
-                <span id="vaRoundedRating" class="value">0%</span>
-              </div>
-              <div class="result-row">
-                <span class="label">Points to Next VA Bracket:</span>
-                <span id="nextBracketPoints" class="highlight">—</span>
-              </div>
-              <hr>
-              <div class="result-row">
-                <span class="label">Current Compensation:</span>
-                <span id="currentComp" class="value money">$0.00</span>
-              </div>
-              <div class="result-row">
-                <span class="label">Compensation at Next Bracket:</span>
-                <span id="nextBracketComp" class="value money">$0.00</span>
-              </div>
-              <div class="result-row total">
-                <span class="label">Pay Difference:</span>
-                <span id="payDifference" class="highlight money">$0.00</span>
-              </div>
-            </div>
-          </div> <!-- ✅ properly closes center-content -->
+  <hr>
+
+  <!-- Results Section (moved outside dependents-container) -->
+  <div id="results-container" class="results-card">
+    <h2>Results</h2>
+    <div class="result-row">
+      <span class="label">Current Combined Rating:</span>
+      <span id="currentRating" class="value">0%</span>
+    </div>
+    <div class="result-row">
+      <span class="label">VA Rounded Rating:</span>
+      <span id="vaRoundedRating" class="value">0%</span>
+    </div>
+    <div class="result-row">
+      <span class="label">Points to Next VA Bracket:</span>
+      <span id="nextBracketPoints" class="highlight">—</span>
+    </div>
+    <hr>
+    <div class="result-row">
+      <span class="label">Current Compensation:</span>
+      <span id="currentComp" class="value money">$0.00</span>
+    </div>
+    <div class="result-row">
+      <span class="label">Compensation at Next Bracket:</span>
+      <span id="nextBracketComp" class="value money">$0.00</span>
+    </div>
+    <div class="result-row total">
+      <span class="label">Pay Difference:</span>
+      <span id="payDifference" class="highlight money">$0.00/month</span>
+    </div>
+  </div>
+</div> <!-- closes center-content -->
 
           <!-- Column 3: Right -->
           <div class="column right-content">
