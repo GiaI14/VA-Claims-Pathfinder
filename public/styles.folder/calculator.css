@@ -86,10 +86,6 @@ h3 {
     background-color: #d32f2f;
 }
 
-.label {
-    color: #002060; /* richer dark blue for labels */
-    font-weight: 600;
-  }
 
 input[type="checkbox"],
 input[type="number"],
