@@ -181,6 +181,12 @@ select {
     margin-top: 10px;
 }
 
+#selected-ratings {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+    
 #selected-ratings .rating-btn {
     cursor: pointer;
     margin: 5px 5px 5px 0;
