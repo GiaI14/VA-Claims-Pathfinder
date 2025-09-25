@@ -1,5 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+  <%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+  <meta name="csrf-token" content="{{csrfToken}}">
+  <link rel="stylesheet" href="/styles.folder/shared.css">
+
+  <body>
+    <div class="page-wrapper">
+      <%- include('includes/header', { nonce: nonce }) %>
+
+      <div id="disabilities-container">
+        <h1 class="main-heading" style="text-align: center; margin-top: 60px; font-size: 1.5rem;">
+          VA Disability Rating Calculator
+        </h1>
+
+        <div class="three-column-layout">
+          
+          <!-- Column 1: Left -->
+          <div class="column left-content">
+            <h1>How is disability rating calculated?</h1>
+            <p>
+              VA disability ratings are calculated using a non-additive method that accounts for the cumulative
+              impact of multiple conditions on a veteran’s overall health and functional capacity. Each
+              condition is assigned a percentage (in increments of 10) based on severity, as outlined in the
+              VA’s Schedule.<br><br>
+              Ratings are combined starting with the highest individual disability, then proceeding to the next
+              highest, and so on. This ensures the most impactful conditions are prioritized. The VA
+              calculates the combined rating by subtracting each disability’s impact from the remaining
+              “efficient” (non-disabled) percentage.<br><br>
+              The calculation begins at 100%, which represents a completely healthy person.
+              First, subtract the percentage of your highest-rated disability from that 100%.<br><br>
+              Then, for each additional disability, subtract its percentage from whatever is left.
+              Each time, the percentage is taken from the remaining amount, not the original 100%.
+            </p>
+          </div>
+
+          <!-- Column 2: Center -->
+          <div class="column center-content">
+            <!-- Rating Buttons -->
+            <div id="rating-buttons">
+              <h3>Select Disability Ratings:</h3>
+              <div class="button-grid">
+                <% for (let i = 0; i <= 100; i += 10) { %>
+                  <button class="rating-btn" data-rating="<%= i %>"><%= i %>%</button>
+                <% } %>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- Selected Ratings -->
+            <div id="selected-ratings-container">
+              <h4>Selected Ratings:</h4>
+              <div id="selected-ratings" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+            </div>
+
+            <!-- Dependents Section -->
+            <button id="toggle-dependents">Add Dependents</button>
+            <div id="dependents-container" style="display:none;">
+              <h2>Dependents</h2>
+              <div class="dependents-row">
+                <label for="spouse">
+                  <input type="checkbox" id="spouse"> Spouse?
+                </label>
+              </div>
+              <div class="dependents-row">
+                <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
+                <select id="numParents">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+              <div class="dependents-row">
+                <label for="childrenUnder18">Number of Children Under 18:</label>
+                <input type="number" id="childrenUnder18" min="0" value="0">
+              </div>
+              <div class="dependents-row">
+                <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+                <input type="number" id="childrenOver18" min="0" value="0">
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- Output Section -->
+            <div id="results-container" class="results-card">
+              <h2>Results</h2>
+              <div class="result-row">
+                <span class="label">Current Combined Rating:</span>
+                <span id="currentRating" class="value">0%</span>
+              </div>
+              <div class="result-row">
+                <span class="label">VA Rounded Rating:</span>
+                <span id="vaRoundedRating" class="value">0%</span>
+              </div>
+              <div class="result-row">
+                <span class="label">Points to Next VA Bracket:</span>
+                <span id="nextBracketPoints" class="highlight">—</span>
+              </div>
+              <hr>
+              <div class="result-row">
+                <span class="label">Current Compensation:</span>
+                <span id="currentComp" class="value money">$0.00</span>
+              </div>
+              <div class="result-row">
+                <span class="label">Compensation at Next Bracket:</span>
+                <span id="nextBracketComp" class="value money">$0.00</span>
+              </div>
+              <div class="result-row total">
+                <span class="label">Pay Difference:</span>
+                <span id="payDifference" class="highlight money">$0.00</span>
+              </div>
+            </div>
+          </div> <!-- ✅ properly closes center-content -->
+
+          <!-- Column 3: Right -->
+          <div class="column right-content">
+            <h1>VA Rating Calculation Example</h1>
+            <p>
+              Suppose a veteran has three disabilities: 50% (PTSD), 30% (back injury), and 10% (tinnitus).<br><br>
+              
+              <b>First Disability (50%)</b><br>
+              Subtract 50% of 100% efficiency. <br>
+              100% - 50% = 50% remaining efficiency. <br>
+              Current combined rating: 50% <br><br>
+              
+              <b>Second Disability (30%)</b><br>
+              Calculate 30% of the remaining 50% efficiency: <br>
+              30% * 50% = 15% <br>
+              Subtract this from the remaining efficiency: <br>
+              50% - 15% = 35% <br>
+              Updated combined rating: 50% + 15% = 65% <br><br>
+              
+              <b>Third Disability (10%)</b><br>
+              Calculate 10% of the remaining 35% efficiency: <br>
+              10% * 35% = 3.5% <br>
+              Subtract this from the remaining efficiency: <br>
+              35% - 3.5% = 31.5% <br><br>
+              
+              <b>Final combined rating:</b> 65% + 3.5% = 68.5% <br>
+              <b>Rounding:</b> The VA rounds the final value to the nearest 10%. <br>
+              In this case, 68.5% rounds to 70%
+            </p>
+          </div>
+        </div> <!-- ✅ closes three-column-layout -->
+      </div> <!-- ✅ closes disabilities-container -->
+
+      <script nonce="<%= nonce %>">
+        const csrfToken = '<%= csrfToken %>';
+      </script>
+      <script src="/js/compensation.js" nonce="<%= nonce %>"></script>
+
+      <%- include('includes/footer') %>
+    </div> <!-- ✅ closes page-wrapper -->
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
 <%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
 <meta name="csrf-token" content="{{csrfToken}}">
 <link rel="stylesheet" href="/styles.folder/shared.css">
