@@ -1,4 +1,57 @@
-.then(data => {
+function updateCurrentRating() {
+    if (selectedRatings.length === 0) {
+        currentRatingDisplay.textContent = "0%";
+        vaRoundedDisplay.textContent = "0%";
+        nextBracketDisplay.textContent = "0%";
+        document.getElementById('currentComp').textContent = "$0.00";
+        document.getElementById('nextBracketComp').textContent = "$0.00";
+        document.getElementById('payDifference').textContent = "$0.00";
+        return; // Stop here, no fetch
+    }
+
+    const combined = calculateCombinedRating(selectedRatings);
+    const roundedCombined = Math.round(combined);
+    currentRatingDisplay.textContent = roundedCombined + '%';
+
+    const vaRoundedRating = vaRound(combined);
+    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
+
+    // Determine next VA bracket
+    let nextBracket;
+    if (vaRoundedRating >= 100) {
+        nextBracketDisplay.textContent = "Already at maximum 100%";
+        nextBracket = 100;
+    } else {
+        nextBracket = getNextVaBracket(combined); 
+
+      let displayBracket = nextBracket;
+    if (nextBracket === 95 && vaRoundedRating >= 90) {
+        displayBracket = 100;
+    }
+    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
+    nextBracketDisplay.textContent = pointsToNext > 0 
+        ? `${pointsToNext} points to reach ${nextBracket}%` 
+        : `Already at max bracket`;
+    }
+
+    // Send VA rounded rating to backend for current compensation
+    fetch('/compensation/calculate', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({
+            currentRating: [vaRoundedRating], // use rounded rating here
+            nextBracketRating: nextBracket,   // also send next bracket
+            spouse: spouse.checked,
+            childrenUnder18: parseInt(childrenUnder18.value),
+            childrenOver18: parseInt(childrenOver18.value),
+            numParents: parseInt(numParents.value)
+        })
+    })
+    .then(res => res.json())
+     .then(data => {
         
         document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
         document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
