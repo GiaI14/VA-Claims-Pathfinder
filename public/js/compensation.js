@@ -122,15 +122,34 @@ function updateCurrentRating() {
     })
     .then(res => res.json())
      .then(data => {
-        
-        document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
-        document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
+    // Convert safely to numbers
+    let currentComp = parseFloat(data.totalCompensation);
+    let nextComp = parseFloat(data.nextBracketCompensation);
 
-        const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
-        document.getElementById('payDifference').textContent = `${difference}`;
-    })
-    .catch(err => console.error('Error fetching compensation:', err));
-}
+    // If API sent invalid (NaN), default to 0
+    if (isNaN(currentComp)) currentComp = 0;
+    if (isNaN(nextComp)) nextComp = 0;
+
+    // Detect if the VA Rounded Rating is 0%
+    const vaRoundedText = document.getElementById('vaRoundedRating').textContent.trim();
+    const isZeroPercent = vaRoundedText === "0%";
+
+    // Handle pay difference logic
+    let difference;
+    if (isZeroPercent) {
+        currentComp = 0; // force compensation at 0%
+        difference = nextComp; // full next bracket is the difference
+    } else {
+        difference = nextComp - currentComp;
+    }
+
+    // Update DOM
+    document.getElementById('currentComp').textContent = currentComp.toFixed(2);
+    document.getElementById('nextBracketComp').textContent = nextComp.toFixed(2);
+    document.getElementById('payDifference').textContent = difference.toFixed(2);
+})
+.catch(err => console.error('Error fetching compensation:', err));
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////               
   // Handle rating button clicks
