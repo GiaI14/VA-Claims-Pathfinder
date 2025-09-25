@@ -121,26 +121,16 @@ function updateCurrentRating() {
         })
     })
     .then(res => res.json())
-    .then(data => {
-      let currentComp = parseFloat(data.totalCompensation || 0).toFixed(2);
-      let nextComp = parseFloat(data.nextBracketCompensation || 0).toFixed(2);
+     .then(data => {
+        
+        document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
+        document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
 
-    // Special case: if current rating is 0%, force compensation to 0
-      const vaRounded = document.getElementById('vaRoundedRating').textContent;
-      if (vaRounded === "0%") {
-          currentComp = "0.00";
-        // difference = next bracket entirely
-          document.getElementById('payDifference').textContent = nextComp;
-      } else {
-        const difference = (nextComp - currentComp).toFixed(2);
-        document.getElementById('payDifference').textContent = difference;
-    }
-
-    document.getElementById('currentComp').textContent = currentComp;
-    document.getElementById('nextBracketComp').textContent = nextComp;
-})
-.catch(err => console.error('Error fetching compensation:', err));
-
+        const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
+        document.getElementById('payDifference').textContent = `${difference}`;
+    })
+    .catch(err => console.error('Error fetching compensation:', err));
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////               
   // Handle rating button clicks
