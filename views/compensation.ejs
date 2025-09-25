@@ -20,7 +20,17 @@
           <h1>How is disability rating calculated?</h1>
           <p>
             VA disability ratings are calculated using a non-additive method that accounts for the cumulative
-            impact of multiple conditions on a veteran’s overall health and functional capacity...
+            impact of multiple conditions on a veteran’s overall health and functional capacity. Each
+            condition is assigned a percentage (in increments of 10) based on severity, as outlined in the
+            VA’s Schedule.<br><br>
+            Ratings are combined starting with the highest individual disability, then proceeding to the next
+            highest, and so on. This ensures the most impactful conditions are prioritized. The VA
+            calculates the combined rating by subtracting each disability’s impact from the remaining
+            “efficient” (non-disabled) percentage.<br><br>
+            The calculation begins at 100%, which represents a completely healthy person.
+            First, subtract the percentage of your highest-rated disability from that 100%.<br><br>
+            Then, for each additional disability, subtract its percentage from whatever is left.
+            Each time, the percentage is taken from the remaining amount, not the original 100%.
           </p>
         </div>
 
@@ -96,8 +106,29 @@
         <div class="column right-content">
           <h1>VA Rating Calculation Example</h1>
           <p>
-            Suppose a veteran has three disabilities: 50% (PTSD), 30% (back injury), and 10% (tinnitus)...  
-            <b>Final combined rating:</b> 68.5% → rounded to 70%
+            Suppose a veteran has three disabilities: 50% (PTSD), 30% (back injury), and 10% (tinnitus).<br><br>
+            
+            <b>First Disability (50%)</b><br>
+            Subtract 50% of 100% efficiency. <br>
+            100% - 50% = 50% remaining efficiency. <br>
+            Current combined rating: 50% <br><br>
+            
+            <b>Second Disability (30%)</b><br>
+            Calculate 30% of the remaining 50% efficiency: <br>
+            30% * 50% = 15% <br>
+            Subtract this from the remaining efficiency: <br>
+            50% - 15% = 35% <br>
+            Updated combined rating: 50% + 15% = 65% <br><br>
+            
+            <b>Third Disability (10%)</b><br>
+            Calculate 10% of the remaining 35% efficiency: <br>
+            10% * 35% = 3.5% <br>
+            Subtract this from the remaining efficiency: <br>
+            35% - 3.5% = 31.5% <br><br>
+            
+            <b>Final combined rating:</b> 65% + 3.5% = 68.5% <br>
+            <b>Rounding:</b> The VA rounds the final value to the nearest 10%. <br>
+            In this case, 68.5% rounds to 70%
           </p>
         </div>
       </div>
