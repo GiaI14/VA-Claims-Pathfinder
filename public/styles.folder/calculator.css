@@ -355,6 +355,61 @@ select {
     margin: 0 auto;
 }
 
+.results-card {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  .results-card h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: #333;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.6rem 0;
+    font-size: 1rem;
+  }
+
+  .result-row.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-top: 2px solid #ddd;
+    padding-top: 0.8rem;
+  }
+
+  .label {
+    color: #555;
+  }
+
+  .value {
+    font-weight: 600;
+    color: #222;
+  }
+
+  .money {
+    color: #0066cc;
+  }
+
+  .highlight {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+
+  hr {
+    margin: 1rem 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+
 @media (max-width: 900px) {
     .three-column-layout {
         grid-template-columns: 1fr;
