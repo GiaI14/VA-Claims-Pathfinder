@@ -1,62 +1,142 @@
-function updateCurrentRating() {
-    if (selectedRatings.length === 0) {
-        currentRatingDisplay.textContent = "0%";
-        vaRoundedDisplay.textContent = "0%";
-        nextBracketDisplay.textContent = "0%";
-        document.getElementById('currentComp').textContent = "$0.00";
-        document.getElementById('nextBracketComp').textContent = "$0.00";
-        document.getElementById('payDifference').textContent = "$0.00";
-        return; // Stop here, no fetch
-    }
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+<meta name="csrf-token" content="{{csrfToken}}">
+<link rel="stylesheet" href="/styles.folder/shared.css">
 
-    const combined = calculateCombinedRating(selectedRatings);
-    const roundedCombined = Math.round(combined);
-    currentRatingDisplay.textContent = roundedCombined + '%';
+<body>
+  <div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
+   
+    <div id="disabilities-container">
+      <h1 class="main-heading" style="text-align: center; margin-top: 60px; font-size: 1.5rem;">
+        VA Disability Rating Calculator
+      </h1>
 
-    const vaRoundedRating = vaRound(combined);
-    vaRoundedDisplay.textContent = vaRoundedRating + '%'; 
+      <div class="three-column-layout">
+        <div class="column empty-left">
+          <h1>How is disability rating calculated?</h1>
+          <p>
+            VA disability ratings are calculated using a non-additive method that accounts for the cumulative
+            impact of multiple conditions on a veteran’s overall health and functional capacity. Each
+            condition is assigned a percentage (in increments of 10) based on severity, as outlined in the
+            VA’s Schedule.<br>
+            Ratings are combined starting with the highest individual disability, then proceeding to the next
+            highest, and so on. This ensures the most impactful conditions are prioritized. The VA
+            calculates the combined rating by subtracting each disability’s impact from the remaining
+            “efficient” (non-disabled) percentage.<br>
+            The calculation begins at 100%, which represents a completely healthy person.
+            First, subtract the percentage of your highest-rated disability from that 100%.
+            Then, for each additional disability, subtract its percentage from whatever is left.
+            Each time, the percentage is taken from the remaining amount, not the original 100%.
+          </p>
+        </div>
+        <div class="column empty-left"></div>
 
-    // Determine next VA bracket
-    let nextBracket;
-    if (vaRoundedRating >= 100) {
-        nextBracketDisplay.textContent = "Already at maximum 100%";
-        nextBracket = 100;
-    } else {
-        nextBracket = getNextVaBracket(combined); 
-    const pointsToNext = calculatePointsToTarget(selectedRatings, nextBracket);
-      
-    let displayBracket = nextBracket;
-    if (nextBracket === 95 && vaRoundedRating >= 90) {
-        displayBracket = 100;
-    }
-    nextBracketDisplay.textContent = pointsToNext > 0 
-        ? `${pointsToNext} points to reach ${nextBracket}%` 
-        : `Already at max bracket`;
-    }
+        <!-- Column 2: Center -->
+        <div class="column center-content">
+          <!-- Rating Buttons -->
+          <div id="rating-buttons">
+            <h3>Select Disability Ratings:</h3>
+            <div class="button-grid">
+              <% for (let i = 0; i <= 100; i += 10) { %>
+                <button class="rating-btn" data-rating="<%= i %>">
+                  <%= i %>%
+                </button>
+              <% } %>
+            </div>
+          </div>
 
-    // Send VA rounded rating to backend for current compensation
-    fetch('/compensation/calculate', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken
-        },
-        body: JSON.stringify({
-            currentRating: [vaRoundedRating], // use rounded rating here
-            nextBracketRating: nextBracket,   // also send next bracket
-            spouse: spouse.checked,
-            childrenUnder18: parseInt(childrenUnder18.value),
-            childrenOver18: parseInt(childrenOver18.value),
-            numParents: parseInt(numParents.value)
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('currentComp').textContent = `${data.totalCompensation || '0.00'}`;
-        document.getElementById('nextBracketComp').textContent = `${data.nextBracketCompensation || '0.00'}`;
+          <hr>
 
-        const difference = (parseFloat(data.nextBracketCompensation || 0) - parseFloat(data.totalCompensation || 0)).toFixed(2);
-        document.getElementById('payDifference').textContent = `${difference}`;
-    })
-    .catch(err => console.error('Error fetching compensation:', err));
-}
+          <!-- Selected Ratings -->
+          <div id="selected-ratings-container">
+            <h4>Selected Ratings:</h4>
+            <div id="selected-ratings" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+          </div>
+
+          <hr>
+
+          <!-- Current Rating -->
+          <div id="ratings-inputs">
+            <label>Current Combined Rating: <span id="currentRating">0%</span></label><br><br>
+          <p></p>
+          </div>
+          <hr>
+
+          <!-- Dependents Section -->
+          <button id="toggle-dependents">Add Dependents</button>
+          <div class="dependents-center-wrapper">
+            <div id="dependents-container" style="display:none;">
+              <h2>Dependents</h2>
+              <div class="dependents-row">
+                <div class="dependent-field" style="flex:0 0 auto;">
+                <label for="spouse">
+                  <input type="checkbox" id="spouse"> Spouse?
+                </label>
+              </div>
+              <div class="parents-field">
+                <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
+                <select id="numParents">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+              <div class="dependents-row">
+               <div class="dependent-field">
+                    <label for="childrenUnder18">Number of Children Under 18:</label>
+                    <input type="number" id="childrenUnder18" min="0" value="0">
+              </div>
+               <div class="dependent-field">
+                    <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+                    <input type="number" id="childrenOver18" min="0" value="0">
+                  </div>
+              </div>
+            </div>
+          </div>
+         </div>
+          <!-- Output Section -->
+          <div id="results-container">
+            <p>VA Rounded Rating: <span id="vaRoundedRating">0%</span></p>
+            <p>Points to Next VA Bracket: <span id="nextBracketPoints">—</span></p>
+            <p>Current Compensation: $<span id="currentComp">0.00</span></p>
+            <p>Compensation at Next Bracket: $<span id="nextBracketComp">0.00</span></p>
+            <p>Pay Difference: $<span id="payDifference">0.00</span></p>
+          </div>
+        </div>
+
+        <!-- Column 3: Right (empty for layout purposes) -->
+        <div class="column empty-right">
+          <h1>VA Rating Calculation Example</h1>
+          <p>
+            Suppose a veteran has three disabilities: 50% (PTSD), 30% (back injury), and 10% (tinnitus).<br>
+            <b>First Disability (50%)</b><br>
+            Subtract 50% of 100% efficiency. <br> 100%-50%=50% remaining efficiency. <br> Current combined
+            rating: 50% <br>
+            <b>Second Disability (30%)</b><br>
+            Calculate 30% of the remaining 50% efficiency:<br> 30% * 50% = 15% <br>Subtract this from the
+            remaining efficiency:<br>50% - 15% = 35%<br>
+            Updated combined rating: 50% + 15% = 65%<br>
+            <b>Third Disability (10%)</b><br>
+            Calculate 10% of the remaining 35% efficiency:<br>
+            10% * 35% = 3.5%<br>
+            Subtract this from the remaining efficiency:<br>
+            35% - 3.5% = 31.5%<br>
+            <b>Final combined rating:</b> 65% + 3.5% = 68.5%<br>
+            <b>Rounding:</b> The VA rounds the final value to the nearest 10%.<br> In this case, 68.5%
+            rounds to 70%
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script nonce="<%= nonce %>">
+  const csrfToken = '<%= csrfToken %>';
+</script>
+<script src="/js/compensation.js" nonce="<%= nonce %>"></script>
+
+    <%- include('includes/footer') %>
+  </div>
+</body>
+</html>
