@@ -380,7 +380,7 @@ select {
     padding-top: 0.8rem;
   }
 
-  .label {
+  .results-card .label {
     color: #003366; /* Dark Blue */
     font-weight: 600;
   }
