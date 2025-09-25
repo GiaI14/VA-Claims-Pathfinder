@@ -56,39 +56,42 @@
   </div>
 
   <!-- Dependents Section -->
-  <button id="toggle-dependents">Add Dependents</button>
-  <div class="dependents-center-wrapper">
-    <div id="dependents-container" style="display:none;">
-      <h2>Dependents</h2>
-      <div class="dependents-row">
-        <div class="dependent-field" style="flex:0 0 auto;">
-          <label for="spouse">
-            <input type="checkbox" id="spouse"> Spouse?
-          </label>
-        </div>
+  <!-- Dependents Section -->
+<button id="toggle-dependents">Add Dependents</button>
+<div class="dependents-center-wrapper" style="margin-top:10px;">
+  <div id="dependents-container" style="display:none; margin-top:0;">
+    <h2 style="margin-bottom:10px;">Dependents</h2>
+
+    <!-- Spouse and Number of Parents on the same row -->
+    <div class="dependents-row" style="gap:20px; align-items:center;">
+      <div class="dependent-field" style="flex:0 0 auto;">
+        <label for="spouse">
+          <input type="checkbox" id="spouse"> Spouse?
+        </label>
       </div>
-      <div class="dependents-row">
-        <div class="parents-field">
-          <label for="numParents" style="margin-right: 8px;">Number of Parents:</label>
-          <select id="numParents">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </div>
+      <div class="parents-field">
+        <label for="numParents" style="margin-right:8px;">Number of Parents:</label>
+        <select id="numParents">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
       </div>
-      <div class="dependents-row">
-        <div class="dependent-field">
-          <label for="childrenUnder18">Number of Children Under 18:</label>
-          <input type="number" id="childrenUnder18" min="0" value="0">
-        </div>
-        <div class="dependent-field">
-          <label for="childrenOver18">Number of Children Over 18 (in school):</label>
-          <input type="number" id="childrenOver18" min="0" value="0">
-        </div>
+    </div>
+
+    <!-- Children Section -->
+    <div class="dependents-row" style="gap:20px;">
+      <div class="dependent-field">
+        <label for="childrenUnder18">Number of Children Under 18:</label>
+        <input type="number" id="childrenUnder18" min="0" value="0">
+      </div>
+      <div class="dependent-field">
+        <label for="childrenOver18">Number of Children Over 18 (in school):</label>
+        <input type="number" id="childrenOver18" min="0" value="0">
       </div>
     </div>
   </div>
+</div>
 
   <hr>
 
