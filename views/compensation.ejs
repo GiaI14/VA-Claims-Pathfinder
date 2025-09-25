@@ -84,15 +84,34 @@
           <hr>
 
           <!-- Output Section -->
-          <div id="results-container">
-            <p>Current Combined Rating: <span id="currentRating">0%</span></p>
-            <p>VA Rounded Rating: <span id="vaRoundedRating">0%</span></p>
-            <p>Points to Next VA Bracket: <span id="nextBracketPoints">—</span></p>
-            <p>Current Compensation: $<span id="currentComp">0.00</span></p>
-            <p>Compensation at Next Bracket: $<span id="nextBracketComp">0.00</span></p>
-            <p>Pay Difference: $<span id="payDifference">0.00</span></p>
-          </div>
-        </div>
+          <div id="results-container" class="results-card">
+  <h2>Results</h2>
+  <div class="result-row">
+    <span class="label">Current Combined Rating:</span>
+    <span id="currentRating" class="value">0%</span>
+  </div>
+  <div class="result-row">
+    <span class="label">VA Rounded Rating:</span>
+    <span id="vaRoundedRating" class="value">0%</span>
+  </div>
+  <div class="result-row">
+    <span class="label">Points to Next VA Bracket:</span>
+    <span id="nextBracketPoints" class="highlight">—</span>
+  </div>
+  <hr>
+  <div class="result-row">
+    <span class="label">Current Compensation:</span>
+    <span id="currentComp" class="value money">$0.00</span>
+  </div>
+  <div class="result-row">
+    <span class="label">Compensation at Next Bracket:</span>
+    <span id="nextBracketComp" class="value money">$0.00</span>
+  </div>
+  <div class="result-row total">
+    <span class="label">Pay Difference:</span>
+    <span id="payDifference" class="highlight money">$0.00</span>
+  </div>
+</div>
 
         <!-- Column 3: Right -->
         <div class="column right-content">
