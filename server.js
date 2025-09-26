@@ -86,9 +86,9 @@ app.use(flash()); //added
 const csrfProtection = csrf();
 app.use(csrfProtection); 
 
-app.use('/api', calculatorRoutes);
 app.use('/api', secondaryConditionRoutes);
 app.use('/api/contact', contactRoutes);
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'images')));
