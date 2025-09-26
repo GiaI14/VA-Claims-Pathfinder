@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const rateLimit = require("express-rate-limit");
+
+const contactFormLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 3,              // max 3 submissions per minute per IP
+  message: "Too many contact form submissions. Please try again later."
+});
 
 router.post('/calculate-disability', (req, res) => {
   let { ratings, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
@@ -119,7 +126,7 @@ transporter.verify((error, success) => {
   else console.log('SMTP server ready');
 });
 
-router.post('/contact', async (req, res) => {
+router.post('/contact', contactFormLimiter, async (req, res) => {
   try {
     const { name, email, message, phone } = req.body;
 
