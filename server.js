@@ -88,7 +88,7 @@ app.use(csrfProtection);
 
 app.use('/api', calculatorRoutes);
 app.use('/api', secondaryConditionRoutes);
-
+app.use('/api/contact', contactRoutes);
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'images')));
@@ -178,7 +178,6 @@ app.use(subSystemRoutes);
 app.use(vaDisabilityRoutes);
 app.use(savedResultsRoutes);
 app.use("/compensation", compensationRoutes);
-app.use('/contact', contactRoutes);
 
 app.get('/', (req, res) => {
   res.render('index', {
