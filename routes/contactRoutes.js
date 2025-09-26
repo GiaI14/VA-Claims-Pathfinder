@@ -1,22 +1,32 @@
 const express = require("express");
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
+const nodemailer = require("nodemailer");
 
 // Strict limiter just for contact form
 const contactFormLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 3,              // 3 submissions per minute per IP
+  windowMs: 60 * 1000,
+  max: 3,
   message: "Too many contact form submissions. Please try again later."
 });
 
-// POST /contact
+// Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // true if using 465
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
 router.post("/", contactFormLimiter, async (req, res) => {
   try {
     const { name, email, message, phone, honeypot } = req.body;
 
-    // Honeypot trap
     if (honeypot) {
-      console.warn("🚨 Bot detected (honeypot filled)", req.ip);
+      console.warn("Bot detected:", req.ip);
       return res.status(400).send("Bot detected");
     }
 
@@ -40,12 +50,13 @@ router.post("/", contactFormLimiter, async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    req.flash("success", "Your message was sent. Someone will contact you shortly.");
-    return res.redirect("/");
+
+    req.flash("successMessage", "Your message was sent. Someone will contact you shortly.");
+    return res.redirect("/#contact");
   } catch (err) {
     console.error("Error in contact form:", err);
-    req.flash("error", "Internal Server Error: " + err.message);
-    return res.redirect("/");
+    req.flash("errorMessage", "Internal Server Error: " + err.message);
+    return res.redirect("/#contact");
   }
 });
 
