@@ -10,7 +10,7 @@ const contactFormLimiter = rateLimit({
 });
 
 // POST /contact
-router.post("/api/contact", contactFormLimiter, async (req, res) => {
+router.post("/", contactFormLimiter, async (req, res) => {
   try {
     const { name, email, message, phone, honeypot } = req.body;
 
