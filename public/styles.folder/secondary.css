@@ -42,6 +42,10 @@ button {
   transition: transform 0.2s ease, background 0.3s ease;
 }
 
+.login-message {
+  color: red;
+  margin-bottom: 1rem;
+}
 button:hover {
   background: linear-gradient(135deg, #7ab0e0, #4682B4);
   transform: translateY(-2px);
