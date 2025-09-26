@@ -40,6 +40,7 @@
             </script>  
             <form id="contact-form" method="POST" action="/api/contact">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="text" name="honeypot" style="display:none;" tabindex="-1" autocomplete="off">
                 <div class="row">
                     <div class="form-group">
                         <label for="name">Name:</label>
