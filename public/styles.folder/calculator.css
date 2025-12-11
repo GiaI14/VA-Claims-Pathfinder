@@ -410,7 +410,8 @@ select {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    
+}
+
 @media (max-width: 900px) {
    .three-column-layout {
         grid-template-columns: 1fr !important;
