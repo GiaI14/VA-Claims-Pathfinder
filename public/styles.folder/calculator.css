@@ -63,6 +63,13 @@ h3 {
     gap: 10px;
 }
 
+.center-content {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+} 
+
 .disability-entry {
     display: flex;
     align-items: center;
@@ -344,15 +351,6 @@ select {
   margin-top: 0.4rem;
   font-size: 0.875rem;
   color: #666;
-}
-
-.center-content {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    max-width: 1600px;
-    margin: 0 auto;
 }
 
 .results-card {
