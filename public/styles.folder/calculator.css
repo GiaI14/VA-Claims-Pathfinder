@@ -415,18 +415,13 @@ select {
     border: none;
     border-top: 1px solid #ddd;
   }
-
-#disabilities-container {
-  width: 100% !important;
-  max-width: 100% !important;
-}
     
 @media (max-width: 900px) {
-    
-    .three-column-layout {
-    width: 100% !important;
-    grid-template-columns: 1fr !important;
-  }
+   .three-column-layout {
+        grid-template-columns: 1fr;
+        min-height: unset;
+        gap: 10px;
+    }
    
     body {
         margin-top: 30px;
