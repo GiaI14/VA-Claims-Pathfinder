@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/calculator.css">' }) %> 
+  <%- include('includes/head', { nonce: nonce }) %> 
   <meta name="csrf-token" content="{{csrfToken}}">
-  
+  <link rel="stylesheet" href="/styles.folder/shared.css">
 
   <body>
     <div class="page-wrapper">
