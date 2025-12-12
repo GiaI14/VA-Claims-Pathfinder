@@ -408,6 +408,15 @@ select {
 
 
 @media (max-width: 900px) {
+    .page-wrapper,
+    .container,
+    .three-column-layout {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+    }
    .three-column-layout {
         grid-template-columns: 1fr !important;
         min-height: unset;
