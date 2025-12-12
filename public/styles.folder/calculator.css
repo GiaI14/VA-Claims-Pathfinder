@@ -414,10 +414,12 @@ select {
 
 
 @media (max-width: 768px) {
-   .three-column-layout {
-        grid-template-columns: 1fr;
-        min-height: unset;
-        gap: 10px;
+    .three-column-layout {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 10px !important;
     }
    
     body {
