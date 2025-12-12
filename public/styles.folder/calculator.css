@@ -414,17 +414,8 @@ select {
 
 
 @media (max-width: 900px) {
-    .page-wrapper,
-    .container,
-    .three-column-layout {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-    }
    .three-column-layout {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: 1fr;
         min-height: unset;
         gap: 10px;
     }
@@ -432,6 +423,7 @@ select {
     body {
         margin-top: 30px;
     }
+    
     #contact {
         min-height: 100vh;
         display: flex;
