@@ -413,7 +413,7 @@ select {
   }
 
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
    .three-column-layout {
         grid-template-columns: 1fr;
         min-height: unset;
