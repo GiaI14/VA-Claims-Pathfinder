@@ -476,6 +476,17 @@ select {
         gap: 10px;
     }
 
+    .button-grid {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        max-width: 100% !important;
+    }
+
+    .rating-btn {
+        flex: 1 1 calc(33% - 10px) !important; /* 3 buttons per row */
+        text-align: center;
+        box-sizing: border-box;
+    }
     h1 {
         font-size: 24px;
     }
