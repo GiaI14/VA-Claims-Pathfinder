@@ -477,10 +477,13 @@ select {
     }
 
     .rating-btn {
-        font-size: 9px !important; 
+        font-size: 10px !important;   
         padding: 4px 6px !important; 
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
-}
     h1 {
         font-size: 24px;
     }
