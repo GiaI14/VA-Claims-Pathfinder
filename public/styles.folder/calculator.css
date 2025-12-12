@@ -477,8 +477,8 @@ select {
     }
 
     .rating-btn {
-        font-size: 11px !important;   /* smaller numbers */
-        padding: 4px 6px !important;  /* slightly smaller padding */
+        font-size: 9px !important; 
+        padding: 4px 6px !important; 
     }
 }
     h1 {
