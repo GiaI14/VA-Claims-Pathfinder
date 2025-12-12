@@ -414,10 +414,38 @@ select {
 
 
 @media (max-width: 768px) {
+    .center-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+    }
+
     .three-column-layout {
-        grid-template-columns: 1fr;
-        min-height: unset;
-        gap: 10px;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .column,
+    .left-content,
+    .center-content,
+    .right-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        padding: 10px !important;
+    }
+
+    /* Prevent child elements inside columns from expanding the layout */
+    .column * {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
     }
    
     body {
