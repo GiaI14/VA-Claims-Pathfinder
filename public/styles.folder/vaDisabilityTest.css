@@ -101,4 +101,14 @@
   .dynamic-symptoms-list {
     column-count: 1;
   }
+
+  .top-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .system-select,
+  .sub-system-select {
+    width: 100%;
+  }
 }
