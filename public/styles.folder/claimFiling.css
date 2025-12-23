@@ -142,6 +142,11 @@ h3{
 }
 
 @media (max-width: 768px) {
+
+  h1{
+    font-size: 14px;
+  }
+  
   .claim-menu-wrapper {
     flex-direction: column;
     align-items: center;       /* center columns */
