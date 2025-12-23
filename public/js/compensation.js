@@ -177,4 +177,4 @@ toggleBtn.addEventListener('click', () => {
   el.addEventListener('change', updateCurrentRating); // fallback
 });
 });
-});
+
