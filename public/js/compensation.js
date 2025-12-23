@@ -173,8 +173,8 @@ toggleBtn.addEventListener('click', () => {
   });
 
   [spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
-    el.addEventListener('change', () => {
-        updateCurrentRating();
-    });
+  el.addEventListener('input', updateCurrentRating);  // typing (mobile)
+  el.addEventListener('change', updateCurrentRating); // fallback
+});
 });
 });
