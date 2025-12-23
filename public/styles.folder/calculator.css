@@ -469,7 +469,12 @@ select {
     .center-content {
         padding: 15px;
     }
-
+    
+.dependent-field {
+    flex: 1 1 auto;   /* allow it to shrink to content */
+    min-width: 0;     /* prevent forced horizontal width */
+    margin-bottom: 10px; /* optional spacing between fields */
+  }
     .dependents-row {
         flex-direction: column !important;
         align-items: center !important;
