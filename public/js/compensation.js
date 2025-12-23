@@ -116,9 +116,9 @@ function updateCurrentRating() {
             currentRating: [vaRoundedRating], // send VA rounded
             nextBracketRating: nextBracket,   // send next bracket
             spouse: spouse.checked,
-            childrenUnder18: parseInt(childrenUnder18.value),
-            childrenOver18: parseInt(childrenOver18.value),
-            numParents: parseInt(numParents.value)
+            childrenUnder18: parseInt(childrenUnder18.value) || 0,
+            childrenOver18: parseInt(childrenOver18.value) || 0,
+            numParents: parseInt(numParents.value) || 0,
         })
     })
     .then(res => res.json())
