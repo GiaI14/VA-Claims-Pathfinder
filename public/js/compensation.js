@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dependentsContainer = document.getElementById('dependents-container');
 
   const spouse = document.getElementById("spouse");
+  const spouseAid = document.getElementById("aid");
   const childrenUnder18 = document.getElementById("childrenUnder18");
   const childrenOver18 = document.getElementById("childrenOver18");
   const numParents = document.getElementById("numParents");
@@ -113,9 +114,10 @@ function updateCurrentRating() {
             'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({
-            currentRating: [vaRoundedRating], // send VA rounded
-            nextBracketRating: nextBracket,   // send next bracket
+            currentRating: [vaRoundedRating],
+            nextBracketRating: nextBracket,   
             spouse: spouse.checked,
+            spouseAid: spouseAid.checked,  
             childrenUnder18: parseInt(childrenUnder18.value) || 0,
             childrenOver18: parseInt(childrenOver18.value) || 0,
             numParents: parseInt(numParents.value) || 0,
@@ -172,7 +174,7 @@ toggleBtn.addEventListener('click', () => {
     toggleBtn.textContent = isVisible ? 'Add Dependents' : 'Hide Dependents';
   });
 
-  [spouse, childrenUnder18, childrenOver18, numParents].forEach(el => {
+  [spouse, spouseAid, childrenUnder18, childrenOver18, numParents].forEach(el => {
   el.addEventListener('input', updateCurrentRating);  // typing (mobile)
   el.addEventListener('change', updateCurrentRating); // fallback
 });
