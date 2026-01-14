@@ -13,7 +13,7 @@ const basePay = { 10: 180.42, 20: 356.66, 30: 552.47, 40: 795.84, 50: 1132.90, 6
   const aidAndAttendance = { 30: 61, 40: 81, 50: 101, 60: 121, 70: 141, 80: 161, 90: 181, 100: 201.41};
 
 // VA Compensation function
-function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
+function calculateVACompensation(rating, spouse, spouseAid, childrenUnder18, childrenOver18, numParents) {
   let baseCompensation = 0;
 
   console.log(`Calculating for rating: ${rating}, spouse: ${spouse}, childrenUnder18: ${childrenUnder18}, childrenOver18: ${childrenOver18}, numParents: ${numParents}`);
@@ -44,6 +44,9 @@ function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18
     baseCompensation += childOver18Pay[rating] * Math.max(0, childrenOver18 - 1);
   }
 
+  if (spouse && spouseAid && rating >= 30) {
+    baseCompensation += aidAndAttendance[rating] || 0;
+  }
   console.log(`Final compensation: $${baseCompensation.toFixed(2)}`);
   return parseFloat(baseCompensation.toFixed(2));
 }
