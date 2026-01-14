@@ -112,11 +112,13 @@ function calculatePointsToTarget(currentRatings, targetBracket) {
 router.post("/calculate", (req, res) => {
   try {
     console.log("Received body:", req.body);
-    const { currentRating, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
+    const { currentRating, spouse, spouseAid, childrenUnder18, childrenOver18, numParents } = req.body;
     
     // Parse inputs
     const roundedRating = Math.round(Array.isArray(currentRating) ? Number(currentRating[0]) : Number(currentRating));
     const hasSpouse = !!spouse;
+    const hasSpouse = spouse === true || spouse === "true";
+    const hasSpouseAid = spouseAid === true || spouseAid === "true";
     const under18 = parseInt(childrenUnder18) || 0;
     const over18 = parseInt(childrenOver18) || 0;
     const parents = parseInt(numParents) || 0;
