@@ -10,6 +10,7 @@ const basePay = { 10: 180.42, 20: 356.66, 30: 552.47, 40: 795.84, 50: 1132.90, 6
   const childOver18Pay = { 30: 105, 40: 140, 50: 176, 60: 211, 70: 246, 80: 281, 90: 317, 100: 352.45 };
   const OneParent = { 30: 52, 40: 70, 50: 88, 60: 105, 70: 123, 80: 140, 90: 158, 100: 176.24 };
   const TwoParents = { 30: 104, 40: 140, 50: 176, 60: 210, 70: 246, 80: 280, 90: 316, 100: 352.48 };
+  const aidAndAttendance = { 30: 61, 40: 81, 50: 101, 60: 121, 70: 141, 80: 161, 90: 181, 100: 201.41};
 
 // VA Compensation function
 function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
