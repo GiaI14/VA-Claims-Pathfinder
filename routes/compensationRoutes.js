@@ -116,7 +116,6 @@ router.post("/calculate", (req, res) => {
     
     // Parse inputs
     const roundedRating = Math.round(Array.isArray(currentRating) ? Number(currentRating[0]) : Number(currentRating));
-    const hasSpouse = !!spouse;
     const hasSpouse = spouse === true || spouse === "true";
     const hasSpouseAid = spouseAid === true || spouseAid === "true";
     const under18 = parseInt(childrenUnder18) || 0;
