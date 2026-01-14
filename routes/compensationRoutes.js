@@ -122,13 +122,13 @@ router.post("/calculate", (req, res) => {
     const parents = parseInt(numParents) || 0;
 
     // Calculate compensation
-    const totalCompensation = calculateVACompensation(roundedRating, hasSpouse, under18, over18, parents);
+    const totalCompensation = calculateVACompensation(roundedRating, hasSpouse, hasSpouseAid, under18, over18, parents);
 
     // Next bracket
     const nextBracket = getNextVaBracket(roundedRating);
     let nextBracketCompensation = null;
     if (nextBracket && nextBracket <= 100) {
-      nextBracketCompensation = calculateVACompensation(nextBracket, hasSpouse, under18, over18, parents);
+      nextBracketCompensation = calculateVACompensation(nextBracket, hasSpouse, hasSpouseAid, under18, over18, parents);
     }
 
     const pointsToNext = calculatePointsToTarget([roundedRating], nextBracket);
