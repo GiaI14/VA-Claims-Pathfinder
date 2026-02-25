@@ -58,7 +58,7 @@ h2 {
 /* FORM LAYOUT */
 .row {
   display: flex;
-  gap: 1rem;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
