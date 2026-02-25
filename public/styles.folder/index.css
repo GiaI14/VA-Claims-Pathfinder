@@ -141,7 +141,7 @@ h2 {
   /* Stack fields cleanly */
   .row {
     flex-direction: column;
-    gap: 0;
+    gap: 0.8;
   }
 
   .form-group {
