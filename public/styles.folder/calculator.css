@@ -414,14 +414,81 @@ select {
 
 
 @media (max-width: 768px) {
-   #contact-mobile {
-        width: 80%;            /* small margin on sides */
-        max-width: 360px;      /* narrower for mobile */
-        margin: 1rem auto;     /* center horizontally */
+   .three-column-layout {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .column,
+    .left-content,
+    .center-content,
+    .right-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        padding: 10px !important;
+    }
+
+    .column * {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+   
+    body {
+        margin-top: 30px;
+    }
+    
+    #contact {
+        min-height: 100vh;
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;           /* vertical spacing between fields */
-        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem; 
+    }
+
+    #send-button {
+    margin-left: 60px;
+    }
+
+   .column {
+      padding: 10px 0;
+    }
+    .center-content {
+        padding: 15px;
+    }
+    
+.dependent-field {
+    flex: 1 1 auto;   /* allow it to shrink to content */
+    min-width: 0;     /* prevent forced horizontal width */
+    margin-bottom: 10px; /* optional spacing between fields */
+  }
+.dependents-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100%;
+}
+
+.rating-btn {
+        font-size: 10px !important;   
+        padding: 4px 6px !important; 
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
     }
 
    
