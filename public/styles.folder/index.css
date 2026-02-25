@@ -81,9 +81,7 @@ h2 {
 .form-group textarea {
   width: 100%;
   border: none;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 0.9rem 0.8rem;
+  border-bottom: 2px solid #ccc;
   font-size: 1rem;
   background: transparent;
   outline: none;
