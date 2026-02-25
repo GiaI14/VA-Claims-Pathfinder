@@ -414,7 +414,15 @@ select {
 
 
 @media (max-width: 768px) {
-  
+   #contact-mobile {
+        width: 90%;            /* small margin on sides */
+        max-width: 360px;      /* narrower for mobile */
+        margin: 1rem auto;     /* center horizontally */
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;           /* vertical spacing between fields */
+        box-sizing: border-box;
+    }
 
     .three-column-layout {
         grid-template-columns: 1fr !important;
