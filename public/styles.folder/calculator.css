@@ -463,8 +463,8 @@ select {
     margin-left: 60px;
     }
 
-     .column {
-        padding: 10px 0;
+   .column {
+      padding: 10px 0;
     }
     .center-content {
         padding: 15px;
@@ -475,14 +475,23 @@ select {
     min-width: 0;     /* prevent forced horizontal width */
     margin-bottom: 10px; /* optional spacing between fields */
   }
-    .dependents-row {
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 10px !important;
-        width: 100%;
-    }
+.dependents-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100%;
+}
 
-    .rating-btn {
+ #contact-form {
+        width: 90%;            /* leave a small margin on sides */
+        max-width: 400px;      /* cap width for mobile */
+        margin: 1rem auto;     /* center horizontally */
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;           /* vertical spacing between fields */
+        box-sizing: border-box;
+    }
+.rating-btn {
         font-size: 10px !important;   
         padding: 4px 6px !important; 
         display: inline-flex;
