@@ -121,15 +121,57 @@ h2 {
 
 /* MOBILE */
 @media (max-width: 768px) {
-  .row {
-    flex-direction: column;
+  @media (max-width: 768px) {
+
+  #contact {
+    padding: 1.5rem 1rem;
   }
 
   .center-content {
-    padding: 15px;
+    max-width: 100%;
+    border-radius: 14px;
+    padding: 20px 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
 
   h2 {
-    font-size: 18px;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Stack fields cleanly */
+  .row {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  /* Inputs feel better on mobile */
+  .form-group input,
+  .form-group textarea {
+    font-size: 16px; /* prevents iPhone zoom */
+    padding: 0.8rem 0;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Button should feel like a mobile button */
+  #send-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  /* Flash messages centered and clean */
+  .contact-alert {
+    width: 100%;
+    margin-bottom: 1rem;
   }
 }
