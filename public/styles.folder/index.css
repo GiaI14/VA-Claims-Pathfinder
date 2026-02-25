@@ -40,6 +40,7 @@ h2 {
 #disabilities-container {
   text-align: center;
   margin: 2rem 0;
+  padding-top: 2rem;
 }
 
 /* Remove old left margin hacks */
