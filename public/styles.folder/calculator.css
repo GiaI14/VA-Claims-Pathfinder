@@ -414,12 +414,7 @@ select {
 
 
 @media (max-width: 768px) {
-    .center-content {
-        max-width: 100% !important;
-        width: 100% !important;
-        padding: 15px !important;
-        box-sizing: border-box !important;
-    }
+  
 
     .three-column-layout {
         grid-template-columns: 1fr !important;
@@ -482,15 +477,6 @@ select {
     width: 100%;
 }
 
- #contact-form {
-        width: 90%;            /* leave a small margin on sides */
-        max-width: 400px;      /* cap width for mobile */
-        margin: 1rem auto;     /* center horizontally */
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;           /* vertical spacing between fields */
-        box-sizing: border-box;
-    }
 .rating-btn {
         font-size: 10px !important;   
         padding: 4px 6px !important; 
