@@ -423,23 +423,5 @@ select {
         gap: 0.5rem;           /* vertical spacing between fields */
         box-sizing: border-box;
     }
- #contact-mobile h2 {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-
-    /* Form layout adjustments */
-    #contact-mobile #contact-form {
-        display: flex;
-        flex-direction: column; /* stack inputs vertically */
-    }
-
-    /* Send button to the left */
-    #contact-mobile #send-button {
-        align-self: flex-start; /* aligns the button to the left inside the flex container */
-        width: auto;            /* button keeps its normal width */
-        padding: 0.8rem 2rem;
-        margin-top: 10px;       /* optional spacing from last input */
-    }
    
 }
