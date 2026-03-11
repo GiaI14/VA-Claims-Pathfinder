@@ -423,5 +423,22 @@ select {
         gap: 0.5rem;           /* vertical spacing between fields */
         box-sizing: border-box;
     }
+
+     #contact-us {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    #send-button {
+        margin-left: 0;
+        display: block;
+        margin: 10px auto;
+    }
+
+    .contact-alert {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
    
 }
