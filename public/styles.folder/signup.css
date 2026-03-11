@@ -165,7 +165,8 @@ input[type="password"]:focus {
   }
   
   #signup-page {
-    max-width: 95vw;
+    width: 100%;
+    max-width: 420px;
     padding: 0.5rem;
     margin: 0.5rem auto 0.3rem auto;
   }
