@@ -309,4 +309,22 @@ input[type="password"]:focus {
     margin: 20px auto;
     padding: 16px;
   }
+  label {
+    font-size: 0.9rem;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.55rem;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 0.45rem;
+    font-size: 0.9rem;
+  }
+
+  .form-control {
+    margin-bottom: 0.9rem;
+  }
 }
