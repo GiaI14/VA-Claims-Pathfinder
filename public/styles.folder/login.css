@@ -298,12 +298,15 @@ input[type="password"]:focus {
   }
   
   main {
-    max-width: 95vw;
-    padding: 0.5rem;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 10px;
   }
   #signup, #login {
-    max-width: 95vw;
-    margin: 1rem auto;
-    padding: 1.25rem;
+    width: 92%;
+    max-width: 380px;
+    margin: 20px auto;
+    padding: 16px;
   }
 }
