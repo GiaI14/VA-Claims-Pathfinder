@@ -155,23 +155,23 @@ input[type="password"]:focus {
   transform: translateY(-1px);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 500px) {
   body {
-    padding-top: 0;  
+    padding-top: 55px;  
   }
   
   .page-wrapper {
-    padding-top: 40px;
+    padding-top: 10px;
   }
   
   #signup-page {
     max-width: 95vw;
-    padding: 1rem;
+    padding: 0.5rem;
     margin: 0.5rem auto 0.3rem auto;
   }
 
   h1 {
-    font-size: 1.35rem; 
+    font-size: 25px; 
   }
 
   .form-control {
