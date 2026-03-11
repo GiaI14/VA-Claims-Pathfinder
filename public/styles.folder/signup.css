@@ -178,13 +178,17 @@ input[type="password"]:focus {
     margin-bottom: 0.81rem;  
   }
 
+  label {
+    font-size: 0.7rem;
+  }
+  
   .btn,
   .btn-alt {
-    font-size: 0.9rem; 
-    padding: 0.61rem; 
+    font-size: 0.7rem; 
+    padding: 0.45rem; 
   }
 
   #auth-alternative {
-    font-size: 0.73rem; 
+    font-size: 0.7rem; 
   }
 }
