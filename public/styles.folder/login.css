@@ -301,7 +301,7 @@ input[type="password"]:focus {
     max-width: 95vw;
     padding: 0.5rem;
   }
-  #sigup, #login {
+  #signup, #login {
     max-width: 95vw;
     padding: 1rem;
   }
