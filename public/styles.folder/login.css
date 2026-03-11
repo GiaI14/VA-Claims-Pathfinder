@@ -312,7 +312,10 @@ input[type="password"]:focus {
   label {
     font-size: 0.7rem;
   }
-
+  h1{
+    font-size: 15px;
+  }
+  
   input[type="email"],
   input[type="password"] {
     padding: 0.55rem;
