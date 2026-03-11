@@ -290,7 +290,7 @@ input[type="password"]:focus {
 
 @media (max-width: 500px) {
     body {
-    padding-top: 0;  
+    padding-top: 55px;  
   }
   
   .page-wrapper {
@@ -300,14 +300,15 @@ input[type="password"]:focus {
   main {
     width: 100%;
     max-width: 420px;
-    margin: 0 auto;
-    padding: 10px;
+    margin: 0.5 auto;
+    padding: 0.5rem;
   }
+  
   #signup, #login {
     width: 92%;
-    max-width: 380px;
-    margin: 20px auto;
-    padding: 16px;
+    max-width: 360px;
+    margin: 10px auto;
+    padding: 14px;
   }
   label {
     font-size: 0.7rem;
