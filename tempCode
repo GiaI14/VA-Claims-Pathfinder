@@ -442,3 +442,78 @@ select {
     }
    
 }
+
+////////////////////////////////////////////
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/index.css">' })%> 
+<link rel="stylesheet" href="/styles.folder/shared.css">
+<body>
+<div class="page-wrapper">
+    <%- include('includes/header', { nonce: nonce }) %>
+
+    <div id="disabilities-container" style="text-align: center; margin: 2rem 0;">
+        <a href="/compensation">
+            <button class="start-calculator-btn" type="button" style="font-size: 1rem; padding: 1rem 2rem; cursor: pointer;">
+                Go to Disability Calculator
+            </button>
+        </a>
+    </div>
+
+    <section id="contact" style="padding: 2rem 0;">
+        <div class="center-content" id="contact-mobile">
+            <h2 id="contact-us">Contact Us</h2>
+            <% if (successMessage && successMessage.length > 0) { %>
+            <div class="alert alert-success text-center my-4 flash-message contact-alert" style="color: green;">
+                <%= successMessage[0] %>
+            </div>
+            <% } %>
+            <% if (errorMessage && errorMessage.length > 0) { %>
+            <div class="alert alert-danger text-center my-4 flash-message contact-alert" style="color: red;">
+                <%= errorMessage[0] %>
+            </div>
+            <% } %>
+
+            <script nonce="<%= nonce %>">
+                document.addEventListener('DOMContentLoaded', () => {
+                    const flashMessages = document.querySelectorAll('.flash-message');
+                    flashMessages.forEach(msg => {
+                        setTimeout(() => {
+                            msg.style.display = 'none';
+                        }, 5000);
+                    });
+                });
+            </script>  
+            <form id="contact-form" method="POST" action="/api/contact">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="text" name="honeypot" style="display:none;" tabindex="-1" autocomplete="off">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" id="phone" name="phone" />
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="message">Message:</label><br />
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button id="send-button" type="submit">Send</button>
+            </form>
+        </div>
+    </section>
+     <div class="spacer"></div>
+    <%- include('includes/footer') %>
+</div>
+
+<script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
+<script src="/js/index.js" nonce="<%= nonce %>"></script>
+</body>
+</html>
