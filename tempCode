@@ -1,149 +1,444 @@
-const express = require("express");
-const router = express.Router();
-
-// -- VA Compensation Tables (your existing data) --
-const basePay = { 10: 180.42, 20: 356.66, 30: 552.47, 40: 795.84, 50: 1132.90, 60: 1435.02, 70: 1808.45, 80: 2102.15, 90: 2362.30, 100: 3938.58 };
-  const compensationWithSpouse = { 30: 617.47, 40: 882.84, 50: 1241.90, 60: 1566.02, 70: 1961.45, 80: 2277.15, 90: 2559.30, 100: 4158.17 };
-  const compensationWithChildAndSpouse = { 30: 666.47, 40: 947.84, 50: 1322.90, 60: 1663.02, 70: 2074.45, 80: 2406.15, 90: 2704.30, 100: 4318.99 };
-  const compensationWithChildOnly = { 30: 596.47, 40: 853.84, 50: 1205.90, 60: 1523.02, 70: 1910.45, 80: 2219.15, 90: 2494.30, 100: 4085.43 };
-  const childUnder18Pay = { 30: 32, 40: 43, 50: 54, 60: 65, 70: 76, 80: 87, 90: 98, 100: 109.11 };
-  const childOver18Pay = { 30: 105, 40: 140, 50: 176, 60: 211, 70: 246, 80: 281, 90: 317, 100: 352.45 };
-  const OneParent = { 30: 52, 40: 70, 50: 88, 60: 105, 70: 123, 80: 140, 90: 158, 100: 176.24 };
-  const TwoParents = { 30: 104, 40: 140, 50: 176, 60: 210, 70: 246, 80: 280, 90: 316, 100: 352.48 };
- 
-
-// VA Compensation function
-function calculateVACompensation(rating, spouse, childrenUnder18, childrenOver18, numParents) {
-  let baseCompensation = 0;
-
-  console.log(`Calculating for rating: ${rating}, spouse: ${spouse}, childrenUnder18: ${childrenUnder18}, childrenOver18: ${childrenOver18}, numParents: ${numParents}`);
-
-  if (rating === 10 || rating === 20) {
-    return basePay[rating] || 0;
-  }
-
-  if (!spouse && childrenUnder18 === 0 && childrenOver18 === 0) {
-    baseCompensation = basePay[rating] || 0;
-  } else if (spouse && childrenUnder18 === 0 && childrenOver18 === 0) {
-    baseCompensation = compensationWithSpouse[rating] || 0;
-  } else if (spouse && (childrenUnder18 > 0 || childrenOver18 > 0)) {
-    baseCompensation = compensationWithChildAndSpouse[rating] || 0;
-  } else if (!spouse && (childrenUnder18 > 0 || childrenOver18 > 0)) {
-    baseCompensation = compensationWithChildOnly[rating] || 0;
-  }
-
-  if (numParents === 1) baseCompensation += OneParent[rating] || 0;
-  else if (numParents === 2) baseCompensation += TwoParents[rating] || 0;
-
-  const additionalChildrenUnder18 = Math.max(0, childrenUnder18 - 1);
-  baseCompensation += childUnder18Pay[rating] * additionalChildrenUnder18;
-
-  if (childrenUnder18 > 0) {
-    baseCompensation += childOver18Pay[rating] * childrenOver18;
-  } else {
-    baseCompensation += childOver18Pay[rating] * Math.max(0, childrenOver18 - 1);
-  }
-
-  console.log(`Final compensation: $${baseCompensation.toFixed(2)}`);
-  return parseFloat(baseCompensation.toFixed(2));
+:root {
+    --primary-color: #855743;
+    --secondary-color: #202c2c;
+    --accent-color: #c4b687;
+    --background-color: #FFFFFF;
+    /* Pure White */
+    --text-color: #212121;
+    /* Near-black for readability */
+    --input-border-color: #5A6D7B;
+    /* VA Gray */
+    --error-color: #E31C3D;
+    /* VA Red */
+    --success-color: #4c6852;
+    /* VA Green */
+    --light-gray: #F4F7FA;
+    /* For subtle backgrounds */
 }
 
-const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
-
-function getNextVaBracket(current) {
-  const individualRounded = Math.round(current);
-
-  let currentBracket;
-  if (individualRounded >= 90 && individualRounded <= 94) {
-      currentBracket = 95;
-  } else {
-      currentBracket = Math.round(individualRounded / 10) * 10;
-  }
-
-  if (currentBracket >= 100) return 100;
-
-  const currentIndex = vaBrackets.indexOf(currentBracket);
-  return vaBrackets[currentIndex + 1] || 100;
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--light-gray);
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-function calculatePointsToTarget(currentRatings, targetBracket) {
-  const vaBrackets = [10,20,30,40,50,60,70,80,90,95,100];
 
-  function calculateCombinedRating(ratings) {
-    const sorted = [...ratings].sort((a, b) => b - a); 
-    let remaining = 100;
-    let combined = 0;
-    sorted.forEach(r => {
-      const add = (r * remaining) / 100;
-      combined += add;
-      remaining -= add;
-    });
-    return combined;
-  }
-
-  let combined = calculateCombinedRating([...currentRatings]);
-
-  let minRatingForTarget;
-  if (targetBracket === 100) {
-      minRatingForTarget = 95;
-  } else if (targetBracket === 95) {
-      minRatingForTarget = 90;
-  } else {
-      minRatingForTarget = targetBracket - 5;
-  }
-
-  if (combined >= minRatingForTarget) {
-      let nextBracket;
-      if (targetBracket === 95) nextBracket = 100;
-      else if (targetBracket === 100) return 0;
-      else nextBracket = targetBracket + 10;
-      return calculatePointsToTarget(currentRatings, nextBracket);
-  }
-
-  const remainingHealthy = 100 - combined;
-  const rawPointsNeeded = ((minRatingForTarget - combined) * 100) / remainingHealthy;
-
-  return Math.ceil(rawPointsNeeded / 10) * 10;
+h1 {
+    color: var(--primary-color);
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 30px;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-router.post("/calculate", (req, res) => {
-  try {
-    console.log("Received body:", req.body);
-    const { currentRating, spouse, childrenUnder18, childrenOver18, numParents } = req.body;
+
+h2 {
+    color: #333;
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 0;
+}
+
+#disabilities-container { 
     
-    // Parse inputs
-    const roundedRating = Math.round(Array.isArray(currentRating) ? Number(currentRating[0]) : Number(currentRating));
-    const hasSpouse = !!spouse;
-    const under18 = parseInt(childrenUnder18) || 0;
-    const over18 = parseInt(childrenOver18) || 0;
-    const parents = parseInt(numParents) || 0;
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-bottom: 30px; 
+`}
 
-    // Calculate compensation
-    const totalCompensation = calculateVACompensation(roundedRating, hasSpouse, under18, over18, parents);
 
-    // Next bracket
-    const nextBracket = getNextVaBracket(roundedRating);
-    let nextBracketCompensation = null;
-    if (nextBracket && nextBracket <= 100) {
-      nextBracketCompensation = calculateVACompensation(nextBracket, hasSpouse, under18, over18, parents);
+.main-heading {
+    text-align: center;
+    margin-top: 20px; /* smaller gap */
+    font-size: 1.5rem;
+}
+
+.center-content { 
+    background-color: #f9f9f9; 
+    border-radius: 10px; 
+    padding: 20px; 
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+    max-width: 1600px; 
+    margin: 0 auto;
+}
+
+#disabilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.disability-entry {
+    display: flex;
+    align-items: center;
+}
+
+.disability-entry input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.remove-button {
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+    background-color: #d32f2f;
+}
+
+
+input[type="checkbox"],
+input[type="number"],
+select {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+
+#results-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#results-container h2 {
+    color: #2a4b8e;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#results-container span {
+    font-weight: bold;
+    color: var(--success-color);
+}
+
+.disability-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.disability-entry select.rating {
+    flex: 1;
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+}
+
+.disability-entry button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding-bottom: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.disability-entry button:hover {
+    background-color: #d32f2f;
+}
+
+#rating-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.button-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 600px;
+}
+
+.rating-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #888;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3 ease;
+    text-align: center;
+}
+
+.rating-btn:hover {
+    background-color: #d0e0ff;
+}
+
+#selected-ratings-container {
+    margin-top: 10px;
+}
+
+#selected-ratings {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+    
+#selected-ratings .rating-btn {
+    cursor: pointer;
+    margin: 5px 5px 5px 0;
+}
+
+.three-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 10px;
+    padding: 10px;
+}
+
+.column {
+    padding: 10px; 
+} 
+
+.empty-left,
+.empty-right {
+    background-color: transparent;
+}
+
+
+#toggle-dependents {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#toggle-dependents:hover {
+    background-color: #2f4141;
+}
+    
+.dependents-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 5px;
+}
+
+.dependent-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 150px;
+    min-width: 140px;
+}
+
+.dependents-center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#dependents-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 10px;  
+    border-radius: 8px;
+}
+
+.parents-field {
+  display: flex;
+  align-items: center;
+  max-width: 260px;
+  margin-bottom: 15px;
+}
+.parents-field label {
+  margin-bottom: 0; 
+  white-space: nowrap;
+}
+
+#numParents {
+    max-width: 100px;
+    width: 100%;
+}
+
+
+#contact-us {
+    margin-left: 175px;
+}
+
+#send-button {
+    margin-left: 180px;
+}
+
+.contact-alert {
+  margin-left: 175px;
+  width: calc(80% - 175px);
+  text-align: left;
+}
+
+/* Flex row for name, email, phone */
+.row {
+  display: flex;
+  gap: 1rem;
+  width: 80%;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.row .form-group {
+  flex: 1 1 0;
+  min-width: 200px;
+}
+
+/* Full width for message */
+.full-width {
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* Reuse earlier form-group/input styling */
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Inputs */
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  background-color: transparent;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus state */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-bottom-color: #007BFF;
+}
+
+/* Label below input */
+.form-group label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.results-card {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  .results-card h2 {
+    text-align: center;
+    margin: 0 0 0.8rem 0;
+    font-size: 1.4rem;
+    color: #333;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.6rem 0;
+    font-size: 1rem;
+  }
+
+  .result-row.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-top: 2px solid #ddd;
+    padding-top: 0.8rem;
+  }
+
+  #results-container .label {
+    color: #003366; /* Dark Blue */
+    font-weight: 600;
+  }
+
+  .value {
+    font-weight: 600;
+    color: #222; /* leave numbers same */
+  }
+
+  .money {
+    color: #0066cc; /* leave money numbers same */
+  }
+
+  .highlight {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+
+  hr {
+    margin: 1rem 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+
+
+@media (max-width: 768px) {
+   #contact-mobile {
+        width: 90%;            /* small margin on sides */
+        max-width: 360px;      /* narrower for mobile */
+        margin: 0.5rem auto;     /* center horizontally */
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;           /* vertical spacing between fields */
+        box-sizing: border-box;
     }
 
-    const pointsToNext = calculatePointsToTarget([roundedRating], nextBracket);
+     #contact-us {
+        margin-left: 0;
+        text-align: center;
+    }
 
-    // Send JSON
-    res.json({
-      roundedRating: roundedRating + "%",
-      totalCompensation: totalCompensation.toFixed(2),
-      nextBracket: nextBracket ? nextBracket + "%" : null,
-      nextBracketCompensation: nextBracketCompensation ? nextBracketCompensation.toFixed(2) : null,
-      pointsToNext
-    });
+    #send-button {
+        margin-left: 0;
+        display: block;
+        margin: 10px auto;
+    }
 
-  } catch (err) {
-    console.error("Error in /calculate:", err);
-    res.status(500).json({ error: "An error occurred while calculating VA compensation" });
-  }
-});
-
-
-module.exports = router;
+    .contact-alert {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+   
+}
