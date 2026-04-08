@@ -16,6 +16,8 @@
     /* For subtle backgrounds */
 }
 
+background: url('/images/Veteran.jpg') center/cover no-repeat;
+
 html, body {
     height: 100%;
     width: 100%;
