@@ -124,9 +124,10 @@ body, html {
 
 #contact-us {
   text-align: center;
-  background-color: #16264D;
   padding: 3rem 1rem;
   border-radius: 12px;
+  color: #16264D;
+  font-size: 20px; 
 }
 
 /* alerts */
