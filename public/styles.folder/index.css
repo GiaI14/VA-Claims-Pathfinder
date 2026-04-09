@@ -43,13 +43,13 @@ body, html {
     font-weight: 500;
     margin-bottom: 10px;
     color: white;
+    line-height: 1.05;
 }
 
 .hero-content h1 span {
     display: block;
     color: #f4b400;
     font-weight: 700;
-    line-height: 1.1;
 }
 
 /* subtitle */
