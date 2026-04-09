@@ -78,6 +78,10 @@ body, html {
     transform: translateY(-2px);
 }
 
+.cta-button i {
+  margin-right: 12px;
+}
+
 /* ================= HEADER ================= */
 .main-header {
     position: absolute;
