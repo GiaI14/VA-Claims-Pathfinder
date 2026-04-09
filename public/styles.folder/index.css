@@ -179,15 +179,13 @@ body, html {
     box-sizing: border-box;
 }
 
-/* TEXTAREA MATCHES BUTTON WIDTH */
 #contact-form .full-width {
     width: 700px;              /* match send button width */
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;       /* center textarea under row */
+    align-items: flex-start;   /* align label and textarea left */
 }
-
 #contact-form .full-width textarea {
     width: 100%;               /* fill the .full-width container */
     padding: 12px;
