@@ -164,7 +164,7 @@ body, html {
 
 /* EACH FORM GROUP IN ROW */
 #contact-form .row .form-group {
-    flex: 1;                   /* equal width for each input */
+    flex: 1;                   
     display: flex;
     flex-direction: column;
 }
@@ -202,6 +202,13 @@ body, html {
     align-self: flex-start; /* aligns label to the left */
     margin-bottom: 5px;
     color: #555;
+}
+
+#contact-form .form-group label {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #222;          /* darker than before */
+    font-weight: 600;     /* semi-bold */
 }
 
 /* button */
