@@ -198,6 +198,13 @@ body, html {
     box-sizing: border-box;
 }
 
+#contact-form .full-width label {
+    align-self: flex-start; /* aligns label to the left */
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
 /* button */
 #send-button {
     width: 100%;
