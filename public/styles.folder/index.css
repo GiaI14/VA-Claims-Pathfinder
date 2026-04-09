@@ -184,15 +184,14 @@ body, html {
     box-sizing: border-box;    /* include padding in width */
 }
 
-/* TEXTAREA MATCHES ROW WIDTH */
 #contact-form .full-width textarea {
-    width: 100%;
-    max-width: 100%;
+    width: 100%;               /* match the full container width */
     padding: 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 0.95rem;
     box-sizing: border-box;
+    min-width: 0;              /* prevents flexbox shrink issue */
 }
 
 /* button */
