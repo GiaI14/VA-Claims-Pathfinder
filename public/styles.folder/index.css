@@ -194,6 +194,9 @@ body, html {
     font-size: 0.95rem;
     box-sizing: border-box;
 }
+#contact-form .full-width textarea {
+    margin: 0;             /* remove any default margin */
+}
 
 #contact-form .full-width label {
     align-self: flex-start;
