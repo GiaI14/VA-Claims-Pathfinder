@@ -123,12 +123,10 @@ body, html {
 
 /* title */
 #contact-us {
-    text-align: center;
-    font-size: 2.4rem;
-    margin-bottom: 10px;
-    color: #0B3D91; /* exact navy from your design */
-    margin-bottom: 5px;
-    font-weight: 600; /* optional, to match boldness in image */
+  text-align: center;        /* centers h2 and p */
+  background-color: #f5f2eb; /* example: light cream from image */
+  padding: 3rem 1rem;
+  border-radius: 12px;
 }
 
 /* alerts */
