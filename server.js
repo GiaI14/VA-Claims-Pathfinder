@@ -64,14 +64,30 @@ app.use((req, res, next) => {
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        `'nonce-${res.locals.nonce}'`,  // IMPORTANT: this string must be wrapped in quotes here
+        `'nonce-${res.locals.nonce}'`,
         "https://accounts.google.com",
         "https://apis.google.com",
         "https://cdnjs.cloudflare.com"
       ],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
-      frameSrc: ["'self'", "https://accounts.google.com"],
-      connectSrc: ["'self'", "https://accounts.google.com", "https://play.google.com"]
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://accounts.google.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://cdnjs.cloudflare.com"
+      ],
+      frameSrc: [
+        "'self'",
+        "https://accounts.google.com"
+      ],
+      connectSrc: [
+        "'self'",
+        "https://accounts.google.com",
+        "https://play.google.com"
+      ]
     }
   })(req, res, next);
 });
