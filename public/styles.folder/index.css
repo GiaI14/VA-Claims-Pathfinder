@@ -121,10 +121,10 @@ body, html {
     box-shadow: 0 12px 30px rgba(0,0,0,0.08); 
 }
 
-/* title */
+
 #contact-us {
-  text-align: center;        /* centers h2 and p */
-  background-color: #f5f2eb; /* example: light cream from image */
+  text-align: center;
+  background-color: #16264D;
   padding: 3rem 1rem;
   border-radius: 12px;
 }
