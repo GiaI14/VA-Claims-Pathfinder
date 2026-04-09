@@ -200,7 +200,7 @@ body, html {
 
 #contact-form .full-width label {
     align-self: flex-start;
-    margin-bottom: 4px;
+    margin-bottom: 0px;
     color: #555;
 }
 
