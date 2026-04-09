@@ -160,8 +160,8 @@ body, html {
 
 /* full width message */
 .full-width {
-    width:700px;
-    max-width: 100%;
+    width: 700px;      /* match button width */
+    max-width: 100%;   /* responsive on smaller screens */
 }
 
 /* inputs */
