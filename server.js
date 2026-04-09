@@ -66,7 +66,7 @@ app.use((req, res, next) => {
         "'self'",
         `'nonce-${res.locals.nonce}'`,  // IMPORTANT: this string must be wrapped in quotes here
         "https://accounts.google.com",
-        "https://apis.google.com"
+        "https://apis.google.com",
         "https://cdnjs.cloudflare.com"
       ],
       styleSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
