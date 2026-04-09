@@ -151,28 +151,21 @@ body, html {
     width: 100%;
 }
 
-/* form groups */
 .form-group {
-    flex: 1;
     display: flex;
     flex-direction: column;
-}
-
-/* full width message */
-.full-width {
-    width: 700px;      /* match button width */
-    max-width: 100%;   /* responsive on smaller screens */
-}
-
-/* inputs */
-.form-group input,
-.form-group textarea {
+    align-items: center; /* center contents */
     width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #f9fafb;
-    font-size: 0.95rem;
+}
+
+.full-width {
+    width: 700px;        /* match the button */
+    max-width: 100%;     /* responsive */
+}
+
+/* make sure textarea respects .full-width */
+.form-group textarea.full-width {
+    width: 700px !important; /* force it */
 }
 
 /* labels */
