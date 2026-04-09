@@ -125,8 +125,10 @@ body, html {
 #contact-us {
     text-align: center;
     font-size: 2.4rem;
-    color: var(--primary-color);
     margin-bottom: 10px;
+    color: #0B3D91; /* exact navy from your design */
+    margin-bottom: 5px;
+    font-weight: 600; /* optional, to match boldness in image */
 }
 
 /* alerts */
