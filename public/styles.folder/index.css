@@ -199,8 +199,7 @@ body, html {
 }
 
 #contact-form .full-width label {
-    align-self: flex-start; /* aligns label to the left */
-    margin-bottom: 5px;
+    align-self: flex-start;
     color: #555;
 }
 
