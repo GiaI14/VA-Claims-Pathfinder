@@ -228,6 +228,9 @@ body, html {
     background: #16213d;
 }
 
+#send-button i {
+  margin-right: 12px;
+}
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
