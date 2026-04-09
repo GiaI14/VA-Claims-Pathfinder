@@ -185,7 +185,6 @@ body, html {
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
     align-items: center;       /* center textarea under row */
 }
 
