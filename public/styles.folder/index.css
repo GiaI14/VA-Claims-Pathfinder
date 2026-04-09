@@ -111,6 +111,12 @@ body, html {
     
 }
 
+.contact-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+
 .center-content { 
     max-width: 700px; 
     margin: 0 auto; 
