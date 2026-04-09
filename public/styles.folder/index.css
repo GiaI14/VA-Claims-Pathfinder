@@ -115,7 +115,7 @@ body, html {
   text-align: center;
   color: #666;
   font-size: 1.3rem; 
-  margin: 0 0 20px 0;
+  margin: 0 0 30px 0;
 }
 
 .center-content { 
@@ -130,7 +130,7 @@ body, html {
 
 #contact-us {
   text-align: center;
-  padding: 1rem 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   border-radius: 12px;
   color: #16264D;
   font-size: 40px; 
