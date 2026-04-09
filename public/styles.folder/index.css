@@ -143,42 +143,56 @@ body, html {
     text-align: center;
 }
 
-/* row layout */
-.row {
+#contact-form {
     display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    width: 100%;
+    flex-direction: column;
+    align-items: center;       /* center everything horizontally */
+    max-width: 750px;          /* total form width */
+    margin: 0 auto;
+    padding: 0 15px;           /* side padding for spacing */
 }
 
-.form-group {
-    flex: 1;
+/* ROW OF INPUTS (Name, Email, Phone) */
+#contact-form .row {
+    display: flex;
+    gap: 15px;                 /* equal gap between inputs */
+    width: 100%;               /* full width of form container */
+    margin-bottom: 20px;       /* spacing below row */
+}
+
+/* EACH FORM GROUP IN ROW */
+#contact-form .row .form-group {
+    flex: 1;                   /* each input equal width */
     display: flex;
     flex-direction: column;
 }
 
-/* full width message */
-.full-width {
-    width: 700px;      /* match button width */
-    max-width: 100%;   /* responsive on smaller screens */
-}
-
-/* inputs */
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #f9fafb;
-    font-size: 0.95rem;
-}
-
-/* labels */
-.form-group label {
+/* LABELS */
+#contact-form .form-group label {
     margin-bottom: 5px;
     font-size: 0.85rem;
     color: #555;
+}
+
+/* INPUTS */
+#contact-form input {
+    width: 100%;               /* fill parent flex container */
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;    /* include padding in width */
+}
+
+/* TEXTAREA MATCHES ROW WIDTH */
+#contact-form .full-width textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
 }
 
 /* button */
