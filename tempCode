@@ -1,519 +1,224 @@
-:root {
-    --primary-color: #855743;
-    --secondary-color: #202c2c;
-    --accent-color: #c4b687;
-    --background-color: #FFFFFF;
-    /* Pure White */
-    --text-color: #212121;
-    /* Near-black for readability */
-    --input-border-color: #5A6D7B;
-    /* VA Gray */
-    --error-color: #E31C3D;
-    /* VA Red */
-    --success-color: #4c6852;
-    /* VA Green */
-    --light-gray: #F4F7FA;
-    /* For subtle backgrounds */
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
+body, html {
     margin: 0;
     padding: 0;
-    background-color: var(--light-gray);
+    background: var(--light-gray);
 }
 
-h1 {
-    color: var(--primary-color);
-    font-size: 20px;
+/* ================= HERO ================= */
+#disabilities-container.hero {
+    position: relative;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    margin-bottom: 30px;
+    margin: 0;
+
+    background: url('/images/veteran.jpg') center 30% / cover no-repeat;
 }
 
-h2 {
-    color: #333;
-    font-size: 20px;
-    margin-top: 30px;
-    margin-bottom: 20px;
+/* overlay */
+#disabilities-container.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 25, 60, 0.75);
 }
 
-h3 {
-    font-size: 20px;
-    text-align: center;
-    margin-top: 0;
+/* content */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 750px;
+    padding: 20px;
+    color: white;
 }
 
-#disabilities-container { 
+/* title */
+.hero-content h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.2rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: white;
+    line-height: 1.05;
+}
+
+.hero-content h1 span {
+    display: block;
+    color: #f4b400;
+    font-weight: 700;
+}
+
+/* subtitle */
+.hero-content p {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #dbe3f1;
+}
+
+/* CTA */
+.start-calculator-btn {
+    margin-top: 25px;
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.start-calculator-btn:hover {
+    background: #a61b1b;
+    transform: translateY(-2px);
+}
+
+.start-calculator-btn i {
+  margin-right: 12px;
+}
+
+/* ================= HEADER ================= */
+.main-header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    background: transparent;
+}
+
+/* hide desktop nav links */
+.main-header nav,
+.main-header a {
+    display: none !important;
+}
+
+/* hamburger visible */
+.hamburger {
+    display: block;
+    color: white;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+}
+
+/* ================= CONTACT ================= */
+#contact {
+    padding: 20px 20px 60px 20px !important;
+    background: #f4f6f9;
     
-    padding: 20px; 
-    border-radius: 8px; 
-    margin-bottom: 30px; 
-`}
+}
 
-
-.main-heading {
-    text-align: center;
-    margin-top: 20px; /* smaller gap */
-    font-size: 1.5rem;
+.contact-subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 1.3rem; 
+  margin: 0 0 30px 0;
 }
 
 .center-content { 
-    background-color: #f9f9f9; 
-    border-radius: 10px; 
-    padding: 20px; 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
-    max-width: 1600px; 
-    margin: 0 auto;
-}
-
-#disabilities {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.disability-entry {
-    display: flex;
-    align-items: center;
-}
-
-.disability-entry input {
-    width: 60px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-right: 10px;
-}
-
-.remove-button {
-    background-color: var(--error-color);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-
-.remove-button:hover {
-    background-color: #d32f2f;
-}
-
-
-input[type="checkbox"],
-input[type="number"],
-select {
-    margin-bottom: 15px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-
-#results-container {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-#results-container h2 {
-    color: #2a4b8e;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-#results-container span {
-    font-weight: bold;
-    color: var(--success-color);
-}
-
-.disability-entry {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.disability-entry select.rating {
-    flex: 1;
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
-}
-
-.disability-entry button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding-bottom: 3px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-.disability-entry button:hover {
-    background-color: #d32f2f;
-}
-
-#rating-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.button-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    justify-content: center;
-    max-width: 600px;
-}
-
-.rating-btn {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #888;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3 ease;
-    text-align: center;
-}
-
-.rating-btn:hover {
-    background-color: #d0e0ff;
-}
-
-#selected-ratings-container {
-    margin-top: 10px;
-}
-
-#selected-ratings {
-  overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 5px;
-}
-    
-#selected-ratings .rating-btn {
-    cursor: pointer;
-    margin: 5px 5px 5px 0;
-}
-
-.three-column-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1fr;
-    gap: 10px;
-    padding: 10px;
-}
-
-.column {
-    padding: 10px; 
-} 
-
-.empty-left,
-.empty-right {
-    background-color: transparent;
-}
-
-
-#toggle-dependents {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-#toggle-dependents:hover {
-    background-color: #2f4141;
-}
-    
-.dependents-row {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    margin-bottom: 5px;
-}
-
-.dependent-field {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 150px;
-    min-width: 140px;
-}
-
-.dependents-center-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-#dependents-container {
-    max-width: 450px;
-    width: 100%;
-    padding: 10px;  
-    border-radius: 8px;
-}
-
-.parents-field {
-  display: flex;
-  align-items: center;
-  max-width: 260px;
-  margin-bottom: 15px;
-}
-.parents-field label {
-  margin-bottom: 0; 
-  white-space: nowrap;
-}
-
-#numParents {
-    max-width: 100px;
-    width: 100%;
+    max-width: 700px; 
+    margin: 0 auto; 
+    padding: 30px; 
+    background: white; 
+    border-radius: 12px; 
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08); 
 }
 
 
 #contact-us {
-    margin-left: 175px;
+  text-align: center;
+  padding: 1rem 1rem 0.5rem 1rem;
+  border-radius: 12px;
+  color: #16264D;
+  font-size: 40px; 
+  margin: 0px;
 }
 
-#send-button {
-    margin-left: 180px;
-}
-
+/* alerts */
 .contact-alert {
-  margin-left: 175px;
-  width: calc(80% - 175px);
-  text-align: left;
+    margin: 10px 0;
+    text-align: center;
 }
 
-/* Flex row for name, email, phone */
+/* row layout */
 .row {
-  display: flex;
-  gap: 1rem;
-  width: 80%;
-  flex-wrap: wrap;
-  margin: 0 auto;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
-.row .form-group {
-  flex: 1 1 0;
-  min-width: 200px;
-}
-
-/* Full width for message */
-.full-width {
-  width: 80%;
-  margin: 0 auto;
-}
-
-/* Reuse earlier form-group/input styling */
 .form-group {
-  position: relative;
-  margin-bottom: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Inputs */
+/* full width message */
+.full-width {
+    width: 700px;      /* match button width */
+    max-width: 100%;   /* responsive on smaller screens */
+}
+
+/* inputs */
 .form-group input,
 .form-group textarea {
-  width: 100%;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  padding: 0.5rem 0;
-  font-size: 1rem;
-  background-color: transparent;
-  color: #333;
-  outline: none;
-  transition: border-color 0.3s ease;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    font-size: 0.95rem;
 }
 
-/* Focus state */
-.form-group input:focus,
-.form-group textarea:focus {
-  border-bottom-color: #007BFF;
-}
-
-/* Label below input */
+/* labels */
 .form-group label {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.875rem;
-  color: #666;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #555;
 }
 
-.results-card {
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    background: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    font-family: Arial, sans-serif;
-  }
-
-  .results-card h2 {
-    text-align: center;
-    margin: 0 0 0.8rem 0;
-    font-size: 1.4rem;
-    color: #333;
-  }
-
-  .result-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 0.6rem 0;
-    font-size: 1rem;
-  }
-
-  .result-row.total {
-    font-weight: bold;
-    font-size: 1.1rem;
-    border-top: 2px solid #ddd;
-    padding-top: 0.8rem;
-  }
-
-  #results-container .label {
-    color: #003366; /* Dark Blue */
-    font-weight: 600;
-  }
-
-  .value {
-    font-weight: 600;
-    color: #222; /* leave numbers same */
-  }
-
-  .money {
-    color: #0066cc; /* leave money numbers same */
-  }
-
-  .highlight {
-    color: #d32f2f;
-    font-weight: bold;
-  }
-
-  hr {
-    margin: 1rem 0;
+/* button */
+#send-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #16264D;
+    color: white;
     border: none;
-    border-top: 1px solid #ddd;
-  }
-
-
-@media (max-width: 768px) {
-   #contact-mobile {
-        width: 90%;            /* small margin on sides */
-        max-width: 360px;      /* narrower for mobile */
-        margin: 0.5rem auto;     /* center horizontally */
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;           /* vertical spacing between fields */
-        box-sizing: border-box;
-    }
-
-     #contact-us {
-        margin-left: 0;
-        text-align: center;
-    }
-
-    #send-button {
-        margin-left: 0;
-        display: block;
-        margin: 10px auto;
-    }
-
-    .contact-alert {
-        margin-left: 0;
-        width: 100%;
-        text-align: center;
-    }
-   
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
-////////////////////////////////////////////
-<!DOCTYPE html>
-<html lang="en">
-<%- include('includes/head', { nonce: nonce, customStyles: '<link rel="stylesheet" href="/styles.folder/index.css">' })%> 
-<link rel="stylesheet" href="/styles.folder/shared.css">
-<body>
-<div class="page-wrapper">
-    <%- include('includes/header', { nonce: nonce }) %>
+#send-button:hover {
+    background: #16213d;
+}
 
-    <div id="disabilities-container" style="text-align: center; margin: 2rem 0;">
-        <a href="/compensation">
-            <button class="start-calculator-btn" type="button" style="font-size: 1rem; padding: 1rem 2rem; cursor: pointer;">
-                Go to Disability Calculator
-            </button>
-        </a>
-    </div>
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
 
-    <section id="contact" style="padding: 2rem 0;">
-        <div class="center-content" id="contact-mobile">
-            <h2 id="contact-us">Contact Us</h2>
-            <% if (successMessage && successMessage.length > 0) { %>
-            <div class="alert alert-success text-center my-4 flash-message contact-alert" style="color: green;">
-                <%= successMessage[0] %>
-            </div>
-            <% } %>
-            <% if (errorMessage && errorMessage.length > 0) { %>
-            <div class="alert alert-danger text-center my-4 flash-message contact-alert" style="color: red;">
-                <%= errorMessage[0] %>
-            </div>
-            <% } %>
+    #disabilities-container.hero {
+        height: auto;
+        padding: 80px 20px;
+    }
 
-            <script nonce="<%= nonce %>">
-                document.addEventListener('DOMContentLoaded', () => {
-                    const flashMessages = document.querySelectorAll('.flash-message');
-                    flashMessages.forEach(msg => {
-                        setTimeout(() => {
-                            msg.style.display = 'none';
-                        }, 5000);
-                    });
-                });
-            </script>  
-            <form id="contact-form" method="POST" action="/api/contact">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <input type="text" name="honeypot" style="display:none;" tabindex="-1" autocomplete="off">
-                <div class="row">
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone:</label>
-                        <input type="text" id="phone" name="phone" />
-                    </div>
-                </div>
-                <div class="form-group full-width">
-                    <label for="message">Message:</label><br />
-                    <textarea id="message" name="message" rows="4" required></textarea>
-                </div>
-                <button id="send-button" type="submit">Send</button>
-            </form>
-        </div>
-    </section>
-     <div class="spacer"></div>
-    <%- include('includes/footer') %>
-</div>
+    .hero-content h1 {
+        font-size: 2rem;
+    }
 
-<script src="/js/mobile-drawer.js" nonce="<%= nonce %>"></script>
-<script src="/js/index.js" nonce="<%= nonce %>"></script>
-</body>
-</html>
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    #contact-us {
+        font-size: 2rem;
+    }
+}
