@@ -1,224 +1,247 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    background: var(--light-gray);
+<footer class="site-footer">
+  <div class="footer-container">
+
+    <div class="footer-left">
+      <div class="footer-title">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L4 7v5c0 5.5 3.8 9.5 8 10 4.2-0.5 8-4.5 8-10V7l-8-4z"/>
+        </svg>
+        <h3>VA Claims Pathfinder</h3>
+      </div>
+      <p>Helping veterans navigate the VA disability claims process with free tools and resources.</p>
+    </div>
+
+    <div class="footer-center">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/compensation">Disability Calculator</a></li>
+        <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
+        <li><a href="/secondary">Secondary Conditions Finder</a></li>
+        <li><a href="/claimFiling">How to File a Claim</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-account">
+      <h3>Account</h3>
+      <ul>
+        <% if (isAuth) { %>
+          <li><a href="/dashboard">My Dashboard</a></li>
+          <li>
+            <form action="/logout" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="quick-logout-btn">Logout</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Signup</a></li>
+        <% } %>
+      </ul>
+    </div>
+
+    <div class="footer-right">
+      <h3>Disclaimer</h3>
+      <p>This site is not affiliated with the Department of Veterans Affairs. Information provided is for educational purposes only.</p>
+      <a href="/policy">Privacy Policy</a> | 
+      <a href="/terms">Terms and Conditions</a>
+    </div>
+
+  </div>
+
+  <div>
+    <hr>
+    <p>Contact us: <a href="mailto:vacpath@vaclaimspathfinder.com">VACPath@vaclaimspathfinder.com</a> | Phone: (123) 456-7890</p>
+    <p>&copy; <%= new Date().getFullYear() %> VA Claims Pathfinder. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+
+ .site-footer {
+  background: #16264D;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #DBE3F1;
+  border-top: 1px solid #ddd;
 }
 
-/* ================= HERO ================= */
-#disabilities-container.hero {
-    position: relative;
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 0;
-
-    background: url('/images/veteran.jpg') center 30% / cover no-repeat;
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 100%; 
+  margin: 0 auto;
+  flex-wrap: wrap;
+  padding: 0 3rem;
 }
 
-/* overlay */
-#disabilities-container.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(10, 25, 60, 0.75);
+.footer-left,
+.footer-center,
+.footer-account,
+.footer-right {
+  flex: 1;
+  min-width: 200px;
+  padding: 0 1rem;
+  text-align: left;
 }
 
-/* content */
-.hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 750px;
-    padding: 20px;
-    color: white;
+.footer-left {
+  display: flex;
+  flex-direction: column;  
+  align-items: flex-start; 
+  gap: 0.5rem;
 }
 
-/* title */
-.hero-content h1 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 3.2rem;
-    font-weight: 500;
-    margin-bottom: 10px;
-    color: white;
-    line-height: 1.05;
+
+.footer-left p {
+  margin-top: 0.5rem;
+  line-height: 1.5;
+  max-width: 280px;
 }
 
-.hero-content h1 span {
-    display: block;
-    color: #f4b400;
+.footer-center ul,
+.footer-account ul {
+  list-style: none;   
+  padding: 0;
+  margin: 0;
+}
+
+.footer-center li,
+.footer-account li{
+  margin-bottom: 0.4rem;
+} 
+
+.site-footer a {
+  color: #DBE3F1;            
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.site-footer a:hover {
+  color: #fbbf24;            
+  opacity: 0.9;
+}
+
+.site-footer a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: #fbbf24;
+  transition: width 0.2s ease;
+}
+
+.site-footer a:hover::after {
+  width: 100%;
+}
+
+.footer-right a {
+  color: rgba(219, 227, 241, 0.8);
+}
+
+.footer-right a:hover {
+  color: #fbbf24;
+}
+
+h3 {
+    font-family: "Merriweather", serif;
+    color: #ffffff;     
+    font-size: 1.25rem;      
     font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    margin-bottom: 0.5rem;
 }
 
-/* subtitle */
-.hero-content p {
-    margin-top: 15px;
-    font-size: 1.1rem;
-    color: #dbe3f1;
+.footer-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* CTA */
-.start-calculator-btn {
-    margin-top: 25px;
-    background: #c62828;
-    color: white;
-    border: none;
-    padding: 14px 32px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.25s;
+.logo-icon {
+    width: 26px;
+    height: 26px;
+
+    stroke: #fbbf24;
+    stroke-width: 2.4;
+
+    flex-shrink: 0;
 }
 
-.start-calculator-btn:hover {
-    background: #a61b1b;
-    transform: translateY(-2px);
+.site-footer hr {
+  border: none;
+  height: 1px;
+  margin: 2rem 3rem 1.5rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(219, 227, 241, 0.4),
+    transparent
+  );
 }
 
-.start-calculator-btn i {
-  margin-right: 12px;
+.footer-subtitle {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
-/* ================= HEADER ================= */
-.main-header {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 10;
-    background: transparent;
-}
-
-/* hide desktop nav links */
-.main-header nav,
-.main-header a {
-    display: none !important;
-}
-
-/* hamburger visible */
-.hamburger {
-    display: block;
-    color: white;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-}
-
-/* ================= CONTACT ================= */
-#contact {
-    padding: 20px 20px 60px 20px !important;
-    background: #f4f6f9;
-    
-}
-
-.contact-subtitle {
+.site-footer > div:last-child {
   text-align: center;
-  color: #666;
-  font-size: 1.3rem; 
-  margin: 0 0 30px 0;
+  padding: 0 3rem;
 }
 
-.center-content { 
-    max-width: 700px; 
-    margin: 0 auto; 
-    padding: 30px; 
-    background: white; 
-    border-radius: 12px; 
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08); 
-}
-
-
-#contact-us {
-  text-align: center;
-  padding: 1rem 1rem 0.5rem 1rem;
-  border-radius: 12px;
-  color: #16264D;
-  font-size: 40px; 
-  margin: 0px;
-}
-
-/* alerts */
-.contact-alert {
-    margin: 10px 0;
+@media (max-width: 768px) {
+ @media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
     text-align: center;
-}
+    padding: 0 1.5rem;
+  }
 
-/* row layout */
-.row {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+  .footer-left,
+  .footer-center,
+  .footer-account,
+  .footer-right {
     width: 100%;
-}
-
-.form-group {
-    flex: 1;
+    min-width: 0;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-title {
+    justify-content: center;
+  }
+
+  .footer-left p,
+  .footer-right p {
+    max-width: 100%;
+  }
+
+  .footer-center ul,
+  .footer-account ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  .site-footer hr {
+    margin: 1.5rem 1rem;
+  }
 }
 
-/* full width message */
-.full-width {
-    width: 700px;      /* match button width */
-    max-width: 100%;   /* responsive on smaller screens */
-}
 
-/* inputs */
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #f9fafb;
-    font-size: 0.95rem;
-}
-
-/* labels */
-.form-group label {
-    margin-bottom: 5px;
-    font-size: 0.85rem;
-    color: #555;
-}
-
-/* button */
-#send-button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 14px;
-    background: #16264D;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-#send-button:hover {
-    background: #16213d;
-}
-
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-
-    #disabilities-container.hero {
-        height: auto;
-        padding: 80px 20px;
-    }
-
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-
-    .hero-content p {
-        font-size: 1rem;
-    }
-
-    .row {
-        flex-direction: column;
-    }
-
-    #contact-us {
-        font-size: 2rem;
-    }
-}
+</style>
