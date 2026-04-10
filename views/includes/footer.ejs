@@ -1,43 +1,44 @@
 <footer class="site-footer">
   <div class="footer-container">
-   <div class="footer-left">
-  <div class="footer-title">
-    <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
-      <path d="M12 3L4 7v5c0 5.5 3.8 9.5 8 10 4.2-0.5 8-4.5 8-10V7l-8-4z"/>
-    </svg>
-    <h3>VA Claims Pathfinder</h3>
-  </div>
 
-  <p>Helping veterans navigate the VA disability claims process with free tools and resources.</p>
-</div>
+    <div class="footer-left">
+      <div class="footer-title">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L4 7v5c0 5.5 3.8 9.5 8 10 4.2-0.5 8-4.5 8-10V7l-8-4z"/>
+        </svg>
+        <h3>VA Claims Pathfinder</h3>
+      </div>
+      <p>Helping veterans navigate the VA disability claims process with free tools and resources.</p>
+    </div>
 
-   <div class="footer-center">
-  <h3>Quick Links</h3>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/compensation">Disability Calculator</a></li>
-    <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
-    <li><a href="/secondary">Secondary Conditions Finder</a></li>
-    <li><a href="/claimFiling">How to File a Claim</a></li>
-  </ul>
+    <div class="footer-center">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/compensation">Disability Calculator</a></li>
+        <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
+        <li><a href="/secondary">Secondary Conditions Finder</a></li>
+        <li><a href="/claimFiling">How to File a Claim</a></li>
+      </ul>
+    </div>
 
- <div class="footer-account">
-    <h3>Account</h3>
-    <ul>
-      <% if (isAuth) { %>
-        <li><a href="/dashboard">My Dashboard</a></li>
-        <li>
-          <form action="/logout" method="POST">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="quick-logout-btn">Logout</button>
-          </form>
-        </li>
-      <% } else { %>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/signup">Signup</a></li>
-      <% } %>
-    </ul>
-  </div>
+    <div class="footer-account">
+      <h3>Account</h3>
+      <ul>
+        <% if (isAuth) { %>
+          <li><a href="/dashboard">My Dashboard</a></li>
+          <li>
+            <form action="/logout" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="quick-logout-btn">Logout</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Signup</a></li>
+        <% } %>
+      </ul>
+    </div>
 
     <div class="footer-right">
       <h3>Disclaimer</h3>
@@ -45,12 +46,14 @@
       <a href="/policy">Privacy Policy</a> | 
       <a href="/terms">Terms and Conditions</a>
     </div>
+
   </div>
- <div>
+
+  <div>
     <hr>
     <p>Contact us: <a href="mailto:vacpath@vaclaimspathfinder.com">VACPath@vaclaimspathfinder.com</a> | Phone: (123) 456-7890</p>
-      <p>&copy; <%= new Date().getFullYear() %> VA Claims Pathfinder. All rights reserved.</p>
- </div>
+    <p>&copy; <%= new Date().getFullYear() %> VA Claims Pathfinder. All rights reserved.</p>
+  </div>
 </footer>
 
 <style>
