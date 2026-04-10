@@ -118,6 +118,28 @@
 .footer-right a:hover {
   color: #fbbf24;
 }
+
+
+.site-footer a {
+  position: relative;
+}
+
+.site-footer a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: #fbbf24;
+  transition: width 0.2s ease;
+}
+
+.site-footer a:hover::after {
+  width: 100%;
+}
+
+
 h3 {
     font-family: "Merriweather", serif;
     color: #ffffff;     
