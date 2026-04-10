@@ -113,15 +113,11 @@
 } 
 
 .site-footer a {
-  color: #DBE3F1;            
+  color: #DBE3F1;
   text-decoration: none;
   position: relative;
-  transition: color 0.2s ease, opacity 0.2s ease;
-}
-
-.site-footer a:hover {
-  color: #fbbf24;            
-  opacity: 0.9;
+  display: inline-block; 
+  transition: color 0.2s ease;
 }
 
 .site-footer a::after {
@@ -135,10 +131,13 @@
   transition: width 0.2s ease;
 }
 
+.site-footer a:hover {
+  color: #fbbf24;
+}
+
 .site-footer a:hover::after {
   width: 100%;
 }
-
 .footer-right a {
   color: rgba(219, 227, 241, 0.8);
 }
