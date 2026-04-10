@@ -201,14 +201,46 @@ h3 {
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
+    align-items: center;   /* center columns */
     text-align: center;
+    padding: 0 1.5rem;
   }
 
   .footer-left,
+  .footer-center,
+  .footer-account,
   .footer-right {
-    justify-content: center;
+    width: 100%;
+    max-width: 400px;      /* keeps it readable */
+    align-items: center;   /* center content */
     text-align: center;
-    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-title {
+    justify-content: center; /* center icon + title */
+  }
+
+  .footer-left p {
+    max-width: 100%;        /* remove desktop constraint */
+  }
+
+  .footer-center ul,
+  .footer-account ul {
+    align-items: center;
+  }
+
+  .footer-center li,
+  .footer-account li {
+    margin-bottom: 0.5rem;
+  }
+
+  .quick-logout-btn {
+    text-align: center;
+  }
+
+  .site-footer hr {
+    margin: 1.5rem 1rem;
   }
 }
 
