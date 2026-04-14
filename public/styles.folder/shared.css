@@ -102,7 +102,6 @@ body {
 }
 
 .hamburger {
-  display: none;
   cursor: pointer;
   background: none;
   border: none;
