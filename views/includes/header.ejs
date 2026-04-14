@@ -6,8 +6,6 @@
       <span class="bar"></span>
       <span class="bar"></span>
     </div>
-  </nav>
-<%- include('mobile-drawer', { nonce: nonce }) %>
  <ul class="nav-menu" id="nav-menu">
       <li><a href="/">Home</a></li>
       <li><a href="/compensation">Disability Calculator</a></li>
@@ -27,6 +25,9 @@
   <li><a href="/signup">Signup</a></li>
 <% } %>
     </ul>
+  </nav>
+<%- include('mobile-drawer', { nonce: nonce }) %>
+
 </header>
 
 <script nonce="<%= nonce %>">
