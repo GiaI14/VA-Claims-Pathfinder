@@ -1,14 +1,19 @@
-.footer-left, 
-.footer-center, 
-.footer-account, 
-.footer-right { 
-  width: 100%; 
-  min-width: 0; 
-  max-width: 400px; 
-  margin-bottom: 1.5rem; 
-  padding: 0; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  text-align: center;
- 
+ <ul class="nav-menu" id="nav-menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/compensation">Disability Calculator</a></li>
+      <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
+      <li><a href="/secondary">Secondary Conditions Finder</a></li>
+      <li><a href="/claimFiling">How to file a claim</a></li>
+     <% if (isAuth) { %> 
+       <li><a href="/dashboard">My Dashboard</a></li>
+  <li>
+    <form action="/logout" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+      <button id="nav-logout-btn">Logout</button>
+    </form>
+  </li>
+<% } else { %>
+  <li><a href="/login">Login</a></li>
+  <li><a href="/signup">Signup</a></li>
+<% } %>
+    </ul>
