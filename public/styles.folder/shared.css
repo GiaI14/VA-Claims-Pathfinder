@@ -43,6 +43,10 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.navbar > .nav-menu {
+  display: none;
+}
+
 .nav-menu {
   display: flex;
   list-style: none;
