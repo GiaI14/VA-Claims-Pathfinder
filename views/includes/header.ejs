@@ -6,25 +6,6 @@
       <span class="bar"></span>
       <span class="bar"></span>
     </div>
-    <ul class="nav-menu" id="nav-menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/compensation">Disability Calculator</a></li>
-      <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
-      <li><a href="/secondary">Secondary Conditions Finder</a></li>
-      <li><a href="/claimFiling">How to file a claim</a></li>
-     <% if (isAuth) { %> 
-       <li><a href="/dashboard">My Dashboard</a></li>
-  <li>
-    <form action="/logout" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
-      <button id="nav-logout-btn">Logout</button>
-    </form>
-  </li>
-<% } else { %>
-  <li><a href="/login">Login</a></li>
-  <li><a href="/signup">Signup</a></li>
-<% } %>
-    </ul>
   </nav>
   <%- include('mobile-drawer', { nonce: nonce }) %>
 </header>
