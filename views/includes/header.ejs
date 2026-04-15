@@ -17,19 +17,34 @@
   document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.getElementById('hamburger');
     const drawer = document.getElementById('mobile-drawer');
+    const closeBtn = document.getElementById('drawer-close');
+
+    function openDrawer() {
+      hamburger.classList.add('active');
+      drawer.classList.add('active');
+    }
+
+    function closeDrawer() {
+      hamburger.classList.remove('active');
+      drawer.classList.remove('active');
+    }
 
     if (hamburger && drawer) {
       hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        drawer.classList.toggle('active');
+        if (drawer.classList.contains('active')) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
       });
     }
 
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeDrawer);
+    }
+
     document.querySelectorAll('#mobile-drawer a').forEach(link => {
-      link.addEventListener('click', function() {
-        hamburger.classList.remove('active');
-        drawer.classList.remove('active');
-      });
+      link.addEventListener('click', closeDrawer);
     });
   });
 </script>
