@@ -25,22 +25,20 @@ body {
   line-height: 1.6;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 10%;
+.navbar { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 2rem 10%; 
+  background-image: url("/Studio-Project.png"); 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  background-color: transparent; 
+  position: fixed; top: 0; left: 0; right: 0; 
+  z-index: 1000; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
 
-  background: #16264D
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 .mobile-drawer {
   position: fixed;
   top: 0;
