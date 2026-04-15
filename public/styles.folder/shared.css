@@ -31,9 +31,7 @@ body {
   align-items: center;
   padding: 1.5rem 10%;
 
-  background: var(--secondary-color); /* match footer */
-  /* OR use exact footer color if needed */
-  /* background: #1f2937; */
+  background: #16264D
 
   position: fixed;
   top: 0;
