@@ -112,7 +112,7 @@ body {
   gap: 10px;
 
   font-size: 2rem;
-  color: white
+  color: var(--gold-logo);
   text-decoration: none;
   font-weight: bold;
   text-transform: uppercase;
