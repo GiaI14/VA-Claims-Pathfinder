@@ -236,6 +236,7 @@ body, html {
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
+    /* HERO FIX (already good) */
     #disabilities-container.hero {
         height: auto;
         padding: 80px 20px;
@@ -249,11 +250,38 @@ body, html {
         font-size: 1rem;
     }
 
-    .row {
+    /* STACK INPUTS */
+    #contact-form .row {
         flex-direction: column;
+        gap: 12px;
     }
 
+    /* FIX FORM WIDTH (CRITICAL) */
+    #contact-form .full-width {
+        width: 100%;   /* 🔥 FIX */
+    }
+
+    /* REDUCE CARD SIZE */
+    .center-content {
+        padding: 20px; /* smaller padding */
+        border-radius: 10px;
+    }
+
+    /* INPUT SIZE */
+    #contact-form input,
+    #contact-form textarea {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* BUTTON SIZE */
+    #send-button {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    /* TITLE */
     #contact-us {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 }
