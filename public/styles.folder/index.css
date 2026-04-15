@@ -261,11 +261,9 @@ body, html {
         width: 100%;   /* 🔥 FIX */
     }
 
-    /* REDUCE CARD SIZE */
     .center-content {
-        padding: 20px; /* smaller padding */
-        border-radius: 10px;
-    }
+    max-width: 600px; 
+}
 
     /* INPUT SIZE */
     #contact-form input,
