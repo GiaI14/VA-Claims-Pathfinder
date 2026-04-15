@@ -1,17 +1,18 @@
-<!-- <body>
-    <aside id="mobile-drawer">
-        <nav>
-            <ul class="nav-menu">
-                <li><a href="/">Home</a></li>
-                <li><a href="/calculator">Disability Calculator</a></li>
-                <li><a href="/secondary">Secondary Conditions</a></li>
-                <li><a href="/possibleDisabilities">Possible Disabilities</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/signup">Signup</a></li>
-            </ul>
-        </nav>
-    </aside>
-    <div id="drawer-overlay" class="hidden"></div>
-</body>
+<div class="mobile-drawer" id="mobile-drawer">
+  <a href="/">Home</a>
+  <a href="/compensation">Disability Calculator</a>
+  <a href="/vaDisabilityTest">VA Disability Finder</a>
+  <a href="/secondary">Secondary Conditions Finder</a>
+  <a href="/claimFiling">How to file a claim</a>
 
-   -->
+  <% if (isAuth) { %>
+    <a href="/dashboard">My Dashboard</a>
+    <form action="/logout" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button id="nav-logout-btn" type="submit">Logout</button>
+    </form>
+  <% } else { %>
+    <a href="/login">Login</a>
+    <a href="/signup">Signup</a>
+  <% } %>
+</div>
