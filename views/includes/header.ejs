@@ -12,22 +12,23 @@
 
 </header>
 
+
 <script nonce="<%= nonce %>">
   document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
+    const drawer = document.getElementById('mobile-drawer');
 
-    if (hamburger && navMenu) {
+    if (hamburger && drawer) {
       hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+        drawer.classList.toggle('active');
       });
     }
 
-    document.querySelectorAll('.nav-menu a').forEach(link => {
+    document.querySelectorAll('#mobile-drawer a').forEach(link => {
       link.addEventListener('click', function() {
         hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
+        drawer.classList.remove('active');
       });
     });
   });
