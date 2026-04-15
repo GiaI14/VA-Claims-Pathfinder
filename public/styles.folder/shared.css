@@ -107,28 +107,21 @@ body {
 }
 
 .logo {
-  font-size: 1.7rem;
-  color: var(--nav-text-color);
-  text-decoration: none;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-.logo {
   font-size: 2rem;
-  color: var(--gold-logo);
+  color: var(--gold-logo); /* keep your gold */
   text-decoration: none;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.logo img {
-  height: 40px;
-  width: auto;
-  vertical-align: middle;
-  margin-right: 10px;
+.logo i {
+  font-size: 1.4rem;
+  color: var(--gold-logo);
 }
 
 .page-wrapper {
