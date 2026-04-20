@@ -44,8 +44,11 @@
   background-color: var(--underline);
 }
 
-.form-control {
-  margin-bottom: 1.25rem;
+#login form,
+#signup form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 label {
