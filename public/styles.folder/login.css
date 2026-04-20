@@ -14,14 +14,6 @@
 } 
 
 
-main {
-  flex: 0 0 auto;
-  min-width: 0;
-  padding: 1rem;
-  max-width: 600px;
-  margin: 2rem auto;
-}
-
 #signup, #login {
   max-width: 450px;
   margin: 2rem auto;
