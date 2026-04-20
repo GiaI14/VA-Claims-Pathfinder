@@ -61,7 +61,7 @@
 #login .form-control label,
 #signup .form-control label {
   margin-bottom: 5px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #222;
   font-weight: 600;
 }
@@ -96,22 +96,6 @@
   font-size: 0.9rem;
   color: #0073e6;
   text-decoration: underline;
-}
-
-.alert {
-  padding: 0.75rem 1rem;
-  text-align: center;
-  margin: 0 auto 1rem auto;
-  max-width: 90%;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-.alert-danger {
-  color: var(--error-color);
-  background-color: #FDF3F4;
-  border-left: 4px solid var(--error-color);
-  padding-left: 1rem;
 }
 
 /* Buttons */
@@ -217,26 +201,6 @@
   display: flex;
   justify-content: center;
   width: 100% !important;
-}
-
-/* Alerts */
-.alert {
-  margin: 10px 0 20px;
-  padding: 12px 14px;
-  border-radius: 6px;
-  text-align: center;
-}
-
-.alert-danger {
-  background: #fdf3f4;
-  color: #E31C3D;
-  border-left: 4px solid #E31C3D;
-}
-
-.alert-success {
-  background: #edf8ef;
-  color: #2E8540;
-  border-left: 4px solid #2E8540;
 }
 
 
