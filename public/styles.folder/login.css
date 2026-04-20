@@ -274,20 +274,6 @@ input[type="password"]:focus {
 }
 
 @media (max-width: 500px) {
-    body {
-    padding-top: 55px;  
-  }
-  
-  .page-wrapper {
-    padding-top: 10px;
-  }
-  
-  main {
-    width: 100%;
-    max-width: 420px;
-    margin: 0.5 auto;
-    padding: 0.5rem;
-  }
   
   #signup, #login {
     width: 92%;
