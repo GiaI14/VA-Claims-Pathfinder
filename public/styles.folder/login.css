@@ -58,10 +58,11 @@
   margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-color);
+#login .form-control label,
+#signup .form-control label {
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  color: #222;
   font-weight: 600;
 }
 
