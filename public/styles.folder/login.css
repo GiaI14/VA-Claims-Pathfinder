@@ -129,9 +129,9 @@
   font-weight: 600;
 }
 
-.btn:hover {
-  background-color: var(--secondary-color);
-  transform: translateY(-1px);
+#login .btn:hover,
+#signup .btn:hover {
+  background: #16213d;
 }
 
 .btn-alt {
