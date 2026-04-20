@@ -1,39 +1,303 @@
- <ul class="nav-menu" id="nav-menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/compensation">Disability Calculator</a></li>
-      <li><a href="/vaDisabilityTest">VA Disability Finder</a></li>
-      <li><a href="/secondary">Secondary Conditions Finder</a></li>
-      <li><a href="/claimFiling">How to file a claim</a></li>
-     <% if (isAuth) { %> 
-       <li><a href="/dashboard">My Dashboard</a></li>
-  <li>
-    <form action="/logout" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
-      <button id="nav-logout-btn">Logout</button>
-    </form>
-  </li>
-<% } else { %>
-  <li><a href="/login">Login</a></li>
-  <li><a href="/signup">Signup</a></li>
-<% } %>
-    </ul>
-<script nonce="<%= nonce %>">
-  document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
+:root {
+  /* VA Official Color Scheme */
+  --primary-color: #440705;       /* VA navy blue */
+  --secondary-color: #202c2c;     /* Dark rich blue */
+  --accent-color:  #c4b687;   /* VA gold */
+  --background-color: #FFFFFF;    /* Pure white */
+  --text-color: #212121;          /* Near-black for readability */
+  --input-border-color: #5A6D7B;  /* VA gray */
+  --underline: #2f4141;
+  --error-color: #E31C3D;         /* VA red */
+  --success-color: #2E8540;       /* VA green */
+  --light-gray: #f8f9fa;
+  --gray-background: #041110/* For subtle backgrounds */
+} 
 
-    if (hamburger && navMenu) {
-      hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-      });
-    }
 
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-      link.addEventListener('click', function() {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-      });
-    });
-  });
-</script>
+#login, 
+#signup {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+}
+#signup h1, #login h1 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+#signup h1:after, #login h1:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 3px;
+  background-color: var(--underline);
+}
+
+.form-control {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 45, 114, 0.2);
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  margin: 0 auto 1rem auto;
+  max-width: 90%;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.alert-danger {
+  color: var(--error-color);
+  background-color: #FDF3F4;
+  border-left: 4px solid var(--error-color);
+  padding-left: 1rem;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: var(--gray-background);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+.btn-alt {
+  background-color: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-alt:hover {
+  background-color: var(--light-gray);
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+/* Auth Alternative */
+#auth-alternative {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+#auth-alternative a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--primary-color);
+}
+
+#auth-alternative a:hover {
+  color: var(--secondary-color);
+  border-bottom-style: solid;
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.g_id_signin-wrapper {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+.g_id_signin {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex;
+  justify-content: center;
+}
+
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: WHITE;
+  background-image: none;
+  border: 1px solid #747775;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+  -webkit-align-items: center;
+  align-items: center;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.gsi-material-button .gsi-material-button-contents {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  -webkit-transition: opacity .218s;
+  transition: opacity .218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
+
+.forgot-password {
+  margin-top: 5px;
+}
+.forgot-password a {
+  font-size: 0.9em;
+  color: #0073e6;
+  text-decoration: underline;
+}
+
+@media (max-width: 500px) {
+  
+  #signup, #login {
+    width: 92%;
+    max-width: 360px;
+    margin: 10px auto;
+    padding: 14px;
+  }
+  label {
+    font-size: 0.7rem;
+  }
+  h1{
+    font-size: 25px;
+  }
+  
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .btn {
+    padding: 0.45rem;
+    font-size: 0.7rem;
+  }
+
+  .form-control {
+    margin-bottom: 0.7rem;
+  }
+}
