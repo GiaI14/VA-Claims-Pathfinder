@@ -14,18 +14,16 @@
 } 
 
 
-#signup, #login {
-  max-width: 450px;
+#login, 
+#signup {
+  max-width: 700px;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 45, 114, 0.15); /* Blue-tinted*/
-  border: 2px solid #E0E0E0; /* Light gray border */
-  width: 100%;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   box-sizing: border-box;
 }
-
 #signup h1, #login h1 {
   color: var(--primary-color);
   margin-bottom: 1.5rem;
