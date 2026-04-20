@@ -24,13 +24,15 @@
   box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   box-sizing: border-box;
 }
-#signup h1, #login h1 {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
+
+#login h1,
+#signup h1 {
   text-align: center;
-  position: relative;
-  padding-bottom: 0.5rem;
+  color: #16264D;
+  font-size: 2.2rem;
+  margin: 0 0 24px 0;
 }
+
 
 #signup h1:after, #login h1:after {
   content: "";
