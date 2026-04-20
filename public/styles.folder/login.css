@@ -13,13 +13,6 @@
   --gray-background: #041110/* For subtle backgrounds */
 } 
 
-body {
-  padding-top: 80px;
-  background-color: var(--light-gray);
-  color: var(--text-color);
-  font-family: 'Source Sans Pro', Arial, sans-serif;
-  line-height: 1.5;
-}
 
 main {
   flex: 0 0 auto;
