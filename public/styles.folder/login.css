@@ -16,7 +16,7 @@
 
 #login, 
 #signup {
-  max-width:  min(900px, 92%);
+  width:  min(900px, 92%);
   margin: 4rem auto 2rem auto;
   padding: 20px;
   background: white;
