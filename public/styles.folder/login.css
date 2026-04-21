@@ -193,4 +193,35 @@
   width: 100% !important;
 }
 
+@media (max-width: 500px) {
+   #signup, #login {
+    width: 92%;
+    max-width: 360px;
+    margin: 10px auto;
+    padding: 14px;
+  }
+ 
+  label {
+    font-size: 0.7rem;
+  }
+  h1{
+    font-size: 25px;
+  }
+  
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .btn {
+    padding: 0.45rem;
+    font-size: 0.7rem;
+  }
+
+  .form-control {
+    margin-bottom: 0.7rem;
+  }
+}
+
 
