@@ -16,9 +16,15 @@
 
 #login, 
 #signup {
-  width: min(680px, 92%);
   margin: 4rem auto 2rem auto;
   padding: 20px;
+}
+
+.auth-card {
+  width: min(600px, 100%); 
+  margin: 0 auto;
+  padding: 20px;
+
   background: white;
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.08);
