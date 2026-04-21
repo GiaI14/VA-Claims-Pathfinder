@@ -60,7 +60,7 @@
 
 #login .form-control label,
 #signup .form-control label {
-  margin-bottom: 5px;
+  margin-bottom: 0;
   font-size: 0.75rem;
   color: #222;
   font-weight: 600;
