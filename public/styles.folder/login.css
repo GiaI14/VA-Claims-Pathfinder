@@ -55,7 +55,7 @@
 #signup .form-control {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #login .form-control label,
