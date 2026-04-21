@@ -21,7 +21,7 @@
 }
 
 .auth-card {
-  max-width: 640px !important;
+  width: 500px !important;
   margin: 0 auto;
   padding: 20px;
 
