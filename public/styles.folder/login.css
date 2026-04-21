@@ -100,26 +100,15 @@
 
 /* Buttons */
 #login .btn,
-#signup .btn,
-#auth-alternative .btn-alt{
-  width: 100%;
+#signup .btn {
+  display: block;
   margin-top: 12px;
-  padding: 10px;
   background: #16264D;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
   cursor: pointer;
-  font-weight: 600;
 }
 
-#login .btn:hover,
-#signup .btn:hover {
-  background: #16213d;
-}
-
-/* Auth Alternative */
 #auth-alternative {
   margin-top: 20px;
   text-align: center;
@@ -137,7 +126,6 @@
 #auth-alternative .btn-alt:hover {
   background: #f4f6f9;
 }
-
 .text-accent {
   color: var(--accent-color);
 }
