@@ -196,12 +196,7 @@
 
 @media (max-width: 500px) {
   
-  #signup, #login {
-    width: 92%;
-    max-width: 360px;
-    margin: 10px auto;
-    padding: 14px;
-  }
+ 
   label {
     font-size: 0.7rem;
   }
