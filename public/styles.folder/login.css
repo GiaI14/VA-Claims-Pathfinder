@@ -21,10 +21,10 @@
 }
 
 .auth-card {
-  width: 350px !important;
+  width: 100%;
+  max-width: 660px;
   margin: 0 auto;
   padding: 20px;
-
   background: white;
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.08);
