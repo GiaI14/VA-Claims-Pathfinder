@@ -125,18 +125,12 @@
 }
 
 #auth-alternative .btn-alt {
-  display: inline-block;
-  width: 100%;
-  max-width: 100%;
-  padding: 10px;
+  display: block;
   background: white;
   color: #16264D;
   border: 1px solid #16264D;
-  border-radius: 6px;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  box-sizing: border-box;
+  text-align: center;
 }
 
 #auth-alternative .btn-alt:hover {
