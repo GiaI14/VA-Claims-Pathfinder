@@ -100,6 +100,18 @@
 
 /* Buttons */
 #login .btn,
+#signup .btn,
+#auth-alternative .btn-alt {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  box-sizing: border-box;
+  border-radius: 6px;
+} 
+
+#login .btn,
 #signup .btn {
   display: block;
   margin-top: 12px;
