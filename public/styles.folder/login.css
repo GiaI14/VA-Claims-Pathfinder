@@ -100,7 +100,8 @@
 
 /* Buttons */
 #login .btn,
-#signup .btn {
+#signup .btn,
+#auth-alternative .btn-alt{
   width: 100%;
   margin-top: 12px;
   padding: 10px;
