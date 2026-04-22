@@ -39,6 +39,14 @@
   margin: 0 0 5px 0;
 }
 
+.link-style {
+  background: none;
+  border: none;
+  padding: 0;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 #signup h1:after, #login h1:after {
   content: "";
