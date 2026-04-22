@@ -29,19 +29,8 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <!-- Honeypot Field -->
             <input type="text" name="honeypot" style="display: none;">
-            <div class="form-control">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
-            </div>
-            <div class="form-control">
-              <label for="password">Password</label>
-              <input type="password" id="password" name="password" required>
-              <div class="forgot-password">
-                <a href="/auth/forgot-password">Forgot your password?</a>
-              </div>
-            </div>
-            <button class="btn">Log in</button>
-            <div class="google-wrapper">
+
+             <div class="google-wrapper">
               <!-- Official Google Sign-In Button -->
              <div class="g_id_signin-wrapper">
               <div id="g_id_onload" 
@@ -62,6 +51,20 @@
             </div>
             </div>
             </div>
+
+            <div class="form-control">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
+            </div>
+            <div class="form-control">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required>
+              <div class="forgot-password">
+                <a href="/auth/forgot-password">Forgot your password?</a>
+              </div>
+            </div>
+            <button class="btn">Log in</button>
+           
           </form>
           <div id="auth-alternative">
             <span>New here? </span>
