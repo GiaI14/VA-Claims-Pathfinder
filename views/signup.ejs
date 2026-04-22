@@ -10,6 +10,7 @@
 <div class="page-wrapper">
   <%- include('includes/header', { nonce: nonce })%>
   <main id="signup-page">
+   <div class="auth-card">
     <h1>Signup</h1>
     <% if (inputData.hasError) { %>
       <p id="input-error"><%= inputData.message %></p>
