@@ -48,6 +48,10 @@
   cursor: pointer;
 }
 
+.signup-link:hover {
+  text-decoration: underline;
+}
+
 .new-here-text {
   color: #aaa; /* subtle, secondary text */
   font-size: 0.9rem;
