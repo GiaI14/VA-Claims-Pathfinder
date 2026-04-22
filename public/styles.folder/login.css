@@ -48,6 +48,11 @@
   cursor: pointer;
 }
 
+.new-here-text {
+  color: #aaa; /* subtle, secondary text */
+  font-size: 0.9rem;
+}
+
 .divider {
   display: flex;
   align-items: center;
