@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.signup-link:hover {
+.link-style: hover {
   text-decoration: underline;
 }
 
