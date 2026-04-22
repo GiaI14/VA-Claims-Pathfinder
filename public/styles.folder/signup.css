@@ -13,18 +13,6 @@
 }
 
 
-#signup-page {
-  max-width: 400px;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0.5rem auto 0.3rem auto; 
-  padding: 1.8rem;  
-  background-color: white;
-  border-radius: 7.2px; 
-  box-shadow: 0 4px 12px rgba(0, 45, 114, 0.15);
-  border: 1px solid #E0E0E0;
-}
-
 #signup-page h1 {
   color: var(--primary-color);
   margin-bottom: 1.35rem;  
