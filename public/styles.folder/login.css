@@ -133,8 +133,13 @@
 
 .forgot-password a {
   font-size: 0.9rem;
-  color: #0073e6;
-  text-decoration: underline;
+  color: #aaa; 
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: none;
+  color: #888;         
 }
 
 /* Buttons */
