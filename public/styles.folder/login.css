@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.link-style: hover {
+.link-style:hover {
   text-decoration: underline;
 }
 
