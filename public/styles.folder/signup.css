@@ -12,13 +12,6 @@
   --maroon-color: #440705; 
 }
 
-body {
-  padding-top: 80px;  
-  background-color: var(--light-gray);
-  color: var(--text-color);
-  font-family: 'Source Sans Pro', Arial, sans-serif;
-  line-height: 1.5;
-}
 
 #signup-page {
   max-width: 400px;
