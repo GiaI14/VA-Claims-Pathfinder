@@ -238,9 +238,19 @@
   width: 100% !important;
 }
 
+.google-mobile {
+  display: none;
+}
 @media (max-width: 500px) {
+  .google-desktop {
+    display: none;
+  }
+
+  .google-mobile {
+    display: block;
+  }
     #signup,
-  #login {
+    #login {
     width: 80% !important;
     max-width: 280px !important;
     padding: 8px !important;
