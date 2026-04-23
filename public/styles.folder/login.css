@@ -239,34 +239,36 @@
 }
 
 @media (max-width: 500px) {
-   #signup, #login {
-    width: 92%;
-    max-width: 360px;
-    margin: 10px auto;
-    padding: 14px;
-  }
- 
-  label {
-    font-size: 0.7rem;
-  }
-  h1{
-    font-size: 25px;
-  }
-  
-  input[type="email"],
-  input[type="password"] {
-    padding: 0.55rem;
-    font-size: 0.7rem;
-  }
+  #signup, #login {
+  width: 88%;              
+  max-width: 320px;      
+  margin: 6px auto;      
+  padding: 10px;     
+}
 
-  .btn {
-    padding: 0.45rem;
-    font-size: 0.7rem;
-  }
+label {
+  font-size: 0.65rem;
+}
 
-  .form-control {
-    margin-bottom: 0.7rem;
-  }
+h1 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+input[type="email"],
+input[type="password"] {
+  padding: 0.45rem;
+  font-size: 0.65rem;
+}
+
+.btn {
+  padding: 0.4rem;
+  font-size: 0.65rem;
+}
+
+.form-control {
+  margin-bottom: 0.5rem;
+}
 }
 
 
