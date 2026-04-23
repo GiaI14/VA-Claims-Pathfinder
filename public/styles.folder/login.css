@@ -253,6 +253,14 @@
     height: 30px !important;
   }
 
+  .google-btn {
+  width: 100%;
+  max-width: 100%;
+  padding: 6px 8px;
+  font-size: 0.65rem;
+  height: 32px;
+  box-sizing: border-box;
+}
   .btn {
     padding: 6px 8px !important;
     font-size: 0.65rem !important;
