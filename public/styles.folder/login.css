@@ -241,39 +241,23 @@
 @media (max-width: 500px) {
     #signup,
   #login {
-    width: 80%;
-    max-width: 280px;
-    margin: 4px auto;
-    padding: 8px;
-  }
-
-  h1 {
-    font-size: 18px;
-    margin: 0 0 8px;
-  }
-
-  label {
-    font-size: 0.6rem;
-    margin-bottom: 2px;
-    display: block;
+    width: 80% !important;
+    max-width: 280px !important;
+    padding: 8px !important;
   }
 
   input[type="email"],
   input[type="password"] {
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 0.65rem;
-    height: 30px;
-    box-sizing: border-box;
+    padding: 6px 8px !important;
+    font-size: 0.65rem !important;
+    height: 30px !important;
   }
 
   .btn {
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 0.65rem;
-    height: 32px;
+    padding: 6px 8px !important;
+    font-size: 0.65rem !important;
+    height: 32px !important;
   }
-
   .form-control {
     margin-bottom: 0.4rem;
   }
