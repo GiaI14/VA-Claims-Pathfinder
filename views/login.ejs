@@ -29,31 +29,44 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <!-- Honeypot Field -->
             <input type="text" name="honeypot" style="display: none;">
+            <div class="google-wrapper">
 
-             <div class="google-wrapper">
-              <!-- Official Google Sign-In Button -->
-             <div class="g_id_signin-wrapper">
-              <div id="g_id_onload" 
-                data-client_id="<%= googleClientId %>" 
-                data-context="signin"
-                data-ux_mode = "popup"
-                data-callback="handleCredentialResponse" 
-                data-auto_prompt="false"> 
-            </div>
-            <div class="g_id_signin" 
-            data-type="standard" 
-            data-shape="rectangular" 
-            data-theme="outline"
-            data-text="sign_in_with" 
-            data-size="large" 
-            data-width="300"
-            data-logo_alignment="left">
-            </div>
-            </div>
-            </div>
-            <div class="divider">
-               <span>or</span>
-            </div>
+  <!-- Google config (ONLY once) -->
+  <div id="g_id_onload" 
+    data-client_id="<%= googleClientId %>" 
+    data-context="signin"
+    data-ux_mode="popup"
+    data-callback="handleCredentialResponse" 
+    data-auto_prompt="false">
+  </div>
+
+  <!-- Desktop button -->
+  <div class="google-desktop">
+    <div class="g_id_signin"
+      data-type="standard"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-size="large"
+      data-width="300">
+    </div>
+  </div>
+
+  <!-- Mobile button -->
+  <div class="google-mobile">
+    <div class="g_id_signin"
+      data-type="standard"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-size="small"
+      data-width="220">
+    </div>
+  </div>
+
+</div>
+
+<div class="divider">
+  <span>or</span>
+</div>
             <div class="form-control">
               <label for="email">Email</label>
               <input type="email" id="email" name="email" value="<%= locals.email || '' %>" required>
