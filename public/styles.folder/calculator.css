@@ -184,7 +184,7 @@ select {
 
 .rating-btn {
     padding: 5px 10px;
-    font-size: 14px;
+    font-size: 12px;
     border: 1px solid #888;
     background-color: #f0f0f0;
     cursor: pointer;
@@ -194,7 +194,7 @@ select {
 }
 
 .rating-btn:hover {
-    background-color: #d0e0ff;
+    background-color: #e0e0e0;
 }
 
 #selected-ratings-container {
