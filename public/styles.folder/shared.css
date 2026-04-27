@@ -134,7 +134,31 @@ body {
   main {
     flex: 0;
  }
- 
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.dashboard-link:hover {
+  color: #fbbf24;
+}
+
+
 footer{
    width: 100%;
    flex-shrink: 0;
