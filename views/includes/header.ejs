@@ -4,6 +4,12 @@
       <i class="fas fa-shield-alt"></i>
         VA Claims Pathfinder
     </a>
+
+    <div class="nav-right">
+      <% if (isAuth) { %>
+        <a href="/dashboard" class="dashboard-link">My Dashboard</a>
+      <% } %> 
+
     <div class="hamburger" id="hamburger">
       <span class="bar"></span>
       <span class="bar"></span>
